@@ -1,0 +1,1736 @@
+openapi: 3.1.0
+info:
+  title: Drip BillableMetrics Events API
+  description: "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n"
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Events
+  description: Record execution events for observability.
+paths:
+  /v1/customers/{customerId}/events:
+    get:
+      operationId: getCustomerEvents
+      summary: Get customer events
+      tags:
+      - Events
+      description: Get events for a customer with optional filters.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: workflowId
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: eventType
+        required: false
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: from
+        required: false
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: to
+        required: false
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        in: query
+        name: limit
+        required: false
+      - schema:
+          type: string
+        in: path
+        name: customerId
+        required: true
+      responses:
+        '200':
+          description: Customer events
+          content:
+            application/json:
+              schema:
+                description: Customer events
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        eventType:
+                          type: string
+                        quantity:
+                          type: number
+                        units:
+                          type: string
+                          nullable: true
+                        costUnits:
+                          type: number
+                          nullable: true
+                        runId:
+                          type: string
+                          nullable: true
+                        timestamp:
+                          type: string
+                          format: date-time
+                  totals:
+                    type: object
+                    properties:
+                      eventCount:
+                        type: integer
+                      totalQuantity:
+                        type: string
+                      totalCostUnits:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/events:
+    post:
+      operationId: createEvent
+      summary: Record an execution event
+      tags:
+      - Events
+      description: 'Record what happened. Only 2 fields required: `customerId` and `idempotencyKey`.
+
+
+        All other fields are optional with smart defaults. If you provide `input` or `output` payloads, they are automatically stored for later retrieval via `GET /events/:id/payload` (no need to set `storePayloads: true`).
+
+
+        > **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - idempotencyKey
+              properties:
+                customerId:
+                  type: string
+                  description: Drip customer ID (cus_*). Either customerId or externalCustomerId is required.
+                  example: cus_abc123
+                externalCustomerId:
+                  type: string
+                  maxLength: 255
+                  description: Your own database's customer ID. If no Drip customer exists yet for (business, externalCustomerId), one is auto-provisioned as an internal customer. Either customerId or externalCustomerId is required.
+                  example: user_42
+                idempotencyKey:
+                  type: string
+                  description: Unique key (same key = same result)
+                  example: req_123
+                actionName:
+                  type: string
+                  description: What action was performed (defaults to eventType name if omitted)
+                  example: api_call
+                outcome:
+                  type: string
+                  enum:
+                  - PENDING
+                  - SUCCEEDED
+                  - FAILED
+                  - SKIPPED
+                  - RETRIED
+                  - TIMEOUT
+                  - CANCELLED
+                  description: SUCCEEDED, FAILED, PENDING, SKIPPED, RETRIED, TIMEOUT, CANCELLED
+                  example: SUCCEEDED
+                explanation:
+                  type: string
+                  maxLength: 2000
+                  description: Human-readable note
+                  example: Processed request successfully
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Any extra data you want to attach
+                quantity:
+                  type: number
+                  description: 'For billing: how many units'
+                  example: 100
+                usageType:
+                  type: string
+                  maxLength: 100
+                  description: Usage type for billing (matches pricing plan)
+                units:
+                  type: string
+                  maxLength: 50
+                  description: Human-readable unit label (e.g., "tokens", "API calls")
+                description:
+                  type: string
+                  maxLength: 500
+                  description: Description for support/finance
+                eventType:
+                  type: string
+                  enum:
+                  - USAGE
+                  - API_CALL
+                  - LLM_INFERENCE
+                  - TOOL_CALL
+                  - DATABASE
+                  - FILE_IO
+                  - NETWORK
+                  - DECISION
+                  - HUMAN_IN_LOOP
+                  - MEMORY
+                  - CUSTOM
+                  - TOOL_CALL_START
+                  - TOOL_CALL_END
+                  - TOOL_CALL_ERROR
+                  - TOOL_CALL_RETRY
+                  - TRAINING
+                  - FINE_TUNING
+                  description: Event category
+                  example: API_CALL
+                runId:
+                  type: string
+                  description: Group events into a run
+                parentEventId:
+                  type: string
+                  description: Link to parent event
+                correlationId:
+                  type: string
+                  maxLength: 255
+                  description: Cross-service tracing ID
+                inputHash:
+                  type: string
+                  maxLength: 128
+                  description: SHA-256 hash of input
+                outputHash:
+                  type: string
+                  maxLength: 128
+                  description: SHA-256 hash of output
+                input:
+                  type: object
+                  additionalProperties: true
+                  description: Raw input (will be hashed)
+                output:
+                  type: object
+                  additionalProperties: true
+                  description: Raw output (will be hashed)
+                workflowId:
+                  type: string
+                  description: Link to a workflow
+                retryOfEventId:
+                  type: string
+                  description: ID of event being retried
+                attemptNumber:
+                  type: integer
+                  minimum: 1
+                  description: Attempt number (1 = first try)
+                spanId:
+                  type: string
+                  maxLength: 64
+                  description: Span ID for distributed tracing
+                spanKind:
+                  type: string
+                  enum:
+                  - TOOL
+                  - LLM
+                  - CHAIN
+                  - AGENT
+                  - RETRIEVER
+                  - EMBEDDING
+                  - INTERNAL
+                  description: OpenTelemetry-inspired span classification
+                inputBytes:
+                  type: integer
+                  minimum: 0
+                  description: Input size in bytes
+                outputBytes:
+                  type: integer
+                  minimum: 0
+                  description: Output size in bytes
+                queueDurationMs:
+                  type: integer
+                  minimum: 0
+                  description: Time spent in queue (ms)
+                executionDurationMs:
+                  type: integer
+                  minimum: 0
+                  description: Execution time (ms)
+                startedAt:
+                  type: string
+                  format: date-time
+                  description: When execution started
+                endedAt:
+                  type: string
+                  format: date-time
+                  description: When execution ended
+                errorType:
+                  type: string
+                  maxLength: 100
+                  description: Error class/type
+                errorMessage:
+                  type: string
+                  maxLength: 2000
+                  description: Error message
+                errorStack:
+                  type: string
+                  maxLength: 10000
+                  description: Stack trace
+                retryCount:
+                  type: integer
+                  minimum: 0
+                  description: Number of retries so far
+                retryBackoffMs:
+                  type: integer
+                  minimum: 0
+                  description: Backoff time before next retry (ms)
+                retryReason:
+                  type: string
+                  maxLength: 500
+                  description: Why the retry was triggered
+                storePayloads:
+                  type: boolean
+                  description: Controls payload storage. Defaults to true when input/output are provided. Set to false to explicitly disable.
+                  default: true
+                payloadTtlSeconds:
+                  type: integer
+                  minimum: 1
+                  description: 'TTL for stored payloads in seconds (default: 90 days)'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                description: Event created successfully
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Event ID
+                  eventType:
+                    type: string
+                    enum:
+                    - USAGE
+                    - API_CALL
+                    - LLM_INFERENCE
+                    - TOOL_CALL
+                    - DATABASE
+                    - FILE_IO
+                    - NETWORK
+                    - DECISION
+                    - HUMAN_IN_LOOP
+                    - MEMORY
+                    - CUSTOM
+                    - TOOL_CALL_START
+                    - TOOL_CALL_END
+                    - TOOL_CALL_ERROR
+                    - TOOL_CALL_RETRY
+                    - TRAINING
+                    - FINE_TUNING
+                  actionName:
+                    type: string
+                  outcome:
+                    type: string
+                    enum:
+                    - PENDING
+                    - SUCCEEDED
+                    - FAILED
+                    - SKIPPED
+                    - RETRIED
+                    - TIMEOUT
+                    - CANCELLED
+                  idempotencyKey:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  wasIdempotentReplay:
+                    type: boolean
+                    description: True if this was a duplicate request
+                  receipt:
+                    type: object
+                    description: Signed receipt proving Drip acknowledged this event
+                    properties:
+                      batchId:
+                        type: string
+                        description: Idempotency key for this submission
+                      eventCount:
+                        type: integer
+                        description: Number of events (1 for single event)
+                      batchHash:
+                        type: string
+                        description: SHA-256 hash of the event data
+                      receivedAt:
+                        type: string
+                        format: date-time
+                        description: When Drip received the event
+                      signature:
+                        type: string
+                        description: Server signature of the receipt
+                      signerAddress:
+                        type: string
+                        description: Address that signed the receipt
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer or referenced event not found
+          content:
+            application/json:
+              schema:
+                description: Customer or referenced event not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: Service temporarily unavailable — retry with backoff
+          content:
+            application/json:
+              schema:
+                description: Service temporarily unavailable — retry with backoff
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+    get:
+      operationId: listEvents
+      summary: List events
+      tags:
+      - Events
+      description: "\nList execution events with optional filters.\n\nSupports filtering by:\n- `customerId`: Events for a specific customer\n- `runId`: Events in a specific agent run\n- `workflowId`: Events in a specific workflow\n- `eventType`: Filter by event type (e.g., LLM_INFERENCE)\n- `outcome`: Filter by outcome (e.g., SUCCESS, FAILURE)\n- `actionName`: Filter by action name\n- `parentEventId`: Get child events\n- `idempotencyKey`: Exact match on idempotency key\n- Time range: `from` and `to` (ISO 8601)\n        "
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: customerId
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: runId
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: workflowId
+        required: false
+      - schema:
+          type: string
+          enum:
+          - USAGE
+          - API_CALL
+          - LLM_INFERENCE
+          - TOOL_CALL
+          - DATABASE
+          - FILE_IO
+          - NETWORK
+          - DECISION
+          - HUMAN_IN_LOOP
+          - MEMORY
+          - CUSTOM
+          - TOOL_CALL_START
+          - TOOL_CALL_END
+          - TOOL_CALL_ERROR
+          - TOOL_CALL_RETRY
+          - TRAINING
+          - FINE_TUNING
+        in: query
+        name: eventType
+        required: false
+      - schema:
+          type: string
+          enum:
+          - PENDING
+          - SUCCEEDED
+          - FAILED
+          - SKIPPED
+          - RETRIED
+          - TIMEOUT
+          - CANCELLED
+        in: query
+        name: outcome
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: actionName
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: parentEventId
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: idempotencyKey
+        required: false
+        description: Filter by idempotency key
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: from
+        required: false
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: to
+        required: false
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 50
+        in: query
+        name: limit
+        required: false
+      - schema:
+          type: integer
+          minimum: 0
+          default: 0
+        in: query
+        name: offset
+        required: false
+      responses:
+        '200':
+          description: List of events with pagination
+          content:
+            application/json:
+              schema:
+                description: List of events with pagination
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        eventType:
+                          type: string
+                        actionName:
+                          type: string
+                        outcome:
+                          type: string
+                        explanation:
+                          type: string
+                          nullable: true
+                        idempotencyKey:
+                          type: string
+                          nullable: true
+                          description: Client-provided idempotency key
+                        customerId:
+                          type: string
+                        runId:
+                          type: string
+                          nullable: true
+                        workflowId:
+                          type: string
+                          nullable: true
+                        parentEventId:
+                          type: string
+                          nullable: true
+                        retryOfEventId:
+                          type: string
+                          nullable: true
+                        attemptNumber:
+                          type: integer
+                        createdAt:
+                          type: string
+                          format: date-time
+                        chargeId:
+                          type: string
+                          nullable: true
+                        costUsdc:
+                          type: string
+                          nullable: true
+                        usageType:
+                          type: string
+                          nullable: true
+                        quantity:
+                          type: string
+                          nullable: true
+                        units:
+                          type: string
+                          nullable: true
+                        description:
+                          type: string
+                          nullable: true
+                        metadata:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      hasMore:
+                        type: boolean
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/events/{id}:
+    get:
+      operationId: getEvent
+      summary: Get event details
+      tags:
+      - Events
+      description: "\nRetrieve a single event with full details including:\n- Execution metadata (eventType, outcome, explanation)\n- Input/output hashes\n- Causality links (parent, children, retry chain)\n- Billing information (if applicable)\n        "
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Event ID
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema:
+                description: Event details
+                type: object
+                properties:
+                  id:
+                    type: string
+                  eventType:
+                    type: string
+                    enum:
+                    - USAGE
+                    - API_CALL
+                    - LLM_INFERENCE
+                    - TOOL_CALL
+                    - DATABASE
+                    - FILE_IO
+                    - NETWORK
+                    - DECISION
+                    - HUMAN_IN_LOOP
+                    - MEMORY
+                    - CUSTOM
+                    - TOOL_CALL_START
+                    - TOOL_CALL_END
+                    - TOOL_CALL_ERROR
+                    - TOOL_CALL_RETRY
+                    - TRAINING
+                    - FINE_TUNING
+                  actionName:
+                    type: string
+                  outcome:
+                    type: string
+                    enum:
+                    - PENDING
+                    - SUCCEEDED
+                    - FAILED
+                    - SKIPPED
+                    - RETRIED
+                    - TIMEOUT
+                    - CANCELLED
+                  explanation:
+                    type: string
+                    nullable: true
+                  idempotencyKey:
+                    type: string
+                    nullable: true
+                    description: Client-provided idempotency key
+                  customerId:
+                    type: string
+                  runId:
+                    type: string
+                    nullable: true
+                  workflowId:
+                    type: string
+                    nullable: true
+                  parentEventId:
+                    type: string
+                    nullable: true
+                  retryOfEventId:
+                    type: string
+                    nullable: true
+                  attemptNumber:
+                    type: integer
+                  createdAt:
+                    type: string
+                    format: date-time
+                  inputHash:
+                    type: string
+                    nullable: true
+                  outputHash:
+                    type: string
+                    nullable: true
+                  childEvents:
+                    type: array
+                    items:
+                      type: string
+                    description: IDs of events caused by this one
+                  retriedBy:
+                    type: string
+                    nullable: true
+                    description: ID of retry event if this failed
+                  chargeId:
+                    type: string
+                    nullable: true
+                  costUsdc:
+                    type: string
+                    nullable: true
+                  usageType:
+                    type: string
+                    nullable: true
+                  quantity:
+                    type: string
+                    nullable: true
+                  units:
+                    type: string
+                    nullable: true
+                  description:
+                    type: string
+                    nullable: true
+                  metadata:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                description: Event not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/events/{id}/payload:
+    get:
+      operationId: getEventPayload
+      summary: Get stored payloads for an event
+      tags:
+      - Events
+      description: "\nRetrieve raw input/output payloads that were stored when the event was created\nwith `storePayloads: true`.\n\nReturns the full JSON payloads along with integrity hashes and size information.\nReturns 404 if no payloads were stored or if they have expired.\n\n**Use case**: Historical data replay, audit trails, debugging.\n        "
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Event ID
+      responses:
+        '200':
+          description: Stored payloads
+          content:
+            application/json:
+              schema:
+                description: Stored payloads
+                type: object
+                properties:
+                  id:
+                    type: string
+                  usageEventId:
+                    type: string
+                  inputPayload:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                  outputPayload:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                  inputHash:
+                    type: string
+                    nullable: true
+                  outputHash:
+                    type: string
+                    nullable: true
+                  inputSizeBytes:
+                    type: integer
+                    nullable: true
+                  outputSizeBytes:
+                    type: integer
+                    nullable: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                  expiresAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: No payload stored for this event
+          content:
+            application/json:
+              schema:
+                description: No payload stored for this event
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/events/{id}/trace:
+    get:
+      operationId: traceEvent
+      summary: Trace event causality
+      tags:
+      - Events
+      description: "\nGet the full causality context for an event in a single API call.\n\nReturns:\n- **ancestors**: Parent chain from root to this event's parent\n- **children**: Direct child events caused by this event\n- **retryChain**: Original event and all retry attempts\n- **anomalies**: Detected anomalies linked to this event\n- **summary**: Quick stats (counts, hasFailures flag)\n\n**Query Parameters:**\n- `format=tree` - Returns ASCII tree output for CLI/support tickets\n\nThis is the primary debugging endpoint for tracing errors through the ledger.\n\n**Example use case**: Customer reports \"my run failed at step 5\"\n```\nGET /v1/events/{failingEventId}/trace\nGET /v1/events/{failingEventId}/trace?format=tree\n```\nReturns the complete context: what led to this event, what it triggered,\nwhether it was retried, and any anomalies detected.\n        "
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - json
+          - tree
+        in: query
+        name: format
+        required: false
+        description: 'Output format (default: json)'
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Event ID to trace
+      responses:
+        '200':
+          description: Full event trace with causality context
+          content:
+            application/json:
+              schema:
+                description: Full event trace with causality context
+                type: object
+                properties:
+                  event:
+                    type: object
+                    description: The event being traced (full details)
+                    properties:
+                      id:
+                        type: string
+                      eventType:
+                        type: string
+                        enum:
+                        - USAGE
+                        - API_CALL
+                        - LLM_INFERENCE
+                        - TOOL_CALL
+                        - DATABASE
+                        - FILE_IO
+                        - NETWORK
+                        - DECISION
+                        - HUMAN_IN_LOOP
+                        - MEMORY
+                        - CUSTOM
+                        - TOOL_CALL_START
+                        - TOOL_CALL_END
+                        - TOOL_CALL_ERROR
+                        - TOOL_CALL_RETRY
+                        - TRAINING
+                        - FINE_TUNING
+                      actionName:
+                        type: string
+                      outcome:
+                        type: string
+                        enum:
+                        - PENDING
+                        - SUCCEEDED
+                        - FAILED
+                        - SKIPPED
+                        - RETRIED
+                        - TIMEOUT
+                        - CANCELLED
+                      explanation:
+                        type: string
+                        nullable: true
+                      idempotencyKey:
+                        type: string
+                        nullable: true
+                      customerId:
+                        type: string
+                      runId:
+                        type: string
+                        nullable: true
+                      workflowId:
+                        type: string
+                        nullable: true
+                      parentEventId:
+                        type: string
+                        nullable: true
+                      retryOfEventId:
+                        type: string
+                        nullable: true
+                      attemptNumber:
+                        type: integer
+                      createdAt:
+                        type: string
+                        format: date-time
+                      inputHash:
+                        type: string
+                        nullable: true
+                      outputHash:
+                        type: string
+                        nullable: true
+                      childEvents:
+                        type: array
+                        items:
+                          type: string
+                      retriedBy:
+                        type: string
+                        nullable: true
+                      chargeId:
+                        type: string
+                        nullable: true
+                      costUsdc:
+                        type: string
+                        nullable: true
+                      usageType:
+                        type: string
+                        nullable: true
+                      quantity:
+                        type: string
+                        nullable: true
+                      units:
+                        type: string
+                        nullable: true
+                      description:
+                        type: string
+                        nullable: true
+                      metadata:
+                        type: object
+                        nullable: true
+                        additionalProperties: true
+                      spanKind:
+                        type: string
+                        nullable: true
+                      inputBytes:
+                        type: integer
+                        nullable: true
+                      outputBytes:
+                        type: integer
+                        nullable: true
+                      queueDurationMs:
+                        type: integer
+                        nullable: true
+                      executionDurationMs:
+                        type: integer
+                        nullable: true
+                      startedAt:
+                        type: string
+                        format: date-time
+                        nullable: true
+                      endedAt:
+                        type: string
+                        format: date-time
+                        nullable: true
+                      errorType:
+                        type: string
+                        nullable: true
+                      errorMessage:
+                        type: string
+                        nullable: true
+                      errorStack:
+                        type: string
+                        nullable: true
+                      retryCount:
+                        type: integer
+                        nullable: true
+                      retryBackoffMs:
+                        type: integer
+                        nullable: true
+                      retryReason:
+                        type: string
+                        nullable: true
+                  ancestors:
+                    type: array
+                    description: Parent chain from root to parent (ordered root → parent)
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        eventType:
+                          type: string
+                        actionName:
+                          type: string
+                        outcome:
+                          type: string
+                        explanation:
+                          type: string
+                          nullable: true
+                        attemptNumber:
+                          type: integer
+                        createdAt:
+                          type: string
+                          format: date-time
+                        costUsdc:
+                          type: string
+                          nullable: true
+                  children:
+                    type: array
+                    description: Direct child events
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        eventType:
+                          type: string
+                        actionName:
+                          type: string
+                        outcome:
+                          type: string
+                        explanation:
+                          type: string
+                          nullable: true
+                        attemptNumber:
+                          type: integer
+                        createdAt:
+                          type: string
+                          format: date-time
+                        costUsdc:
+                          type: string
+                          nullable: true
+                  retryChain:
+                    type: object
+                    description: Retry chain if this event was retried or is a retry
+                    properties:
+                      originalEvent:
+                        type: object
+                        nullable: true
+                        additionalProperties: true
+                        description: The original event that was retried
+                      retries:
+                        type: array
+                        description: All retry attempts ordered by attemptNumber
+                        items:
+                          type: object
+                          additionalProperties: true
+                  anomalies:
+                    type: array
+                    description: Anomalies linked to this event or its retry chain
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        anomalyType:
+                          type: string
+                        severity:
+                          type: string
+                        detectedAt:
+                          type: string
+                          format: date-time
+                        status:
+                          type: string
+                        metric:
+                          type: string
+                          nullable: true
+                        expectedValue:
+                          type: string
+                          nullable: true
+                        actualValue:
+                          type: string
+                          nullable: true
+                  summary:
+                    type: object
+                    description: Quick summary statistics
+                    properties:
+                      totalAncestors:
+                        type: integer
+                      totalChildren:
+                        type: integer
+                      totalRetries:
+                        type: integer
+                      totalAnomalies:
+                        type: integer
+                      hasFailures:
+                        type: boolean
+                        description: True if any event in trace has FAILURE outcome
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Event not found
+          content:
+            application/json:
+              schema:
+                description: Event not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/trace/{correlationId}:
+    get:
+      operationId: traceByCorrelationId
+      summary: Trace by correlation ID
+      tags:
+      - Events
+      description: "\nTrace events across multiple runs and services using a correlation ID.\n\nReturns all events that share the same correlation ID, grouped by run.\nUseful for debugging distributed agent workflows.\n\n**Example use case**: Tracing a request across multiple microservices\n```\nGET /v1/trace/{correlationId}\n```\n        "
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - json
+          - tree
+        in: query
+        name: format
+        required: false
+        description: 'Output format (default: json)'
+      - schema:
+          type: string
+        in: path
+        name: correlationId
+        required: true
+        description: Correlation ID to trace
+      responses:
+        '200':
+          description: Events grouped by run with trace context
+          content:
+            application/json:
+              schema:
+                description: Events grouped by run with trace context
+                type: object
+                properties:
+                  correlationId:
+                    type: string
+                  totalEvents:
+                    type: integer
+                  totalRuns:
+                    type: integer
+                  runs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        runId:
+                          type: string
+                          nullable: true
+                        workflowName:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                          nullable: true
+                        events:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              actionName:
+                                type: string
+                              outcome:
+                                type: string
+                              explanation:
+                                type: string
+                                nullable: true
+                              timestamp:
+                                type: string
+                                format: date-time
+                  anomalies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        type:
+                          type: string
+                        severity:
+                          type: string
+                        detectedAt:
+                          type: string
+                          format: date-time
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: No events found with this correlation ID
+          content:
+            application/json:
+              schema:
+                description: No events found with this correlation ID
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/events/payloads:
+    get:
+      operationId: listEventPayloads
+      summary: List events with payloads (flat format)
+      tags:
+      - Events
+      description: "\nReturns events joined with their stored payloads in a flat, tabular format\ndesigned for data engineers and SQL-based workflows.\n\nEach row is a single event with its input/output payloads inlined.\nOnly events that have stored payloads are returned (i.e., events created\nwith `input` or `output` fields).\n\n**Filters:** `customerId`, `actionName`, `from`/`to` (ISO 8601 date range),\n`hasInput`, `hasOutput` (boolean).\n\n**Use cases:**\n- Export to data warehouses (BigQuery, Snowflake, Redshift)\n- Ad-hoc SQL analysis of event payloads\n- Training data extraction for ML pipelines\n- Compliance audits requiring full payload history\n        "
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: customerId
+        required: false
+        description: Filter by customer
+      - schema:
+          type: string
+        in: query
+        name: actionName
+        required: false
+        description: Filter by action name
+      - schema:
+          type: string
+          enum:
+          - USAGE
+          - API_CALL
+          - LLM_INFERENCE
+          - TOOL_CALL
+          - DATABASE
+          - FILE_IO
+          - NETWORK
+          - DECISION
+          - HUMAN_IN_LOOP
+          - MEMORY
+          - CUSTOM
+          - TOOL_CALL_START
+          - TOOL_CALL_END
+          - TOOL_CALL_ERROR
+          - TOOL_CALL_RETRY
+          - TRAINING
+          - FINE_TUNING
+        in: query
+        name: eventType
+        required: false
+        description: Filter by event type
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: from
+        required: false
+        description: Start of time range (inclusive)
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: to
+        required: false
+        description: End of time range (inclusive)
+      - schema:
+          type: boolean
+        in: query
+        name: hasInput
+        required: false
+        description: Only events with input payloads
+      - schema:
+          type: boolean
+        in: query
+        name: hasOutput
+        required: false
+        description: Only events with output payloads
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+        in: query
+        name: limit
+        required: false
+      - schema:
+          type: integer
+          minimum: 0
+          default: 0
+        in: query
+        name: offset
+        required: false
+      responses:
+        '200':
+          description: Flat list of events with inlined payloads
+          content:
+            application/json:
+              schema:
+                description: Flat list of events with inlined payloads
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        eventId:
+                          type: string
+                        customerId:
+                          type: string
+                        actionName:
+                          type: string
+                        eventType:
+                          type: string
+                        outcome:
+                          type: string
+                          nullable: true
+                        quantity:
+                          type: string
+                        units:
+                          type: string
+                          nullable: true
+                        idempotencyKey:
+                          type: string
+                        createdAt:
+                          type: string
+                          format: date-time
+                        inputPayload:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                        outputPayload:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                        inputHash:
+                          type: string
+                          nullable: true
+                        outputHash:
+                          type: string
+                          nullable: true
+                        inputSizeBytes:
+                          type: integer
+                          nullable: true
+                        outputSizeBytes:
+                          type: integer
+                          nullable: true
+                        payloadExpiresAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                        runId:
+                          type: string
+                          nullable: true
+                        workflowId:
+                          type: string
+                          nullable: true
+                        metadata:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                  pagination:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      limit:
+                        type: integer
+                      offset:
+                        type: integer
+                      hasMore:
+                        type: boolean
+                  sql_hint:
+                    type: string
+                    description: Example SQL query for this data set
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'

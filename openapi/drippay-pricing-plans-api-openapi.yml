@@ -1,0 +1,1694 @@
+openapi: 3.1.0
+info:
+  title: Drip BillableMetrics Pricing Plans API
+  description: "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n"
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Pricing Plans
+  description: Define per-unit pricing for usage types. Creating, updating, and deleting plans requires a secret key (`sk_*`) with the `ADMIN` role.
+paths:
+  /v1/pricing-plans:
+    get:
+      operationId: listPricingPlans
+      summary: List pricing plans
+      tags:
+      - Pricing Plans
+      description: Get all pricing plans for your business.
+      responses:
+        '200':
+          description: List of pricing plans
+          content:
+            application/json:
+              schema:
+                description: List of pricing plans
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      description: A pricing plan defines how much to charge per unit of usage.
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier for the pricing plan
+                          example: plan_abc123def456
+                        businessId:
+                          type: string
+                          description: Business this plan belongs to
+                          example: biz_789xyz
+                        name:
+                          type: string
+                          description: Human-readable name for the plan
+                          example: API Calls
+                        unitType:
+                          type: string
+                          description: The usage type this plan prices (e.g., "api_call", "token", "compute_second", "gb_storage")
+                          example: api_call
+                        unitPriceUsd:
+                          type: string
+                          description: Default (FLAT) price per unit in USD. For TIERED/VOLUME/PACKAGE plans, consult `tiers`. For PER_SEAT plans, this is the price per seat per billing period.
+                          example: '0.001000'
+                        unitPrice:
+                          type:
+                          - 'null'
+                          - string
+                          description: 'Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth: the billing engine reads it directly and converts to USD via FxRate at charge time.'
+                          example: '0.000920'
+                        currency:
+                          type: string
+                          enum:
+                          - USD
+                          - USDC
+                          - EUR
+                          - GBP
+                          - JPY
+                          - CAD
+                          - AUD
+                          - CHF
+                          - SGD
+                          - HKD
+                          - ILS
+                          - NZD
+                          - SEK
+                          - NOK
+                          - DKK
+                          - MXN
+                          - BRL
+                          - INR
+                          - ZAR
+                          - PLN
+                          description: Billing currency for the plan. Defaults to USD. For non-USD currencies, supply `unitPrice` (and tier `unitPrice`/`flatFee`); the billing engine uses those as the source of truth and converts to USD via FxRate at charge time.
+                          example: USD
+                        pricingModel:
+                          type: string
+                          enum:
+                          - FLAT
+                          - TIERED
+                          - VOLUME
+                          - PACKAGE
+                          - PER_SEAT
+                          description: 'How quantity maps to charge amount:
+
+                            - `FLAT`: quantity × unitPrice (default)
+
+                            - `TIERED`: graduated, first N at price A, next M at price B, etc.
+
+                            - `VOLUME`: total quantity determines a single rate applied to all units
+
+                            - `PACKAGE`: charge per package of N units (rounds up partial packages)
+
+                            - `PER_SEAT`: per-seat/user licensing. quantity is the seat count, charged at unitPrice per seat per billing period (no tiers)'
+                          example: FLAT
+                        tiers:
+                          type: array
+                          description: Tier definitions. Empty for FLAT and PER_SEAT plans; required for TIERED/VOLUME/PACKAGE.
+                          items:
+                            type: object
+                            description: A tier defines a price bracket for TIERED, VOLUME, or PACKAGE pricing.
+                            properties:
+                              id:
+                                type: string
+                                description: Tier ID (present on existing tiers)
+                              minQuantity:
+                                type: string
+                                description: Tier starts at this quantity (inclusive). First tier must be 0.
+                                example: '0'
+                              maxQuantity:
+                                type:
+                                - 'null'
+                                - string
+                                description: Tier ends at this quantity (exclusive). Null on the final unbounded tier.
+                                example: '1000'
+                              unitPriceUsd:
+                                type: string
+                                description: Price per unit in this tier (USD)
+                                example: '0.001000'
+                              flatFeeUsd:
+                                type:
+                                - 'null'
+                                - string
+                                description: Optional flat fee added when this tier is reached
+                                example: null
+                              unitPrice:
+                                type:
+                                - 'null'
+                                - string
+                                description: Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth and the legacy unitPriceUsd is ignored by the billing engine.
+                                example: '0.000920'
+                              flatFee:
+                                type:
+                                - 'null'
+                                - string
+                                description: Native-currency flat fee. Populated only for non-USD plans (mirror of flatFeeUsd).
+                                example: null
+                              packageSize:
+                                type:
+                                - 'null'
+                                - integer
+                                description: 'For PACKAGE model: number of units in one billable package'
+                                example: 1000
+                            required:
+                            - minQuantity
+                            - unitPriceUsd
+                        creditsPerUnit:
+                          type:
+                          - 'null'
+                          - string
+                          description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                          example: '10'
+                        productCategoryId:
+                          type:
+                          - 'null'
+                          - string
+                          description: Optional product category tag used by 'strict products' mode to roll up reporting by service line. Null when the plan is untagged. When `Business.strictProducts` is true, this must be populated via the category id or key.
+                          example: cat_core
+                        isActive:
+                          type: boolean
+                          description: Whether this plan is active. Only active plans are used for new charges.
+                          example: true
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: When the plan was created
+                          example: '2024-01-15T10:30:00.000Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: When the plan was last updated
+                          example: '2024-01-15T10:30:00.000Z'
+                      required:
+                      - id
+                      - name
+                      - unitType
+                      - unitPriceUsd
+                      - pricingModel
+                      - tiers
+                      - isActive
+                  count:
+                    type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+    post:
+      operationId: createPricingPlan
+      summary: Create a pricing plan
+      tags:
+      - Pricing Plans
+      description: "\nCreate a new pricing plan for a usage type.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.** Public keys and lower-role secret keys will receive `403 Forbidden`.\n\nEach `unitType` can only have one active pricing plan. If you need to\nchange prices, update the existing plan or deactivate it first.\n\n**Example unit types:**\n- `api_call` - Per API request\n- `token` - Per token processed\n- `compute_second` - Per second of compute\n- `gb_storage` - Per GB stored\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Request body for creating a new pricing plan.
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  description: Human-readable name for the plan (required)
+                  example: API Calls
+                unitType:
+                  type: string
+                  minLength: 1
+                  description: 'The usage type to price. Must be unique per business. Examples: "api_call", "token", "compute_second", "gb_storage"'
+                  example: api_call
+                unitPriceUsd:
+                  type: number
+                  exclusiveMinimum: 0
+                  maximum: 1000000
+                  description: Default (FLAT) price per unit in USD. Required even for tiered plans as a fallback.
+                  example: 0.001
+                unitPrice:
+                  type: number
+                  exclusiveMinimum: 0
+                  maximum: 1000000
+                  description: Native-currency price per unit. Required when `currency` is non-USD/USDC. The billing engine uses this as the source of truth and converts to USD via FxRate at charge time.
+                  example: 0.0037
+                currency:
+                  type: string
+                  enum:
+                  - USD
+                  - USDC
+                  - EUR
+                  - GBP
+                  - JPY
+                  - CAD
+                  - AUD
+                  - CHF
+                  - SGD
+                  - HKD
+                  - ILS
+                  - NZD
+                  - SEK
+                  - NOK
+                  - DKK
+                  - MXN
+                  - BRL
+                  - INR
+                  - ZAR
+                  - PLN
+                  description: 'Billing currency for the plan (default: USD). Non-USD plans require `unitPrice`.'
+                  example: USD
+                isActive:
+                  type: boolean
+                  description: 'Whether to activate the plan immediately (default: true)'
+                  example: true
+                pricingModel:
+                  type: string
+                  enum:
+                  - FLAT
+                  - TIERED
+                  - VOLUME
+                  - PACKAGE
+                  - PER_SEAT
+                  description: 'How quantity maps to charge amount (default: FLAT)'
+                  example: FLAT
+                creditsPerUnit:
+                  type: number
+                  exclusiveMinimum: 0
+                  description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                  example: 10
+                productCategoryId:
+                  type: string
+                  description: Optional product category id. When `Business.strictProducts` is true, either this or `productCategoryKey` is required.
+                  example: cat_core
+                productCategoryKey:
+                  type: string
+                  description: Optional product category slug (e.g. 'core_api'). Resolved server-side to the matching id. Mutually exclusive with `productCategoryId`.
+                  example: core_api
+                tiers:
+                  type: array
+                  description: Tier definitions. Must be omitted/empty for FLAT and PER_SEAT. Required for TIERED/VOLUME/PACKAGE. Tiers must be contiguous (tier N.max == tier N+1.min) and the first tier must start at 0.
+                  items:
+                    type: object
+                    properties:
+                      minQuantity:
+                        type: number
+                        minimum: 0
+                      maxQuantity:
+                        type:
+                        - number
+                        - 'null'
+                      unitPriceUsd:
+                        type: number
+                        minimum: 0
+                        maximum: 1000000
+                      flatFeeUsd:
+                        type:
+                        - number
+                        - 'null'
+                      unitPrice:
+                        type:
+                        - number
+                        - 'null'
+                        minimum: 0
+                        maximum: 1000000
+                      flatFee:
+                        type:
+                        - number
+                        - 'null'
+                        minimum: 0
+                      packageSize:
+                        type:
+                        - integer
+                        - 'null'
+                    required:
+                    - minQuantity
+                    - unitPriceUsd
+              required:
+              - name
+              - unitType
+              - unitPriceUsd
+        description: Request body for creating a new pricing plan.
+      responses:
+        '201':
+          description: Pricing plan created
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Pricing plan created
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the pricing plan
+                    example: plan_abc123def456
+                  businessId:
+                    type: string
+                    description: Business this plan belongs to
+                    example: biz_789xyz
+                  name:
+                    type: string
+                    description: Human-readable name for the plan
+                    example: API Calls
+                  unitType:
+                    type: string
+                    description: The usage type this plan prices (e.g., "api_call", "token", "compute_second", "gb_storage")
+                    example: api_call
+                  unitPriceUsd:
+                    type: string
+                    description: Default (FLAT) price per unit in USD. For TIERED/VOLUME/PACKAGE plans, consult `tiers`. For PER_SEAT plans, this is the price per seat per billing period.
+                    example: '0.001000'
+                  unitPrice:
+                    type:
+                    - 'null'
+                    - string
+                    description: 'Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth: the billing engine reads it directly and converts to USD via FxRate at charge time.'
+                    example: '0.000920'
+                  currency:
+                    type: string
+                    enum:
+                    - USD
+                    - USDC
+                    - EUR
+                    - GBP
+                    - JPY
+                    - CAD
+                    - AUD
+                    - CHF
+                    - SGD
+                    - HKD
+                    - ILS
+                    - NZD
+                    - SEK
+                    - NOK
+                    - DKK
+                    - MXN
+                    - BRL
+                    - INR
+                    - ZAR
+                    - PLN
+                    description: Billing currency for the plan. Defaults to USD. For non-USD currencies, supply `unitPrice` (and tier `unitPrice`/`flatFee`); the billing engine uses those as the source of truth and converts to USD via FxRate at charge time.
+                    example: USD
+                  pricingModel:
+                    type: string
+                    enum:
+                    - FLAT
+                    - TIERED
+                    - VOLUME
+                    - PACKAGE
+                    - PER_SEAT
+                    description: 'How quantity maps to charge amount:
+
+                      - `FLAT`: quantity × unitPrice (default)
+
+                      - `TIERED`: graduated, first N at price A, next M at price B, etc.
+
+                      - `VOLUME`: total quantity determines a single rate applied to all units
+
+                      - `PACKAGE`: charge per package of N units (rounds up partial packages)
+
+                      - `PER_SEAT`: per-seat/user licensing. quantity is the seat count, charged at unitPrice per seat per billing period (no tiers)'
+                    example: FLAT
+                  tiers:
+                    type: array
+                    description: Tier definitions. Empty for FLAT and PER_SEAT plans; required for TIERED/VOLUME/PACKAGE.
+                    items:
+                      type: object
+                      description: A tier defines a price bracket for TIERED, VOLUME, or PACKAGE pricing.
+                      properties:
+                        id:
+                          type: string
+                          description: Tier ID (present on existing tiers)
+                        minQuantity:
+                          type: string
+                          description: Tier starts at this quantity (inclusive). First tier must be 0.
+                          example: '0'
+                        maxQuantity:
+                          type:
+                          - 'null'
+                          - string
+                          description: Tier ends at this quantity (exclusive). Null on the final unbounded tier.
+                          example: '1000'
+                        unitPriceUsd:
+                          type: string
+                          description: Price per unit in this tier (USD)
+                          example: '0.001000'
+                        flatFeeUsd:
+                          type:
+                          - 'null'
+                          - string
+                          description: Optional flat fee added when this tier is reached
+                          example: null
+                        unitPrice:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth and the legacy unitPriceUsd is ignored by the billing engine.
+                          example: '0.000920'
+                        flatFee:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency flat fee. Populated only for non-USD plans (mirror of flatFeeUsd).
+                          example: null
+                        packageSize:
+                          type:
+                          - 'null'
+                          - integer
+                          description: 'For PACKAGE model: number of units in one billable package'
+                          example: 1000
+                      required:
+                      - minQuantity
+                      - unitPriceUsd
+                  creditsPerUnit:
+                    type:
+                    - 'null'
+                    - string
+                    description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                    example: '10'
+                  productCategoryId:
+                    type:
+                    - 'null'
+                    - string
+                    description: Optional product category tag used by 'strict products' mode to roll up reporting by service line. Null when the plan is untagged. When `Business.strictProducts` is true, this must be populated via the category id or key.
+                    example: cat_core
+                  isActive:
+                    type: boolean
+                    description: Whether this plan is active. Only active plans are used for new charges.
+                    example: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was created
+                    example: '2024-01-15T10:30:00.000Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was last updated
+                    example: '2024-01-15T10:30:00.000Z'
+                required:
+                - id
+                - name
+                - unitType
+                - unitPriceUsd
+                - pricingModel
+                - tiers
+                - isActive
+        '400':
+          description: Invalid tier configuration
+          content:
+            application/json:
+              schema:
+                description: Invalid tier configuration
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+                    example: INVALID_TIERS
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '409':
+          description: Pricing plan for unit type already exists
+          content:
+            application/json:
+              schema:
+                description: Pricing plan for unit type already exists
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+                    example: DUPLICATE_PRICING_PLAN
+                  existingPlanId:
+                    type: string
+  /v1/pricing-plans/{id}:
+    get:
+      operationId: getPricingPlan
+      summary: Get a pricing plan
+      tags:
+      - Pricing Plans
+      description: Retrieve a pricing plan by ID.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Pricing plan ID
+      responses:
+        '200':
+          description: Pricing plan details
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Pricing plan details
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the pricing plan
+                    example: plan_abc123def456
+                  businessId:
+                    type: string
+                    description: Business this plan belongs to
+                    example: biz_789xyz
+                  name:
+                    type: string
+                    description: Human-readable name for the plan
+                    example: API Calls
+                  unitType:
+                    type: string
+                    description: The usage type this plan prices (e.g., "api_call", "token", "compute_second", "gb_storage")
+                    example: api_call
+                  unitPriceUsd:
+                    type: string
+                    description: Default (FLAT) price per unit in USD. For TIERED/VOLUME/PACKAGE plans, consult `tiers`. For PER_SEAT plans, this is the price per seat per billing period.
+                    example: '0.001000'
+                  unitPrice:
+                    type:
+                    - 'null'
+                    - string
+                    description: 'Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth: the billing engine reads it directly and converts to USD via FxRate at charge time.'
+                    example: '0.000920'
+                  currency:
+                    type: string
+                    enum:
+                    - USD
+                    - USDC
+                    - EUR
+                    - GBP
+                    - JPY
+                    - CAD
+                    - AUD
+                    - CHF
+                    - SGD
+                    - HKD
+                    - ILS
+                    - NZD
+                    - SEK
+                    - NOK
+                    - DKK
+                    - MXN
+                    - BRL
+                    - INR
+                    - ZAR
+                    - PLN
+                    description: Billing currency for the plan. Defaults to USD. For non-USD currencies, supply `unitPrice` (and tier `unitPrice`/`flatFee`); the billing engine uses those as the source of truth and converts to USD via FxRate at charge time.
+                    example: USD
+                  pricingModel:
+                    type: string
+                    enum:
+                    - FLAT
+                    - TIERED
+                    - VOLUME
+                    - PACKAGE
+                    - PER_SEAT
+                    description: 'How quantity maps to charge amount:
+
+                      - `FLAT`: quantity × unitPrice (default)
+
+                      - `TIERED`: graduated, first N at price A, next M at price B, etc.
+
+                      - `VOLUME`: total quantity determines a single rate applied to all units
+
+                      - `PACKAGE`: charge per package of N units (rounds up partial packages)
+
+                      - `PER_SEAT`: per-seat/user licensing. quantity is the seat count, charged at unitPrice per seat per billing period (no tiers)'
+                    example: FLAT
+                  tiers:
+                    type: array
+                    description: Tier definitions. Empty for FLAT and PER_SEAT plans; required for TIERED/VOLUME/PACKAGE.
+                    items:
+                      type: object
+                      description: A tier defines a price bracket for TIERED, VOLUME, or PACKAGE pricing.
+                      properties:
+                        id:
+                          type: string
+                          description: Tier ID (present on existing tiers)
+                        minQuantity:
+                          type: string
+                          description: Tier starts at this quantity (inclusive). First tier must be 0.
+                          example: '0'
+                        maxQuantity:
+                          type:
+                          - 'null'
+                          - string
+                          description: Tier ends at this quantity (exclusive). Null on the final unbounded tier.
+                          example: '1000'
+                        unitPriceUsd:
+                          type: string
+                          description: Price per unit in this tier (USD)
+                          example: '0.001000'
+                        flatFeeUsd:
+                          type:
+                          - 'null'
+                          - string
+                          description: Optional flat fee added when this tier is reached
+                          example: null
+                        unitPrice:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth and the legacy unitPriceUsd is ignored by the billing engine.
+                          example: '0.000920'
+                        flatFee:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency flat fee. Populated only for non-USD plans (mirror of flatFeeUsd).
+                          example: null
+                        packageSize:
+                          type:
+                          - 'null'
+                          - integer
+                          description: 'For PACKAGE model: number of units in one billable package'
+                          example: 1000
+                      required:
+                      - minQuantity
+                      - unitPriceUsd
+                  creditsPerUnit:
+                    type:
+                    - 'null'
+                    - string
+                    description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                    example: '10'
+                  productCategoryId:
+                    type:
+                    - 'null'
+                    - string
+                    description: Optional product category tag used by 'strict products' mode to roll up reporting by service line. Null when the plan is untagged. When `Business.strictProducts` is true, this must be populated via the category id or key.
+                    example: cat_core
+                  isActive:
+                    type: boolean
+                    description: Whether this plan is active. Only active plans are used for new charges.
+                    example: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was created
+                    example: '2024-01-15T10:30:00.000Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was last updated
+                    example: '2024-01-15T10:30:00.000Z'
+                required:
+                - id
+                - name
+                - unitType
+                - unitPriceUsd
+                - pricingModel
+                - tiers
+                - isActive
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '404':
+          description: Pricing plan not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Pricing plan not found
+    patch:
+      operationId: updatePricingPlan
+      summary: Update a pricing plan
+      tags:
+      - Pricing Plans
+      description: 'Update the name, price, or status of a pricing plan. Changes take effect immediately for new charges.
+
+
+        > **Requires a secret key (`sk_*`) with the `ADMIN` role.**'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Plan name
+                unitPriceUsd:
+                  type: number
+                  description: New price per unit in USD
+                isActive:
+                  type: boolean
+                  description: Enable/disable the plan
+                creditsPerUnit:
+                  type: number
+                  exclusiveMinimum: 0
+                  description: Credits consumed per unit of usage; null to disable credit billing
+                  nullable: true
+                pricingModel:
+                  type: string
+                  enum:
+                  - FLAT
+                  - TIERED
+                  - VOLUME
+                  - PACKAGE
+                  - PER_SEAT
+                  description: How quantity maps to charge
+                tiers:
+                  type: array
+                  description: Replace the plan tiers (required for non-FLAT models)
+                  items:
+                    type: object
+                    properties:
+                      minQuantity:
+                        type: number
+                      maxQuantity:
+                        type:
+                        - number
+                        - 'null'
+                      unitPriceUsd:
+                        type: number
+                      flatFeeUsd:
+                        type:
+                        - number
+                        - 'null'
+                      packageSize:
+                        type:
+                        - integer
+                        - 'null'
+                    required:
+                    - minQuantity
+                    - unitPriceUsd
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Pricing plan ID
+      responses:
+        '200':
+          description: Pricing plan updated
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Pricing plan updated
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the pricing plan
+                    example: plan_abc123def456
+                  businessId:
+                    type: string
+                    description: Business this plan belongs to
+                    example: biz_789xyz
+                  name:
+                    type: string
+                    description: Human-readable name for the plan
+                    example: API Calls
+                  unitType:
+                    type: string
+                    description: The usage type this plan prices (e.g., "api_call", "token", "compute_second", "gb_storage")
+                    example: api_call
+                  unitPriceUsd:
+                    type: string
+                    description: Default (FLAT) price per unit in USD. For TIERED/VOLUME/PACKAGE plans, consult `tiers`. For PER_SEAT plans, this is the price per seat per billing period.
+                    example: '0.001000'
+                  unitPrice:
+                    type:
+                    - 'null'
+                    - string
+                    description: 'Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth: the billing engine reads it directly and converts to USD via FxRate at charge time.'
+                    example: '0.000920'
+                  currency:
+                    type: string
+                    enum:
+                    - USD
+                    - USDC
+                    - EUR
+                    - GBP
+                    - JPY
+                    - CAD
+                    - AUD
+                    - CHF
+                    - SGD
+                    - HKD
+                    - ILS
+                    - NZD
+                    - SEK
+                    - NOK
+                    - DKK
+                    - MXN
+                    - BRL
+                    - INR
+                    - ZAR
+                    - PLN
+                    description: Billing currency for the plan. Defaults to USD. For non-USD currencies, supply `unitPrice` (and tier `unitPrice`/`flatFee`); the billing engine uses those as the source of truth and converts to USD via FxRate at charge time.
+                    example: USD
+                  pricingModel:
+                    type: string
+                    enum:
+                    - FLAT
+                    - TIERED
+                    - VOLUME
+                    - PACKAGE
+                    - PER_SEAT
+                    description: 'How quantity maps to charge amount:
+
+                      - `FLAT`: quantity × unitPrice (default)
+
+                      - `TIERED`: graduated, first N at price A, next M at price B, etc.
+
+                      - `VOLUME`: total quantity determines a single rate applied to all units
+
+                      - `PACKAGE`: charge per package of N units (rounds up partial packages)
+
+                      - `PER_SEAT`: per-seat/user licensing. quantity is the seat count, charged at unitPrice per seat per billing period (no tiers)'
+                    example: FLAT
+                  tiers:
+                    type: array
+                    description: Tier definitions. Empty for FLAT and PER_SEAT plans; required for TIERED/VOLUME/PACKAGE.
+                    items:
+                      type: object
+                      description: A tier defines a price bracket for TIERED, VOLUME, or PACKAGE pricing.
+                      properties:
+                        id:
+                          type: string
+                          description: Tier ID (present on existing tiers)
+                        minQuantity:
+                          type: string
+                          description: Tier starts at this quantity (inclusive). First tier must be 0.
+                          example: '0'
+                        maxQuantity:
+                          type:
+                          - 'null'
+                          - string
+                          description: Tier ends at this quantity (exclusive). Null on the final unbounded tier.
+                          example: '1000'
+                        unitPriceUsd:
+                          type: string
+                          description: Price per unit in this tier (USD)
+                          example: '0.001000'
+                        flatFeeUsd:
+                          type:
+                          - 'null'
+                          - string
+                          description: Optional flat fee added when this tier is reached
+                          example: null
+                        unitPrice:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth and the legacy unitPriceUsd is ignored by the billing engine.
+                          example: '0.000920'
+                        flatFee:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency flat fee. Populated only for non-USD plans (mirror of flatFeeUsd).
+                          example: null
+                        packageSize:
+                          type:
+                          - 'null'
+                          - integer
+                          description: 'For PACKAGE model: number of units in one billable package'
+                          example: 1000
+                      required:
+                      - minQuantity
+                      - unitPriceUsd
+                  creditsPerUnit:
+                    type:
+                    - 'null'
+                    - string
+                    description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                    example: '10'
+                  productCategoryId:
+                    type:
+                    - 'null'
+                    - string
+                    description: Optional product category tag used by 'strict products' mode to roll up reporting by service line. Null when the plan is untagged. When `Business.strictProducts` is true, this must be populated via the category id or key.
+                    example: cat_core
+                  isActive:
+                    type: boolean
+                    description: Whether this plan is active. Only active plans are used for new charges.
+                    example: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was created
+                    example: '2024-01-15T10:30:00.000Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was last updated
+                    example: '2024-01-15T10:30:00.000Z'
+                required:
+                - id
+                - name
+                - unitType
+                - unitPriceUsd
+                - pricingModel
+                - tiers
+                - isActive
+        '400':
+          description: Invalid tier configuration
+          content:
+            application/json:
+              schema:
+                description: Invalid tier configuration
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+                    example: INVALID_TIERS
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '404':
+          description: Pricing plan not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Pricing plan not found
+    delete:
+      operationId: deletePricingPlan
+      summary: Delete a pricing plan
+      tags:
+      - Pricing Plans
+      description: "\nSoft-delete a pricing plan by deactivating it.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**\n\nThe plan is preserved for historical charges but will no longer be used\nfor new usage events. You can reactivate it by updating `isActive` to `true`.\n        "
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Pricing plan ID
+      responses:
+        '204':
+          description: Pricing plan deleted
+          content:
+            application/json:
+              schema:
+                description: Pricing plan deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '404':
+          description: Pricing plan not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Pricing plan not found
+  /v1/pricing-plans/{id}/versions:
+    get:
+      operationId: listPricingPlanVersions
+      summary: List versions of a pricing plan
+      tags:
+      - Pricing Plans
+      description: Return every version row in the same `versionGroupId` as the given plan, ordered oldest → newest. Pass the id of any version (active or archived) and you get the full history of that plan.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Pricing plan ID (any version)
+      responses:
+        '200':
+          description: Version history
+          content:
+            application/json:
+              schema:
+                description: Version history
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      description: A pricing plan defines how much to charge per unit of usage.
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier for the pricing plan
+                          example: plan_abc123def456
+                        businessId:
+                          type: string
+                          description: Business this plan belongs to
+                          example: biz_789xyz
+                        name:
+                          type: string
+                          description: Human-readable name for the plan
+                          example: API Calls
+                        unitType:
+                          type: string
+                          description: The usage type this plan prices (e.g., "api_call", "token", "compute_second", "gb_storage")
+                          example: api_call
+                        unitPriceUsd:
+                          type: string
+                          description: Default (FLAT) price per unit in USD. For TIERED/VOLUME/PACKAGE plans, consult `tiers`. For PER_SEAT plans, this is the price per seat per billing period.
+                          example: '0.001000'
+                        unitPrice:
+                          type:
+                          - 'null'
+                          - string
+                          description: 'Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth: the billing engine reads it directly and converts to USD via FxRate at charge time.'
+                          example: '0.000920'
+                        currency:
+                          type: string
+                          enum:
+                          - USD
+                          - USDC
+                          - EUR
+                          - GBP
+                          - JPY
+                          - CAD
+                          - AUD
+                          - CHF
+                          - SGD
+                          - HKD
+                          - ILS
+                          - NZD
+                          - SEK
+                          - NOK
+                          - DKK
+                          - MXN
+                          - BRL
+                          - INR
+                          - ZAR
+                          - PLN
+                          description: Billing currency for the plan. Defaults to USD. For non-USD currencies, supply `unitPrice` (and tier `unitPrice`/`flatFee`); the billing engine uses those as the source of truth and converts to USD via FxRate at charge time.
+                          example: USD
+                        pricingModel:
+                          type: string
+                          enum:
+                          - FLAT
+                          - TIERED
+                          - VOLUME
+                          - PACKAGE
+                          - PER_SEAT
+                          description: 'How quantity maps to charge amount:
+
+                            - `FLAT`: quantity × unitPrice (default)
+
+                            - `TIERED`: graduated, first N at price A, next M at price B, etc.
+
+                            - `VOLUME`: total quantity determines a single rate applied to all units
+
+                            - `PACKAGE`: charge per package of N units (rounds up partial packages)
+
+                            - `PER_SEAT`: per-seat/user licensing. quantity is the seat count, charged at unitPrice per seat per billing period (no tiers)'
+                          example: FLAT
+                        tiers:
+                          type: array
+                          description: Tier definitions. Empty for FLAT and PER_SEAT plans; required for TIERED/VOLUME/PACKAGE.
+                          items:
+                            type: object
+                            description: A tier defines a price bracket for TIERED, VOLUME, or PACKAGE pricing.
+                            properties:
+                              id:
+                                type: string
+                                description: Tier ID (present on existing tiers)
+                              minQuantity:
+                                type: string
+                                description: Tier starts at this quantity (inclusive). First tier must be 0.
+                                example: '0'
+                              maxQuantity:
+                                type:
+                                - 'null'
+                                - string
+                                description: Tier ends at this quantity (exclusive). Null on the final unbounded tier.
+                                example: '1000'
+                              unitPriceUsd:
+                                type: string
+                                description: Price per unit in this tier (USD)
+                                example: '0.001000'
+                              flatFeeUsd:
+                                type:
+                                - 'null'
+                                - string
+                                description: Optional flat fee added when this tier is reached
+                                example: null
+                              unitPrice:
+                                type:
+                                - 'null'
+                                - string
+                                description: Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth and the legacy unitPriceUsd is ignored by the billing engine.
+                                example: '0.000920'
+                              flatFee:
+                                type:
+                                - 'null'
+                                - string
+                                description: Native-currency flat fee. Populated only for non-USD plans (mirror of flatFeeUsd).
+                                example: null
+                              packageSize:
+                                type:
+                                - 'null'
+                                - integer
+                                description: 'For PACKAGE model: number of units in one billable package'
+                                example: 1000
+                            required:
+                            - minQuantity
+                            - unitPriceUsd
+                        creditsPerUnit:
+                          type:
+                          - 'null'
+                          - string
+                          description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                          example: '10'
+                        productCategoryId:
+                          type:
+                          - 'null'
+                          - string
+                          description: Optional product category tag used by 'strict products' mode to roll up reporting by service line. Null when the plan is untagged. When `Business.strictProducts` is true, this must be populated via the category id or key.
+                          example: cat_core
+                        isActive:
+                          type: boolean
+                          description: Whether this plan is active. Only active plans are used for new charges.
+                          example: true
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: When the plan was created
+                          example: '2024-01-15T10:30:00.000Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          description: When the plan was last updated
+                          example: '2024-01-15T10:30:00.000Z'
+                      required:
+                      - id
+                      - name
+                      - unitType
+                      - unitPriceUsd
+                      - pricingModel
+                      - tiers
+                      - isActive
+                  count:
+                    type: integer
+                  versionGroupId:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '404':
+          description: Pricing plan not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Pricing plan not found
+  /v1/pricing-plans/by-type/{unitType}:
+    get:
+      operationId: getPricingPlanByType
+      summary: Get pricing plan by unit type
+      tags:
+      - Pricing Plans
+      description: Look up the active pricing plan for a specific usage type.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: unitType
+        required: true
+        description: Usage type (e.g., "api_call", "token")
+      responses:
+        '200':
+          description: Pricing plan for unit type
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Pricing plan for unit type
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the pricing plan
+                    example: plan_abc123def456
+                  businessId:
+                    type: string
+                    description: Business this plan belongs to
+                    example: biz_789xyz
+                  name:
+                    type: string
+                    description: Human-readable name for the plan
+                    example: API Calls
+                  unitType:
+                    type: string
+                    description: The usage type this plan prices (e.g., "api_call", "token", "compute_second", "gb_storage")
+                    example: api_call
+                  unitPriceUsd:
+                    type: string
+                    description: Default (FLAT) price per unit in USD. For TIERED/VOLUME/PACKAGE plans, consult `tiers`. For PER_SEAT plans, this is the price per seat per billing period.
+                    example: '0.001000'
+                  unitPrice:
+                    type:
+                    - 'null'
+                    - string
+                    description: 'Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth: the billing engine reads it directly and converts to USD via FxRate at charge time.'
+                    example: '0.000920'
+                  currency:
+                    type: string
+                    enum:
+                    - USD
+                    - USDC
+                    - EUR
+                    - GBP
+                    - JPY
+                    - CAD
+                    - AUD
+                    - CHF
+                    - SGD
+                    - HKD
+                    - ILS
+                    - NZD
+                    - SEK
+                    - NOK
+                    - DKK
+                    - MXN
+                    - BRL
+                    - INR
+                    - ZAR
+                    - PLN
+                    description: Billing currency for the plan. Defaults to USD. For non-USD currencies, supply `unitPrice` (and tier `unitPrice`/`flatFee`); the billing engine uses those as the source of truth and converts to USD via FxRate at charge time.
+                    example: USD
+                  pricingModel:
+                    type: string
+                    enum:
+                    - FLAT
+                    - TIERED
+                    - VOLUME
+                    - PACKAGE
+                    - PER_SEAT
+                    description: 'How quantity maps to charge amount:
+
+                      - `FLAT`: quantity × unitPrice (default)
+
+                      - `TIERED`: graduated, first N at price A, next M at price B, etc.
+
+                      - `VOLUME`: total quantity determines a single rate applied to all units
+
+                      - `PACKAGE`: charge per package of N units (rounds up partial packages)
+
+                      - `PER_SEAT`: per-seat/user licensing. quantity is the seat count, charged at unitPrice per seat per billing period (no tiers)'
+                    example: FLAT
+                  tiers:
+                    type: array
+                    description: Tier definitions. Empty for FLAT and PER_SEAT plans; required for TIERED/VOLUME/PACKAGE.
+                    items:
+                      type: object
+                      description: A tier defines a price bracket for TIERED, VOLUME, or PACKAGE pricing.
+                      properties:
+                        id:
+                          type: string
+                          description: Tier ID (present on existing tiers)
+                        minQuantity:
+                          type: string
+                          description: Tier starts at this quantity (inclusive). First tier must be 0.
+                          example: '0'
+                        maxQuantity:
+                          type:
+                          - 'null'
+                          - string
+                          description: Tier ends at this quantity (exclusive). Null on the final unbounded tier.
+                          example: '1000'
+                        unitPriceUsd:
+                          type: string
+                          description: Price per unit in this tier (USD)
+                          example: '0.001000'
+                        flatFeeUsd:
+                          type:
+                          - 'null'
+                          - string
+                          description: Optional flat fee added when this tier is reached
+                          example: null
+                        unitPrice:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency price per unit. Populated only for non-USD plans (e.g. EUR, ILS). When set, this is the source of truth and the legacy unitPriceUsd is ignored by the billing engine.
+                          example: '0.000920'
+                        flatFee:
+                          type:
+                          - 'null'
+                          - string
+                          description: Native-currency flat fee. Populated only for non-USD plans (mirror of flatFeeUsd).
+                          example: null
+                        packageSize:
+                          type:
+                          - 'null'
+                          - integer
+                          description: 'For PACKAGE model: number of units in one billable package'
+                          example: 1000
+                      required:
+                      - minQuantity
+                      - unitPriceUsd
+                  creditsPerUnit:
+                    type:
+                    - 'null'
+                    - string
+                    description: Credits consumed per unit of usage. When set, usage is deducted from the customer's credit wallet instead of charging USD.
+                    example: '10'
+                  productCategoryId:
+                    type:
+                    - 'null'
+                    - string
+                    description: Optional product category tag used by 'strict products' mode to roll up reporting by service line. Null when the plan is untagged. When `Business.strictProducts` is true, this must be populated via the category id or key.
+                    example: cat_core
+                  isActive:
+                    type: boolean
+                    description: Whether this plan is active. Only active plans are used for new charges.
+                    example: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was created
+                    example: '2024-01-15T10:30:00.000Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: When the plan was last updated
+                    example: '2024-01-15T10:30:00.000Z'
+                required:
+                - id
+                - name
+                - unitType
+                - unitPriceUsd
+                - pricingModel
+                - tiers
+                - isActive
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '404':
+          description: No active pricing plan found for unit type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: No active pricing plan found for unit type
+  /v1/pricing-plans/{id}/reprovision-stripe:
+    post:
+      operationId: reprovisionPricingPlanStripe
+      summary: Retry Stripe auto-provisioning for a plan
+      tags:
+      - Pricing Plans
+      description: 'Retries the Drip-managed Stripe Product / Meter / Price provisioning for a pricing plan. Useful after an initial transient failure on plan create. Idempotent: already-provisioned objects are skipped; only the missing Stripe calls are made.
+
+
+        > **Requires a secret key (`sk_*`) with the `ADMIN` role.**'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Pricing plan ID
+      responses:
+        '200':
+          description: Default Response
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'

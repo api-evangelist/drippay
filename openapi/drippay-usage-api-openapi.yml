@@ -1,0 +1,1449 @@
+openapi: 3.1.0
+info:
+  title: Drip BillableMetrics Usage API
+  description: "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n"
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Usage
+  description: Record metered usage. Creates charges when a pricing plan matches.
+paths:
+  /v1/usage:
+    post:
+      operationId: recordUsage
+      summary: Record usage and charge
+      tags:
+      - Usage
+      description: "\nRecord a billable usage event and immediately charge the customer.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\nThis endpoint waits for on-chain confirmation before returning, ensuring\nthe charge is settled. For faster responses, use `POST /v1/usage/async`.\n\n**x402 Payment Flow:**\nIf the customer has insufficient balance, returns 402 with payment headers.\nThe client can sign a payment with their session key and retry with\n`X-Payment-*` headers to complete the charge.\n\n**Idempotency:**\nInclude an `idempotencyKey` to safely retry requests without duplicate charges.\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: string
+                  description: Drip customer ID (cus_*). One of customerId, externalCustomerId, or stripeCustomerId is required.
+                  example: cus_abc123def456
+                externalCustomerId:
+                  type: string
+                  maxLength: 255
+                  description: Your own database's customer ID. If no Drip customer exists yet for (business, externalCustomerId), one is auto-provisioned as an internal customer on first use.
+                  example: user_42
+                stripeCustomerId:
+                  type: string
+                  pattern: ^cus_[A-Za-z0-9]+$
+                  maxLength: 255
+                  description: Stripe customer ID (`cus_…`) from your connected Stripe account. If no Drip customer exists yet for (business, stripeCustomerId), one is auto-provisioned and usage is forwarded to Stripe's Billing Meter Events. Intended for merchants who just finished Stripe OAuth, so you can start sending usage against Stripe IDs immediately without waiting for the background customer import.
+                  example: cus_NffrFeUfNV2Hib
+                usageType:
+                  type: string
+                  description: Usage type matching a pricing plan (defaults to "generic" if omitted)
+                  example: api_call
+                  default: generic
+                quantity:
+                  type: number
+                  exclusiveMinimum: 0
+                  description: Quantity of usage (defaults to 1 if omitted)
+                  example: 100
+                  default: 1
+                units:
+                  type: string
+                  maxLength: 50
+                  description: Human-readable unit label for display (e.g., "tokens", "API calls", "seconds")
+                  example: API calls
+                description:
+                  type: string
+                  maxLength: 500
+                  description: Human-readable description for support/finance teams (e.g., "Chat completion for Customer XYZ")
+                  example: 'Eligibility check for Pharmacy ABC (workflow: insurance_verify)'
+                idempotencyKey:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                  description: Unique key to prevent duplicate charges. Required. Use a stable identifier like `{customerId}_{action}_{timestamp}` so retries produce the same key.
+                  example: req_20240115_abc123
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Optional metadata
+                  example:
+                    endpoint: /v1/chat
+                    model: gpt-4
+                workflowId:
+                  type: string
+                  description: Link this usage to a workflow
+                runId:
+                  type: string
+                  description: Link this usage to an agent run
+                eventType:
+                  type: string
+                  enum:
+                  - USAGE
+                  - INFERENCE
+                  - TOOL_CALL
+                  - DELEGATION
+                  - RETRIEVAL
+                  - CUSTOM
+                  description: Classify the type of usage event
+                actionName:
+                  type: string
+                  maxLength: 255
+                  description: Name of the action performed (e.g., "chat_completion", "image_generation")
+                outcome:
+                  type: string
+                  enum:
+                  - SUCCEEDED
+                  - FAILED
+                  - PENDING
+                  - SKIPPED
+                  - CANCELLED
+                  description: Outcome of the action
+                explanation:
+                  type: string
+                  maxLength: 1000
+                  description: Human-readable explanation of what happened
+                parentEventId:
+                  type: string
+                  description: ID of the parent event (for building causality trees)
+                retryOfEventId:
+                  type: string
+                  description: ID of the event this is retrying (for retry chain tracking)
+                attemptNumber:
+                  type: integer
+                  minimum: 1
+                  description: Attempt number (1 = first try, 2 = first retry, etc.)
+                inputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the input for verification
+                outputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the output for verification
+                input:
+                  type: object
+                  additionalProperties: true
+                  description: Raw input data (will be hashed for verification)
+                output:
+                  type: object
+                  additionalProperties: true
+                  description: Raw output data (will be hashed for verification)
+              required:
+              - idempotencyKey
+      responses:
+        '201':
+          description: Usage recorded. Either an on-chain charge was created (charge object populated) or the customer has no on-chain address and the request was auto-promoted to internal/visibility mode (charge=null, mode=internal).
+          content:
+            application/json:
+              schema:
+                description: Usage recorded. Either an on-chain charge was created (charge object populated) or the customer has no on-chain address and the request was auto-promoted to internal/visibility mode (charge=null, mode=internal).
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  usageEventId:
+                    type: string
+                    description: Usage event ID
+                  isDuplicate:
+                    type: boolean
+                    description: True if this was a duplicate request matched by idempotencyKey
+                    example: false
+                  charge:
+                    type: object
+                    nullable: true
+                    description: Populated when the customer has an on-chain address and a charge was created. `null` when the request was recorded as internal/visibility usage (no billing).
+                    properties:
+                      id:
+                        type: string
+                        description: Charge ID
+                      amountUsdc:
+                        type: string
+                        description: Charge amount in USDC
+                      amountToken:
+                        type: string
+                        description: Charge amount in token units
+                      txHash:
+                        type: string
+                        nullable: true
+                        description: Transaction hash
+                      status:
+                        type: string
+                        enum:
+                        - PENDING
+                        - PENDING_SETTLEMENT
+                        - CONFIRMED
+                  mode:
+                    type: string
+                    enum:
+                    - internal
+                    nullable: true
+                    description: Present when the request was recorded as internal/visibility usage.
+                  autoPromoted:
+                    type: boolean
+                    nullable: true
+                    description: True when /usage auto-promoted to /usage/internal because the customer has no on-chain address. Explicit internal customers get mode=internal with autoPromoted=false.
+                  reason:
+                    type: string
+                    nullable: true
+                    description: Human-readable explanation of why the request was routed to the internal path.
+                  x402:
+                    type: object
+                    nullable: true
+                    description: Present if payment was via x402 flow
+                    properties:
+                      paymentVerified:
+                        type: boolean
+                      sessionKeyId:
+                        type: string
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '402':
+          description: Payment required - insufficient balance. Includes x402 payment details for automatic payment flow.
+          content:
+            application/json:
+              schema:
+                description: Payment required - insufficient balance. Includes x402 payment details for automatic payment flow.
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+                    example: PAYMENT_REQUIRED
+                  payment:
+                    type: object
+                    description: Payment details for x402 flow. Sign with session key and retry with X-Payment-* headers.
+                    properties:
+                      amount:
+                        type: string
+                        description: Amount required in USDC
+                      recipient:
+                        type: string
+                        description: Payment recipient address
+                      currency:
+                        type: string
+                        example: USDC
+                      chain:
+                        type: string
+                        example: base-sepolia
+                      description:
+                        type: string
+                        description: Human-readable charge description
+                      usageId:
+                        type: string
+                        description: Unique usage identifier
+                      expiresAt:
+                        type: integer
+                        description: Unix timestamp (seconds) when payment expires
+                      timestamp:
+                        type: integer
+                        description: Unix timestamp (seconds) when request was created
+                      nonce:
+                        type: string
+                        description: Unique nonce for replay protection
+                  x402:
+                    type: object
+                    description: Full x402 protocol payload for client signing
+                    properties:
+                      version:
+                        type: string
+                        example: 1.0.0
+                      paymentRequest:
+                        type: object
+                        description: Complete payment request to sign via EIP-712
+                  serverTime:
+                    type: object
+                    description: Server time for client clock synchronization
+                    properties:
+                      seconds:
+                        type: integer
+                      milliseconds:
+                        type: integer
+                      iso:
+                        type: string
+                        format: date-time
+                  checkout_url:
+                    type: string
+                    nullable: true
+                    description: URL for balance top-up
+        '403':
+          description: Account paused — usage blocked until balance is restored
+          content:
+            application/json:
+              schema:
+                description: Account paused — usage blocked until balance is restored
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer or pricing plan not found
+          content:
+            application/json:
+              schema:
+                description: Customer or pricing plan not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded. Retry after the duration specified in the Retry-After header.
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded. Retry after the duration specified in the Retry-After header.
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: Billing temporarily paused or dependency unavailable
+          content:
+            application/json:
+              schema:
+                description: Billing temporarily paused or dependency unavailable
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+    get:
+      operationId: listUsageEvents
+      summary: List usage events
+      tags:
+      - Usage
+      description: Retrieve recent usage events for your business, including associated charges.
+      parameters:
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of events to return
+      - schema:
+          type: string
+        in: query
+        name: customerId
+        required: false
+        description: Filter by customer ID
+      responses:
+        '200':
+          description: List of usage events
+          content:
+            application/json:
+              schema:
+                description: List of usage events
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        customerId:
+                          type: string
+                        customer:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            onchainAddress:
+                              type: string
+                            externalCustomerId:
+                              type: string
+                              nullable: true
+                        usageType:
+                          type: string
+                        quantity:
+                          type: string
+                        description:
+                          type: string
+                          nullable: true
+                          description: Human-readable description of the usage event
+                        metadata:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                        createdAt:
+                          type: string
+                          format: date-time
+                        charge:
+                          type: object
+                          nullable: true
+                          properties:
+                            id:
+                              type: string
+                            amountUsdc:
+                              type: string
+                            txHash:
+                              type: string
+                              nullable: true
+                            status:
+                              type: string
+                  count:
+                    type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/usage/async:
+    post:
+      operationId: recordUsageAsync
+      summary: Record usage (async)
+      tags:
+      - Usage
+      description: "\nRecord a billable usage event and return immediately without waiting for settlement.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\nThe charge will be processed in the background. Subscribe to webhooks\n(`charge.succeeded`, `charge.failed`) to get notified of the final status.\n\nUse this endpoint when you need fast response times and can handle\neventual consistency via webhooks.\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: string
+                  description: Drip customer ID (cus_*). One of customerId, externalCustomerId, or stripeCustomerId is required.
+                  example: cus_abc123def456
+                externalCustomerId:
+                  type: string
+                  maxLength: 255
+                  description: Your own database's customer ID. If no Drip customer exists yet for (business, externalCustomerId), one is auto-provisioned as an internal customer on first use.
+                  example: user_42
+                stripeCustomerId:
+                  type: string
+                  pattern: ^cus_[A-Za-z0-9]+$
+                  maxLength: 255
+                  description: Stripe customer ID (`cus_…`) from your connected Stripe account. If no Drip customer exists yet for (business, stripeCustomerId), one is auto-provisioned and usage is forwarded to Stripe's Billing Meter Events. Intended for merchants who just finished Stripe OAuth, so you can start sending usage against Stripe IDs immediately without waiting for the background customer import.
+                  example: cus_NffrFeUfNV2Hib
+                usageType:
+                  type: string
+                  description: Usage type matching a pricing plan (defaults to "generic" if omitted)
+                  example: api_call
+                  default: generic
+                quantity:
+                  type: number
+                  exclusiveMinimum: 0
+                  description: Quantity of usage (defaults to 1 if omitted)
+                  example: 100
+                  default: 1
+                units:
+                  type: string
+                  maxLength: 50
+                  description: Human-readable unit label for display (e.g., "tokens", "API calls", "seconds")
+                  example: API calls
+                description:
+                  type: string
+                  maxLength: 500
+                  description: Human-readable description for support/finance teams (e.g., "Chat completion for Customer XYZ")
+                  example: 'Eligibility check for Pharmacy ABC (workflow: insurance_verify)'
+                idempotencyKey:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                  description: Unique key to prevent duplicate charges. Required. Use a stable identifier like `{customerId}_{action}_{timestamp}` so retries produce the same key.
+                  example: req_20240115_abc123
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Optional metadata
+                  example:
+                    endpoint: /v1/chat
+                    model: gpt-4
+                workflowId:
+                  type: string
+                  description: Link this usage to a workflow
+                runId:
+                  type: string
+                  description: Link this usage to an agent run
+                eventType:
+                  type: string
+                  enum:
+                  - USAGE
+                  - INFERENCE
+                  - TOOL_CALL
+                  - DELEGATION
+                  - RETRIEVAL
+                  - CUSTOM
+                  description: Classify the type of usage event
+                actionName:
+                  type: string
+                  maxLength: 255
+                  description: Name of the action performed (e.g., "chat_completion", "image_generation")
+                outcome:
+                  type: string
+                  enum:
+                  - SUCCEEDED
+                  - FAILED
+                  - PENDING
+                  - SKIPPED
+                  - CANCELLED
+                  description: Outcome of the action
+                explanation:
+                  type: string
+                  maxLength: 1000
+                  description: Human-readable explanation of what happened
+                parentEventId:
+                  type: string
+                  description: ID of the parent event (for building causality trees)
+                retryOfEventId:
+                  type: string
+                  description: ID of the event this is retrying (for retry chain tracking)
+                attemptNumber:
+                  type: integer
+                  minimum: 1
+                  description: Attempt number (1 = first try, 2 = first retry, etc.)
+                inputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the input for verification
+                outputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the output for verification
+                input:
+                  type: object
+                  additionalProperties: true
+                  description: Raw input data (will be hashed for verification)
+                output:
+                  type: object
+                  additionalProperties: true
+                  description: Raw output data (will be hashed for verification)
+              required:
+              - idempotencyKey
+      responses:
+        '202':
+          description: Usage recorded, charge queued
+          content:
+            application/json:
+              schema:
+                description: Usage recorded, charge queued
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  usageEventId:
+                    type: string
+                    description: Usage event ID
+                  isDuplicate:
+                    type: boolean
+                    description: True if this was a duplicate request matched by idempotencyKey
+                    example: false
+                  charge:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Charge ID
+                      amountUsdc:
+                        type: string
+                        description: Charge amount in USDC
+                      status:
+                        type: string
+                        enum:
+                        - PENDING
+                        - CONFIRMED
+                        example: PENDING
+                      estimatedConfirmationTime:
+                        type: string
+                        nullable: true
+                        description: Human-readable estimate of when the charge will be confirmed (e.g. "~15 seconds", "already confirmed")
+                  message:
+                    type: string
+                    example: Charge queued for processing. Subscribe to webhooks for status updates.
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Account paused — usage blocked until balance is restored
+          content:
+            application/json:
+              schema:
+                description: Account paused — usage blocked until balance is restored
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer or pricing plan not found
+          content:
+            application/json:
+              schema:
+                description: Customer or pricing plan not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded. Retry after the duration specified in the Retry-After header.
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded. Retry after the duration specified in the Retry-After header.
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: Billing temporarily paused or dependency unavailable
+          content:
+            application/json:
+              schema:
+                description: Billing temporarily paused or dependency unavailable
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/usage/internal:
+    post:
+      operationId: recordInternalUsage
+      summary: Record internal usage (no billing)
+      tags:
+      - Usage
+      description: "\nRecord a usage event for internal visibility tracking only. No billing or charges are created.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\n**Use cases:**\n- Track internal team usage without charging\n- Pilot programs where you want visibility before billing\n- Usage tracking before customer has on-chain wallet setup\n\nThis endpoint:\n- Does NOT create a Charge record\n- Does NOT require customer balance\n- Does NOT require blockchain/wallet setup for internal customers\n- Works with both internal and regular customers\n\nFor billing customers, use `POST /v1/usage` or `POST /v1/usage/async` instead.\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: string
+                  description: Drip customer ID (cus_*). One of customerId, externalCustomerId, or stripeCustomerId is required.
+                  example: cus_abc123def456
+                externalCustomerId:
+                  type: string
+                  maxLength: 255
+                  description: Your own database's customer ID. If no Drip customer exists yet for (business, externalCustomerId), one is auto-provisioned as an internal customer on first use.
+                  example: user_42
+                stripeCustomerId:
+                  type: string
+                  pattern: ^cus_[A-Za-z0-9]+$
+                  maxLength: 255
+                  description: Stripe customer ID (`cus_…`) from your connected Stripe account. If no Drip customer exists yet for (business, stripeCustomerId), one is auto-provisioned and usage is forwarded to Stripe's Billing Meter Events. Intended for merchants who just finished Stripe OAuth, so you can start sending usage against Stripe IDs immediately without waiting for the background customer import.
+                  example: cus_NffrFeUfNV2Hib
+                usageType:
+                  type: string
+                  description: Usage type matching a pricing plan (defaults to "generic" if omitted)
+                  example: api_call
+                  default: generic
+                quantity:
+                  type: number
+                  exclusiveMinimum: 0
+                  description: Quantity of usage (defaults to 1 if omitted)
+                  example: 100
+                  default: 1
+                units:
+                  type: string
+                  maxLength: 50
+                  description: Human-readable unit label for display (e.g., "tokens", "API calls", "seconds")
+                  example: API calls
+                description:
+                  type: string
+                  maxLength: 500
+                  description: Human-readable description for support/finance teams (e.g., "Chat completion for Customer XYZ")
+                  example: 'Eligibility check for Pharmacy ABC (workflow: insurance_verify)'
+                idempotencyKey:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                  description: Unique key to prevent duplicate charges. Required. Use a stable identifier like `{customerId}_{action}_{timestamp}` so retries produce the same key.
+                  example: req_20240115_abc123
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Optional metadata
+                  example:
+                    endpoint: /v1/chat
+                    model: gpt-4
+                workflowId:
+                  type: string
+                  description: Link this usage to a workflow
+                runId:
+                  type: string
+                  description: Link this usage to an agent run
+                eventType:
+                  type: string
+                  enum:
+                  - USAGE
+                  - INFERENCE
+                  - TOOL_CALL
+                  - DELEGATION
+                  - RETRIEVAL
+                  - CUSTOM
+                  description: Classify the type of usage event
+                actionName:
+                  type: string
+                  maxLength: 255
+                  description: Name of the action performed (e.g., "chat_completion", "image_generation")
+                outcome:
+                  type: string
+                  enum:
+                  - SUCCEEDED
+                  - FAILED
+                  - PENDING
+                  - SKIPPED
+                  - CANCELLED
+                  description: Outcome of the action
+                explanation:
+                  type: string
+                  maxLength: 1000
+                  description: Human-readable explanation of what happened
+                parentEventId:
+                  type: string
+                  description: ID of the parent event (for building causality trees)
+                retryOfEventId:
+                  type: string
+                  description: ID of the event this is retrying (for retry chain tracking)
+                attemptNumber:
+                  type: integer
+                  minimum: 1
+                  description: Attempt number (1 = first try, 2 = first retry, etc.)
+                inputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the input for verification
+                outputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the output for verification
+                input:
+                  type: object
+                  additionalProperties: true
+                  description: Raw input data (will be hashed for verification)
+                output:
+                  type: object
+                  additionalProperties: true
+                  description: Raw output data (will be hashed for verification)
+              required:
+              - idempotencyKey
+      responses:
+        '201':
+          description: Internal usage recorded
+          content:
+            application/json:
+              schema:
+                description: Internal usage recorded
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  usageEventId:
+                    type: string
+                    description: Usage event ID
+                  customerId:
+                    type: string
+                    description: Customer ID
+                  usageType:
+                    type: string
+                    description: Type of usage
+                  quantity:
+                    type: number
+                    description: Quantity recorded
+                  units:
+                    type: string
+                    nullable: true
+                    description: Human-readable unit label
+                  description:
+                    type: string
+                    nullable: true
+                    description: Human-readable event description
+                  isInternal:
+                    type: boolean
+                    description: Whether customer is internal-only
+                  message:
+                    type: string
+                    example: Usage recorded for internal visibility (no charge created)
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded. Retry after the duration specified in the Retry-After header.
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded. Retry after the duration specified in the Retry-After header.
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: Billing temporarily paused or dependency unavailable
+          content:
+            application/json:
+              schema:
+                description: Billing temporarily paused or dependency unavailable
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/usage/internal/batch:
+    post:
+      operationId: recordInternalUsageBatch
+      summary: Record internal usage (batched, high throughput)
+      tags:
+      - Usage
+      description: "\nBatch-optimized variant of `POST /v1/usage/internal`.\n\nEvents are buffered in memory and flushed to the database every ~2 seconds\nusing a single bulk INSERT. This reduces per-event DB overhead by ~99% and\nis designed for customers sending 1M+ events/day.\n\nReturns 202 immediately. The event will be persisted within 2 seconds.\nIdempotency is still enforced via `idempotencyKey` — duplicates are\nsilently skipped during the bulk insert.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerId:
+                  type: string
+                  description: Drip customer ID (cus_*). One of customerId, externalCustomerId, or stripeCustomerId is required.
+                  example: cus_abc123def456
+                externalCustomerId:
+                  type: string
+                  maxLength: 255
+                  description: Your own database's customer ID. If no Drip customer exists yet for (business, externalCustomerId), one is auto-provisioned as an internal customer on first use.
+                  example: user_42
+                stripeCustomerId:
+                  type: string
+                  pattern: ^cus_[A-Za-z0-9]+$
+                  maxLength: 255
+                  description: Stripe customer ID (`cus_…`) from your connected Stripe account. If no Drip customer exists yet for (business, stripeCustomerId), one is auto-provisioned and usage is forwarded to Stripe's Billing Meter Events. Intended for merchants who just finished Stripe OAuth, so you can start sending usage against Stripe IDs immediately without waiting for the background customer import.
+                  example: cus_NffrFeUfNV2Hib
+                usageType:
+                  type: string
+                  description: Usage type matching a pricing plan (defaults to "generic" if omitted)
+                  example: api_call
+                  default: generic
+                quantity:
+                  type: number
+                  exclusiveMinimum: 0
+                  description: Quantity of usage (defaults to 1 if omitted)
+                  example: 100
+                  default: 1
+                units:
+                  type: string
+                  maxLength: 50
+                  description: Human-readable unit label for display (e.g., "tokens", "API calls", "seconds")
+                  example: API calls
+                description:
+                  type: string
+                  maxLength: 500
+                  description: Human-readable description for support/finance teams (e.g., "Chat completion for Customer XYZ")
+                  example: 'Eligibility check for Pharmacy ABC (workflow: insurance_verify)'
+                idempotencyKey:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                  description: Unique key to prevent duplicate charges. Required. Use a stable identifier like `{customerId}_{action}_{timestamp}` so retries produce the same key.
+                  example: req_20240115_abc123
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Optional metadata
+                  example:
+                    endpoint: /v1/chat
+                    model: gpt-4
+                workflowId:
+                  type: string
+                  description: Link this usage to a workflow
+                runId:
+                  type: string
+                  description: Link this usage to an agent run
+                eventType:
+                  type: string
+                  enum:
+                  - USAGE
+                  - INFERENCE
+                  - TOOL_CALL
+                  - DELEGATION
+                  - RETRIEVAL
+                  - CUSTOM
+                  description: Classify the type of usage event
+                actionName:
+                  type: string
+                  maxLength: 255
+                  description: Name of the action performed (e.g., "chat_completion", "image_generation")
+                outcome:
+                  type: string
+                  enum:
+                  - SUCCEEDED
+                  - FAILED
+                  - PENDING
+                  - SKIPPED
+                  - CANCELLED
+                  description: Outcome of the action
+                explanation:
+                  type: string
+                  maxLength: 1000
+                  description: Human-readable explanation of what happened
+                parentEventId:
+                  type: string
+                  description: ID of the parent event (for building causality trees)
+                retryOfEventId:
+                  type: string
+                  description: ID of the event this is retrying (for retry chain tracking)
+                attemptNumber:
+                  type: integer
+                  minimum: 1
+                  description: Attempt number (1 = first try, 2 = first retry, etc.)
+                inputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the input for verification
+                outputHash:
+                  type: string
+                  maxLength: 64
+                  description: SHA-256 hash of the output for verification
+                input:
+                  type: object
+                  additionalProperties: true
+                  description: Raw input data (will be hashed for verification)
+                output:
+                  type: object
+                  additionalProperties: true
+                  description: Raw output data (will be hashed for verification)
+              required:
+              - idempotencyKey
+      responses:
+        '202':
+          description: Usage accepted for batched insert
+          content:
+            application/json:
+              schema:
+                description: Usage accepted for batched insert
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  customerId:
+                    type: string
+                  usageType:
+                    type: string
+                  quantity:
+                    type: number
+                  idempotencyKey:
+                    type: string
+                  pendingEvents:
+                    type: integer
+                    description: Number of events waiting to be flushed
+                  message:
+                    type: string
+                    example: Event queued for batched insert (~2s)
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/usage/quota:
+    get:
+      operationId: getUsageQuota
+      summary: Get current-month event usage vs plan quota (API-key auth)
+      tags:
+      - Usage
+      description: Safe to poll every few seconds — the underlying count is cached 30s per business. Response includes `resetAt` (ISO) and `overagePerEventUsd`; use `exceeded` as the gate signal.
+      responses:
+        '200':
+          description: Default Response
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'

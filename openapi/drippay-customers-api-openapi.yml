@@ -1,0 +1,1476 @@
+openapi: 3.1.0
+info:
+  title: Drip BillableMetrics Customers API
+  description: "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n"
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Customers
+  description: Create and manage billable customers.
+paths:
+  /v1/customers:
+    post:
+      operationId: createCustomer
+      summary: Create a customer
+      tags:
+      - Customers
+      description: 'Create a customer. Just pass `externalCustomerId` (your user ID). Add `onchainAddress` later for on-chain billing.
+
+
+        > **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Create a customer. At least one of `externalCustomerId` or `onchainAddress` must be provided.
+              properties:
+                externalCustomerId:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  description: Your system customer ID. Required if `onchainAddress` is not provided.
+                  example: user_789
+                onchainAddress:
+                  type: string
+                  pattern: ^0x[a-fA-F0-9]{40}$
+                  description: Smart account address. Required if `externalCustomerId` is not provided. Optional for ledger-only use.
+                  example: '0x742d35Cc6634C0532925a3b844Bc9e7595f00000'
+                email:
+                  type: string
+                  format: email
+                  maxLength: 320
+                  description: Optional end-customer email. When set, invoice PDFs are emailed here automatically on issue, past-due, and payment.
+                  example: billing@acme.com
+                isInternal:
+                  type: boolean
+                  description: Internal customer (visibility only, no billing)
+                  example: false
+                  default: false
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  description: Optional metadata
+                  example:
+                    plan: pro
+                    source: signup
+              required: []
+        description: Create a customer. At least one of `externalCustomerId` or `onchainAddress` must be provided.
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                description: Customer created successfully
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Internal customer ID
+                    example: cus_abc123def456
+                  businessId:
+                    type: string
+                    description: Business ID this customer belongs to
+                    example: biz_abc123
+                  name:
+                    type: string
+                    nullable: true
+                    description: Customer display name
+                    example: Acme Logistics
+                  externalCustomerId:
+                    type: string
+                    nullable: true
+                    description: Your system customer ID (null if created with onchainAddress only)
+                    example: user_789
+                  stripeCustomerId:
+                    type: string
+                    nullable: true
+                    description: Stripe customer ID linked via Connect or migration
+                    example: cus_StripeXYZ
+                  onchainAddress:
+                    type: string
+                    pattern: ^0x[a-fA-F0-9]{40}$
+                    description: Smart account address (null for internal customers)
+                    example: '0x742d35Cc6634C0532925a3b844Bc9e7595f00000'
+                    nullable: true
+                  email:
+                    type: string
+                    format: email
+                    nullable: true
+                    description: End-customer email used for invoice receipt delivery (null if not set)
+                    example: billing@acme.com
+                  isInternal:
+                    type: boolean
+                    description: Internal customer (visibility only, no billing)
+                    example: false
+                  status:
+                    type: string
+                    enum:
+                    - ACTIVE
+                    - LOW_BALANCE
+                    - PAUSED
+                    description: Customer status
+                    example: ACTIVE
+                  metadata:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    description: Arbitrary metadata attached to the customer
+                    example:
+                      plan: pro
+                      source: signup
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2024-01-15T10:30:00Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2024-01-15T10:30:00Z'
+                  provisioningStatus:
+                    type: string
+                    enum:
+                    - provisioned
+                    - pending
+                    - skipped
+                    description: Provisioning outcome for the customer smart account
+                    example: provisioned
+                  fundingRequired:
+                    type: boolean
+                    description: True when the smart account exists but still needs funding before billing can proceed
+                    example: true
+                  _warnings:
+                    type: array
+                    items:
+                      type: string
+                    description: Non-fatal warnings generated while creating the customer
+                    example:
+                    - External customer ID resembles a patient identifier; avoid storing PHI in identifiers.
+                required:
+                - id
+                - businessId
+                - isInternal
+                - status
+                - createdAt
+                - updatedAt
+                - provisioningStatus
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                description: Unauthorized - invalid or missing API key
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden - customer blocked
+          content:
+            application/json:
+              schema:
+                description: Forbidden - customer blocked
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '409':
+          description: Customer already exists
+          content:
+            application/json:
+              schema:
+                description: Customer already exists
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: 'Service temporarily unavailable: retry with backoff'
+          content:
+            application/json:
+              schema:
+                description: 'Service temporarily unavailable: retry with backoff'
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+    get:
+      operationId: listCustomers
+      summary: List customers
+      tags:
+      - Customers
+      description: List all customers for your business. Requires a secret key (`sk_*`). Returns up to 100 customers sorted by creation date (newest first).
+      parameters:
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of customers to return
+      - schema:
+          type: integer
+          minimum: 0
+          default: 0
+        in: query
+        name: offset
+        required: false
+        description: Number of customers to skip (for pagination)
+      - schema:
+          type: string
+          enum:
+          - ACTIVE
+          - LOW_BALANCE
+          - PAUSED
+        in: query
+        name: status
+        required: false
+        description: Filter by customer status
+      - schema:
+          type: string
+        in: query
+        name: onchainAddress
+        required: false
+        description: Filter by on-chain address
+      - schema:
+          type: boolean
+        in: query
+        name: isInternal
+        required: false
+        description: Filter by internal customers (true = internal only, false = billing customers only)
+      responses:
+        '200':
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                description: List of customers
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Internal customer ID
+                          example: cus_abc123def456
+                        businessId:
+                          type: string
+                          description: Business ID this customer belongs to
+                          example: biz_abc123
+                        name:
+                          type: string
+                          nullable: true
+                          description: Customer display name
+                          example: Acme Logistics
+                        externalCustomerId:
+                          type: string
+                          nullable: true
+                          description: Your system customer ID (null if created with onchainAddress only)
+                          example: user_789
+                        stripeCustomerId:
+                          type: string
+                          nullable: true
+                          description: Stripe customer ID linked via Connect or migration
+                          example: cus_StripeXYZ
+                        onchainAddress:
+                          type: string
+                          pattern: ^0x[a-fA-F0-9]{40}$
+                          description: Smart account address (null for internal customers)
+                          example: '0x742d35Cc6634C0532925a3b844Bc9e7595f00000'
+                          nullable: true
+                        email:
+                          type: string
+                          format: email
+                          nullable: true
+                          description: End-customer email used for invoice receipt delivery (null if not set)
+                          example: billing@acme.com
+                        isInternal:
+                          type: boolean
+                          description: Internal customer (visibility only, no billing)
+                          example: false
+                        status:
+                          type: string
+                          enum:
+                          - ACTIVE
+                          - LOW_BALANCE
+                          - PAUSED
+                          description: Customer status
+                          example: ACTIVE
+                        metadata:
+                          type: object
+                          nullable: true
+                          additionalProperties: true
+                          description: Arbitrary metadata attached to the customer
+                          example:
+                            plan: pro
+                            source: signup
+                        createdAt:
+                          type: string
+                          format: date-time
+                          example: '2024-01-15T10:30:00Z'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          example: '2024-01-15T10:30:00Z'
+                      required:
+                      - id
+                      - businessId
+                      - isInternal
+                      - status
+                      - createdAt
+                      - updatedAt
+                  count:
+                    type: integer
+                    description: Number of customers returned
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/customers/{id}:
+    get:
+      operationId: getCustomer
+      summary: Get a customer
+      tags:
+      - Customers
+      description: Retrieve a customer by their ID. Requires a secret key (`sk_*`).
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Customer ID
+      responses:
+        '200':
+          description: Customer details
+          content:
+            application/json:
+              schema:
+                description: Customer details
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Internal customer ID
+                    example: cus_abc123def456
+                  businessId:
+                    type: string
+                    description: Business ID this customer belongs to
+                    example: biz_abc123
+                  name:
+                    type: string
+                    nullable: true
+                    description: Customer display name
+                    example: Acme Logistics
+                  externalCustomerId:
+                    type: string
+                    nullable: true
+                    description: Your system customer ID (null if created with onchainAddress only)
+                    example: user_789
+                  stripeCustomerId:
+                    type: string
+                    nullable: true
+                    description: Stripe customer ID linked via Connect or migration
+                    example: cus_StripeXYZ
+                  onchainAddress:
+                    type: string
+                    pattern: ^0x[a-fA-F0-9]{40}$
+                    description: Smart account address (null for internal customers)
+                    example: '0x742d35Cc6634C0532925a3b844Bc9e7595f00000'
+                    nullable: true
+                  email:
+                    type: string
+                    format: email
+                    nullable: true
+                    description: End-customer email used for invoice receipt delivery (null if not set)
+                    example: billing@acme.com
+                  isInternal:
+                    type: boolean
+                    description: Internal customer (visibility only, no billing)
+                    example: false
+                  status:
+                    type: string
+                    enum:
+                    - ACTIVE
+                    - LOW_BALANCE
+                    - PAUSED
+                    description: Customer status
+                    example: ACTIVE
+                  metadata:
+                    type: object
+                    nullable: true
+                    additionalProperties: true
+                    description: Arbitrary metadata attached to the customer
+                    example:
+                      plan: pro
+                      source: signup
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2024-01-15T10:30:00Z'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2024-01-15T10:30:00Z'
+                required:
+                - id
+                - businessId
+                - isInternal
+                - status
+                - createdAt
+                - updatedAt
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+    patch:
+      operationId: updateCustomer
+      summary: Update a customer
+      tags:
+      - Customers
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/customers/{id}/billing-history:
+    get:
+      operationId: getCustomerBillingHistory
+      summary: Get customer billing-field history
+      tags:
+      - Customers
+      description: Return every snapshot of this customer's billing-relevant fields (name, email), oldest → newest. A v1 snapshot is created when the customer is first created; each subsequent change appends a new version and seals the previous one.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Billing history
+          content:
+            application/json:
+              schema:
+                description: Billing history
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                  count:
+                    type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Unauthorized
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+                description: Customer not found
+  /v1/customers/{id}/revops-summary:
+    get:
+      operationId: getCustomerRevOpsSummary
+      summary: Get RevOps summary
+      tags:
+      - Customers
+      description: 'Aggregated revenue/operations summary for a customer: reputation band, lifetime revenue, cost, gross margin, success rate, and top unit types. Requires a secret key (`sk_*`).'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Customer ID
+      responses:
+        '200':
+          description: RevOps summary
+          content:
+            application/json:
+              schema:
+                description: RevOps summary
+                type: object
+                properties:
+                  reputationScore:
+                    type: number
+                  reputationBand:
+                    type: string
+                    enum:
+                    - EXCELLENT
+                    - GOOD
+                    - FAIR
+                    - POOR
+                    - HIGH_RISK
+                  lifetimeRevenueUsdc:
+                    type: string
+                  lifetimeCostUsdc:
+                    type: string
+                  grossMarginUsdc:
+                    type: string
+                  grossMarginPct:
+                    type: number
+                  chargeSuccessRate:
+                    type: number
+                  disputeCount:
+                    type: number
+                  anomalyCount:
+                    type: number
+                  tenureDays:
+                    type: number
+                  lastActivityAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                  topUnitTypes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        unitType:
+                          type: string
+                        revenueUsdc:
+                          type: string
+                        marginPct:
+                          type: number
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/customers/{id}/sync-balance:
+    post:
+      operationId: syncCustomerBalance
+      summary: Sync customer balance
+      tags:
+      - Customers
+      description: "\nTriggers an immediate balance sync for a customer. This fetches the current\non-chain balance and updates the database snapshot.\n\nUse this endpoint:\n- After a customer deposits funds on-chain\n- To verify balance accuracy before a charge\n- For debugging balance discrepancies\n\nThe response includes both previous and new balances, along with whether\na change was detected. Requires a secret key (`sk_*`).\n        "
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Customer ID
+      responses:
+        '200':
+          description: Balance sync completed
+          content:
+            application/json:
+              schema:
+                description: Balance sync completed
+                type: object
+                properties:
+                  customerId:
+                    type: string
+                    description: Customer ID
+                  previousBalance:
+                    type: string
+                    description: Previous balance in USDC
+                  newBalance:
+                    type: string
+                    description: Current on-chain balance in USDC
+                  changed:
+                    type: boolean
+                    description: Whether the balance changed
+                  blockNumber:
+                    type: string
+                    description: Block number when balance was checked
+                  syncedAt:
+                    type: string
+                    format: date-time
+                    description: Timestamp of sync
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/customers/{id}/provision:
+    post:
+      operationId: provisionSmartAccount
+      summary: Provision smart account
+      tags:
+      - Customers
+      description: "\nDeploy an ERC-4337 smart account for a customer and deposit USDC into the BillingModule.\n\nOn testnet (Base Sepolia), this automatically mints and deposits test USDC.\nOn mainnet, the customer must deposit USDC separately after deployment.\n\nThe smart account is owned by the billing authority for server-side management.\nRequires a secret key (`sk_*`).\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deposit_amount_usdc:
+                  type: string
+                  description: 'USDC amount to deposit into BillingModule (testnet only, default: "100")'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Customer ID
+      responses:
+        '200':
+          description: Smart account provisioned
+          content:
+            application/json:
+              schema:
+                description: Smart account provisioned
+                type: object
+                properties:
+                  smart_account_address:
+                    type: string
+                  already_deployed:
+                    type: boolean
+                  deploy_tx_hash:
+                    type: string
+                    nullable: true
+                  fund_tx_hash:
+                    type: string
+                    nullable: true
+                  billing_deposit_tx_hash:
+                    type: string
+                    nullable: true
+                  billing_balance_usdc:
+                    type: string
+                  funding_required:
+                    type: boolean
+                    description: True when the customer must fund their account via checkout (mainnet)
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                description: Invalid request
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/customers/{id}/spending-cap:
+    put:
+      operationId: setCustomerSpendingCap
+      summary: Set customer spending cap
+      tags:
+      - Customers
+      description: Set or update a per-customer spending cap. Supports DAILY_CHARGE_LIMIT, MONTHLY_CHARGE_LIMIT, and SINGLE_CHARGE_LIMIT. When autoBlock=true (default), charges are rejected at 100% of the cap. Requires a secret key (`sk_*`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - capType
+              - limitValue
+              properties:
+                capType:
+                  type: string
+                  enum:
+                  - DAILY_CHARGE_LIMIT
+                  - MONTHLY_CHARGE_LIMIT
+                  - SINGLE_CHARGE_LIMIT
+                  description: Type of spending cap
+                limitValue:
+                  type: number
+                  description: Spending limit in USDC
+                autoBlock:
+                  type: boolean
+                  description: 'Auto-block charges when cap is reached (default: true)'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Spending cap set
+          content:
+            application/json:
+              schema:
+                description: Spending cap set
+                type: object
+                properties:
+                  id:
+                    type: string
+                  capType:
+                    type: string
+                  limitValue:
+                    type: string
+                  autoBlock:
+                    type: boolean
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+  /v1/customers/{id}/spending-caps:
+    get:
+      operationId: listCustomerSpendingCaps
+      summary: List customer spending caps
+      tags:
+      - Customers
+      description: List all active spending caps for a customer, including current usage and last alert level. Requires a secret key (`sk_*`).
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Spending caps
+          content:
+            application/json:
+              schema:
+                description: Spending caps
+                type: object
+                properties:
+                  caps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        capType:
+                          type: string
+                        limitValue:
+                          type: string
+                        currentUsage:
+                          type: string
+                        autoBlock:
+                          type: boolean
+                        lastAlertLevel:
+                          type: string
+                          nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+  /v1/customers/{id}/spending-caps/{capId}:
+    delete:
+      operationId: removeCustomerSpendingCap
+      summary: Remove customer spending cap
+      tags:
+      - Customers
+      description: Deactivate a spending cap for a customer. Requires a secret key (`sk_*`).
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      - schema:
+          type: string
+        in: path
+        name: capId
+        required: true
+      responses:
+        '200':
+          description: Cap removed
+          content:
+            application/json:
+              schema:
+                description: Cap removed
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+        '404':
+          description: Customer or cap not found
+          content:
+            application/json:
+              schema:
+                description: Customer or cap not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+  /v1/customers/{id}/attach-plan:
+    post:
+      operationId: attachPlanToCustomer
+      summary: Attach a Quickstart-managed plan to a customer
+      tags:
+      - Customers
+      description: 'Creates a Stripe Subscription on the merchant''s connected account for the given Drip (customer, plan) pair. The plan MUST be Drip-managed (`managedBy=DRIP`); run provisionPlanOnStripe / POST `/pricing-plans/:id/reprovision-stripe` first if the plan is still `EXTERNAL`. Idempotent: re-calling with the same customer + plan returns the existing subscription.
+
+
+        > **Requires a secret key (`sk_*`) with the `ADMIN` role.**'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                planId:
+                  type: string
+                  description: Drip pricing plan id
+                customerEmailOverride:
+                  type: string
+                  description: Optional email to send to Stripe when the Drip customer row has none. Ignored if the customer already has an email.
+              required:
+              - planId
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Drip customer id
+      responses:
+        '200':
+          description: Default Response
+  /v1/customers/{id}/sync-stripe-customer:
+    post:
+      operationId: syncCustomerToStripe
+      summary: Sync a Drip customer to Stripe (create cus_xxx and link)
+      tags:
+      - Customers
+      description: 'Create a Stripe Customer on the merchant''s connected Stripe account for the given Drip customer and persist the resulting `cus_xxx` on the Drip customer row. Idempotent: if the Drip customer already has a `stripeCustomerId`, returns it unchanged. Works with API-key or OAuth-connected Stripe integrations. Email/name are pulled from the Drip customer''s `metadata.email` / `metadata.name`, falling back to `externalCustomerId` when it looks like an email, then to `emailOverride` from the request body.
+
+
+        > **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                integrationId:
+                  type: string
+                  description: Specific Stripe integration to use. Omit to auto-select the workspace's active Stripe integration.
+                emailOverride:
+                  type: string
+                  description: Email to send to Stripe when the Drip customer has none in metadata or externalCustomerId.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Drip customer id
+      responses:
+        '200':
+          description: Default Response
+  /v1/customers/{id}/hierarchy:
+    get:
+      operationId: getCustomerHierarchy
+      summary: Get customer hierarchy
+      tags:
+      - Customers
+      description: Returns the full ancestor chain (parent, grandparent, …) and all descendants for a customer.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/customers/{id}/rollup:
+    get:
+      operationId: getCustomerRollup
+      summary: Get customer roll-up stats
+      tags:
+      - Customers
+      description: Aggregated invoice totals and usage across this customer and all descendants.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/customers/{id}/touches:
+    get:
+      operationId: listCustomerTouches
+      summary: List recent touches for a customer
+      tags:
+      - Customers
+      description: Return the most recent touches for a customer, ordered by `ts` descending. Default limit 10, max 100. Touches are pushed by drip-cli via POST /v1/sync/touches; this endpoint surfaces the last-N preview metadata.
+      parameters:
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        in: query
+        name: limit
+        required: false
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Customer ID
+      responses:
+        '200':
+          description: Default Response
+  /v1/customers/{id}/balance:
+    get:
+      operationId: getCustomerBalance
+      summary: Get customer balance
+      tags:
+      - Customers
+      description: "\nRetrieve the current balance for a customer. Returns the latest cached\nbalance from the database (synced periodically from on-chain).\n\nFor real-time balance, call `POST /v1/customers/:id/sync-balance` first.\n        "
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Customer ID
+      responses:
+        '200':
+          description: Customer balance
+          content:
+            application/json:
+              schema:
+                description: Customer balance
+                type: object
+                properties:
+                  customerId:
+                    type: string
+                  onchainAddress:
+                    type: string
+                    pattern: ^0x[a-fA-F0-9]{40}$
+                  balanceUsdc:
+                    type: string
+                    description: Available USDC balance
+                  pendingChargesUsdc:
+                    type: string
+                    description: USDC in pending charges
+                  availableUsdc:
+                    type: string
+                    description: Balance minus pending charges
+                  lastSyncedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'

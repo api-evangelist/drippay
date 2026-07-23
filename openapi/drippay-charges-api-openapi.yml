@@ -1,0 +1,1303 @@
+openapi: 3.1.0
+info:
+  title: Drip BillableMetrics Charges API
+  description: "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n"
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Charges
+  description: View charge history and settlement status.
+paths:
+  /v1/charges:
+    get:
+      operationId: listCharges
+      summary: List charges
+      tags:
+      - Charges
+      description: Retrieve all charges for your business, sorted by creation date (newest first).
+      parameters:
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of charges to return
+      - schema:
+          type: integer
+          minimum: 0
+          default: 0
+        in: query
+        name: offset
+        required: false
+        description: Number of charges to skip (for pagination)
+      - schema:
+          type: string
+          enum:
+          - PENDING
+          - PENDING_SETTLEMENT
+          - CONFIRMED
+          - FAILED
+          - REFUNDED
+          - REFUND_PENDING
+        in: query
+        name: status
+        required: false
+        description: Filter by status
+      - schema:
+          type: string
+        in: query
+        name: customerId
+        required: false
+        description: Filter by customer ID
+      responses:
+        '200':
+          description: List of charges
+          content:
+            application/json:
+              schema:
+                description: List of charges
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique charge identifier
+                          example: chg_abc123def456
+                        usageId:
+                          type: string
+                          description: Associated usage event ID
+                          example: usg_xyz789
+                        customerId:
+                          type: string
+                          description: Customer ID
+                          example: cus_abc123
+                        customer:
+                          type: object
+                          description: Customer details
+                          properties:
+                            id:
+                              type: string
+                              example: cus_abc123
+                            onchainAddress:
+                              type: string
+                              example: '0x742d35Cc6634C0532925a3b844Bc9e7595f00000'
+                            externalCustomerId:
+                              type: string
+                              nullable: true
+                              example: user_123
+                        usageEvent:
+                          type: object
+                          description: Usage event that triggered this charge
+                          properties:
+                            id:
+                              type: string
+                              example: usg_xyz789
+                            type:
+                              type: string
+                              description: Usage type
+                              example: api_call
+                            quantity:
+                              type: string
+                              description: Quantity consumed
+                              example: '100'
+                            metadata:
+                              type: object
+                              nullable: true
+                              additionalProperties: true
+                              example:
+                                endpoint: /v1/chat
+                        amountUsdc:
+                          type: string
+                          description: Amount charged in USDC
+                          example: '0.100000'
+                        amountToken:
+                          type: string
+                          description: Amount in token units (6 decimals)
+                          example: '100000'
+                        txHash:
+                          type: string
+                          nullable: true
+                          description: On-chain transaction hash
+                          example: 0x1234567890abcdef...
+                        blockNumber:
+                          type: string
+                          nullable: true
+                          description: Block number when confirmed
+                          example: '12345678'
+                        status:
+                          type: string
+                          enum:
+                          - PENDING
+                          - PENDING_SETTLEMENT
+                          - CONFIRMED
+                          - FAILED
+                          - REFUNDED
+                          - REFUND_PENDING
+                          description: Current charge status
+                          example: CONFIRMED
+                        failureReason:
+                          type: string
+                          nullable: true
+                          description: Reason if charge failed
+                        createdAt:
+                          type: string
+                          format: date-time
+                          description: When the charge was created
+                          example: '2024-01-15T10:30:00.000Z'
+                        confirmedAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: When the charge was confirmed on-chain
+                          example: '2024-01-15T10:30:05.000Z'
+                  count:
+                    type: integer
+                    description: Total number of charges returned
+                    example: 42
+        '400':
+          description: Invalid parameter
+          content:
+            application/json:
+              schema:
+                description: Invalid parameter
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden (secret key required)
+          content:
+            application/json:
+              schema:
+                description: Forbidden (secret key required)
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: Service temporarily unavailable
+          content:
+            application/json:
+              schema:
+                description: Service temporarily unavailable
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/charges/{id}:
+    get:
+      operationId: getCharge
+      summary: Get a charge
+      tags:
+      - Charges
+      description: Retrieve details for a specific charge by ID.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Charge ID
+      responses:
+        '200':
+          description: Charge details
+          content:
+            application/json:
+              schema:
+                description: Charge details
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique charge identifier
+                    example: chg_abc123def456
+                  customerId:
+                    type: string
+                    description: Customer ID
+                    example: cus_abc123
+                  customer:
+                    type: object
+                    description: Customer who was charged
+                    properties:
+                      id:
+                        type: string
+                        example: cus_abc123
+                      onchainAddress:
+                        type: string
+                        description: Smart account address
+                        example: '0x742d35Cc6634C0532925a3b844Bc9e7595f00000'
+                      externalCustomerId:
+                        type: string
+                        nullable: true
+                        description: Your system customer ID
+                        example: user_123
+                  usageId:
+                    type: string
+                    description: Associated usage event ID
+                    example: usg_xyz789
+                  usageEvent:
+                    type: object
+                    description: Usage event that triggered this charge
+                    properties:
+                      id:
+                        type: string
+                        example: usg_xyz789
+                      type:
+                        type: string
+                        description: Usage type from pricing plan
+                        example: api_call
+                      quantity:
+                        type: string
+                        description: Quantity consumed
+                        example: '100'
+                      metadata:
+                        type: object
+                        nullable: true
+                        additionalProperties: true
+                        description: Custom metadata attached to usage event
+                        example:
+                          endpoint: /v1/chat
+                          model: gpt-4
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: '2024-01-15T10:30:00.000Z'
+                  amountUsdc:
+                    type: string
+                    description: Amount charged in USDC
+                    example: '0.100000'
+                  amountToken:
+                    type: string
+                    description: Amount in token units (6 decimals)
+                    example: '100000'
+                  txHash:
+                    type: string
+                    nullable: true
+                    description: On-chain transaction hash when confirmed
+                    example: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+                  blockNumber:
+                    type: string
+                    nullable: true
+                    description: Block number when charge was confirmed
+                    example: '12345678'
+                  status:
+                    type: string
+                    enum:
+                    - PENDING
+                    - PENDING_SETTLEMENT
+                    - CONFIRMED
+                    - FAILED
+                    - REFUNDED
+                    - REFUND_PENDING
+                    description: 'Current charge status: PENDING (processing), PENDING_SETTLEMENT (in batch), CONFIRMED (settled), FAILED (error), REFUNDED (returned)'
+                    example: CONFIRMED
+                  failureReason:
+                    type: string
+                    nullable: true
+                    description: Error message if charge failed
+                    example: null
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: When the charge was created
+                    example: '2024-01-15T10:30:00.000Z'
+                  confirmedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                    description: When the charge was confirmed on-chain
+                    example: '2024-01-15T10:30:05.000Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden (secret key required)
+          content:
+            application/json:
+              schema:
+                description: Forbidden (secret key required)
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Charge not found
+          content:
+            application/json:
+              schema:
+                description: Charge not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/charges/export:
+    get:
+      operationId: exportCharges
+      summary: Export charges
+      tags:
+      - Charges
+      description: "\nExport all charges for your business in JSON or CSV format.\n\nCSV format is useful for importing into spreadsheets or accounting software.\n        "
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - json
+          - csv
+          default: json
+        in: query
+        name: format
+        required: false
+        description: Export format
+      responses:
+        '200':
+          description: Exported charges (JSON or CSV)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+                  count:
+                    type: integer
+            text/csv:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden (secret key required)
+          content:
+            application/json:
+              schema:
+                description: Forbidden (secret key required)
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/charges/{id}/refund:
+    post:
+      operationId: refundCharge
+      summary: Refund a charge
+      tags:
+      - Charges
+      description: "\nRefund a charge back to the customer. Only escrow-based charges can be refunded,\nand only before the escrow has been settled or expired.\n\n**Refund reasons:**\n- `customer_request` - Customer requested a refund\n- `merchant_error` - Charge was made in error\n- `fraud_reversal` - Fraudulent transaction reversal\n\nThe refund is processed on-chain and the funds are returned to the customer's account.\n        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  enum:
+                  - customer_request
+                  - merchant_error
+                  - fraud_reversal
+                  description: Reason for the refund
+                note:
+                  type: string
+                  maxLength: 1000
+                  description: Optional internal note about the refund
+              required:
+              - reason
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+        description: Charge ID
+      responses:
+        '200':
+          description: Charge refunded successfully
+          content:
+            application/json:
+              schema:
+                description: Charge refunded successfully
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Charge ID
+                  customerId:
+                    type: string
+                  customer:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      onchainAddress:
+                        type: string
+                        pattern: ^0x[a-fA-F0-9]{40}$
+                        description: Ethereum address (checksummed or lowercase)
+                      externalCustomerId:
+                        type: string
+                        nullable: true
+                  usageId:
+                    type: string
+                  amountUsdc:
+                    type: string
+                    pattern: ^\d+\.\d{1,6}$
+                    description: USDC amount with up to 6 decimal places
+                  amountToken:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - REFUNDED
+                    - REFUND_PENDING
+                    description: REFUNDED when on-chain confirmation succeeded, REFUND_PENDING when tx submitted but confirmation failed
+                  refundReason:
+                    type: string
+                    enum:
+                    - customer_request
+                    - merchant_error
+                    - fraud_reversal
+                  refundNote:
+                    type: string
+                    nullable: true
+                  refundTxHash:
+                    type: string
+                    description: Transaction hash for the refund
+                  refundedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                    description: Set when refund is confirmed on-chain; null when REFUND_PENDING
+                  createdAt:
+                    type: string
+                    format: date-time
+                required:
+                - id
+                - customerId
+                - amountUsdc
+                - status
+                - refundReason
+                - refundTxHash
+        '400':
+          description: Refund not allowed
+          content:
+            application/json:
+              schema:
+                description: Refund not allowed
+                type: object
+                properties:
+                  error:
+                    type: string
+                  code:
+                    type: string
+                    enum:
+                    - NO_ESCROW
+                    - ALREADY_REFUNDED
+                    - ESCROW_ALREADY_SETTLED
+                    - ESCROW_EXPIRED
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden (secret key required)
+          content:
+            application/json:
+              schema:
+                description: Forbidden (secret key required)
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Charge not found
+          content:
+            application/json:
+              schema:
+                description: Charge not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Blockchain error
+          content:
+            application/json:
+              schema:
+                description: Blockchain error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: Lock unavailable
+          content:
+            application/json:
+              schema:
+                description: Lock unavailable
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/cost-estimate/from-usage:
+    post:
+      operationId: estimateCostsFromUsage
+      summary: Estimate costs from existing usage
+      tags:
+      - Charges
+      description: '
+
+        Estimate costs from existing usage events without creating charges.
+
+
+        Queries usage events in the specified period and calculates what they would cost
+
+        based on pricing plans. Supports custom pricing overrides for "what-if" scenarios.
+
+
+        **Use cases:**
+
+        - Budget planning and forecasting
+
+        - Cost allocation previews
+
+        - Retroactive pricing analysis
+
+        - Comparing pricing strategies
+
+
+        The response includes per-usage-type line items with quantity, unit price,
+
+        and estimated cost. Notes indicate which usage types used custom pricing,
+
+        default pricing, or had no pricing plan available.
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - periodStart
+              - periodEnd
+              properties:
+                customerId:
+                  type: string
+                  description: Filter to a specific customer. Omit to estimate across all customers.
+                periodStart:
+                  type: string
+                  format: date-time
+                  description: Start of the estimation period (ISO 8601)
+                  example: '2024-01-01T00:00:00.000Z'
+                periodEnd:
+                  type: string
+                  format: date-time
+                  description: End of the estimation period (ISO 8601)
+                  example: '2024-01-31T23:59:59.999Z'
+                defaultUnitPrice:
+                  type: string
+                  description: Default unit price (USDC) for usage types without a pricing plan
+                  example: '0.001'
+                includeChargedEvents:
+                  type: boolean
+                  description: 'Include events that already have charges (default: true)'
+                  default: true
+                usageTypes:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter to specific usage types
+                customPricing:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: 'Custom pricing overrides: usageType → unitPrice. Takes precedence over DB pricing plans.'
+                  example:
+                    api_call: '0.005'
+                    token: '0.0001'
+      responses:
+        '200':
+          description: Cost estimate with line item breakdown
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Cost estimate with line item breakdown
+                properties:
+                  businessId:
+                    type: string
+                  customerId:
+                    type: string
+                  periodStart:
+                    type: string
+                  periodEnd:
+                    type: string
+                  lineItems:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        usageType:
+                          type: string
+                        quantity:
+                          type: string
+                        unitPrice:
+                          type: string
+                        estimatedCostUsdc:
+                          type: string
+                        eventCount:
+                          type: integer
+                        hasPricingPlan:
+                          type: boolean
+                  subtotalUsdc:
+                    type: string
+                  estimatedTotalUsdc:
+                    type: string
+                  currency:
+                    type: string
+                    enum:
+                    - USDC
+                  isEstimate:
+                    type: boolean
+                    enum:
+                    - true
+                  generatedAt:
+                    type: string
+                    format: date-time
+                  notes:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                description: Invalid request parameters
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                description: Missing or invalid API key
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                description: Customer not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/cost-estimate/hypothetical:
+    post:
+      operationId: estimateCostsFromHypothetical
+      summary: Estimate costs from hypothetical usage
+      tags:
+      - Charges
+      description: '
+
+        Estimate costs from hypothetical usage without creating charges.
+
+
+        Takes a list of usage items (type + quantity) and calculates what they would
+
+        cost based on your pricing plans. Useful for "what-if" scenarios, budget
+
+        planning, or previewing costs before usage occurs.
+
+
+        **Use cases:**
+
+        - Pre-execution cost preview for AI agents
+
+        - Budget planning with different pricing scenarios
+
+        - Customer-facing cost calculators
+
+        - Comparing pricing strategies side by side
+
+        '
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - items
+              properties:
+                items:
+                  type: array
+                  minItems: 1
+                  description: Hypothetical usage items to estimate
+                  items:
+                    type: object
+                    required:
+                    - usageType
+                    - quantity
+                    properties:
+                      usageType:
+                        type: string
+                        minLength: 1
+                        description: Usage type (must match a pricing plan for accurate estimates)
+                        example: api_call
+                      quantity:
+                        type: number
+                        exclusiveMinimum: 0
+                        description: Hypothetical quantity
+                        example: 10000
+                      unitPriceOverride:
+                        type: string
+                        description: Override unit price for this item (USDC)
+                        example: '0.005'
+                defaultUnitPrice:
+                  type: string
+                  description: Default unit price (USDC) for usage types without a pricing plan
+                  example: '0.001'
+                customPricing:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: 'Custom pricing overrides: usageType → unitPrice. Takes precedence over DB pricing plans.'
+                  example:
+                    api_call: '0.005'
+                    token: '0.0001'
+      responses:
+        '200':
+          description: Cost estimate with line item breakdown
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Cost estimate with line item breakdown
+                properties:
+                  businessId:
+                    type: string
+                  lineItems:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        usageType:
+                          type: string
+                        quantity:
+                          type: string
+                        unitPrice:
+                          type: string
+                        estimatedCostUsdc:
+                          type: string
+                        hasPricingPlan:
+                          type: boolean
+                  subtotalUsdc:
+                    type: string
+                  estimatedTotalUsdc:
+                    type: string
+                  currency:
+                    type: string
+                    enum:
+                    - USDC
+                  isEstimate:
+                    type: boolean
+                    enum:
+                    - true
+                  generatedAt:
+                    type: string
+                    format: date-time
+                  notes:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                description: Invalid request parameters
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Missing or invalid API key
+          content:
+            application/json:
+              schema:
+                description: Missing or invalid API key
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'

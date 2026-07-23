@@ -1,0 +1,3134 @@
+openapi: 3.1.0
+info:
+  title: Drip BillableMetrics Integrations API
+  description: "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n"
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Integrations
+  description: Manage billing, CRM, and marketplace integrations (Stripe, Xero, Salesforce).
+paths:
+  /v1/webhooks/salesforce/{integrationId}:
+    post:
+      operationId: salesforceWebhook
+      summary: Salesforce Change Data Capture webhook (HMAC-signed)
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: integrationId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations:
+    get:
+      operationId: listIntegrations
+      summary: List marketplace & CRM integrations
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+    post:
+      operationId: createIntegration
+      summary: Create a marketplace / CRM integration
+      tags:
+      - Integrations
+      description: 'Create a new marketplace or CRM integration.
+
+
+        Supported providers:
+
+        - `AWS_MARKETPLACE` - AWS Marketplace Metering Service
+
+        - `AZURE_MARKETPLACE` - Azure Marketplace SaaS metering
+
+        - `GCP_MARKETPLACE` - GCP Cloud Commerce / Service Control
+
+        - `STRIPE` - Stripe Billing Meter Events
+
+        - `SALESFORCE` - Salesforce CRM (custom usage object)
+
+        - `METRONOME` - Metronome usage ingestion
+
+
+        Secret config fields are encrypted at rest and never returned on read.
+
+
+        > **Requires a secret key (`sk_*`) with the `ADMIN` role.**'
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/{id}:
+    get:
+      operationId: getIntegration
+      summary: Get a marketplace integration
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    patch:
+      operationId: updateIntegration
+      summary: Update an integration (rotate secrets, toggle status)
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: deleteIntegration
+      summary: Delete an integration
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/{id}/test:
+    post:
+      operationId: testIntegration
+      summary: Test an integration connection
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/{id}/usage:
+    post:
+      operationId: submitIntegrationUsage
+      summary: Submit a metered usage record to the provider
+      tags:
+      - Integrations
+      description: Forwards a single metered usage record to the connected marketplace or CRM. A MarketplaceMeterSubmission row is always written as an audit trail, even if the provider call fails. Idempotency is guaranteed via the `idempotencyKey` field (auto-generated when omitted).
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/{id}/submissions:
+    get:
+      operationId: listIntegrationSubmissions
+      summary: List recent meter submissions
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - PENDING
+          - SUBMITTED
+          - FAILED
+          - RETRYING
+          - REJECTED
+        in: query
+        name: status
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: limit
+        required: false
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/test:
+    post:
+      operationId: testStripeOnboarding
+      summary: Validate Stripe credentials (no side effects)
+      tags:
+      - Integrations
+      description: Validates a Stripe secret or restricted key (and optional webhook secret) against Stripe's /v1/account endpoint. Probes tax/billing/invoicing capabilities when scoped keys are provided. Returns account metadata on success. **No database writes.** Requires a secret key with the `ADMIN` role.
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/connect:
+    post:
+      operationId: connectStripeIntegration
+      summary: Connect a Stripe account via API key
+      tags:
+      - Integrations
+      description: 'Validates Stripe credentials, creates a `MarketplaceIntegration` row (idempotent on Stripe account ID), optionally flips `taxProvider` to `STRIPE_TAX`, and returns the webhook URL the merchant must paste into their Stripe dashboard. Retrying this endpoint with the same Stripe account returns the existing integration with `alreadyExists: true`. Requires `API_PUBLIC_BASE_URL` to be set; webhook URL has no host header fallback. **Requires a secret key with the `ADMIN` role.**'
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/oauth/init:
+    post:
+      operationId: initStripeQuickstartOAuth
+      summary: Begin Stripe Connect OAuth (Quickstart mode)
+      tags:
+      - Integrations
+      description: Generates a Stripe Connect authorize URL and a signed state token. The frontend redirects the user's browser to `authorizeUrl`; Stripe then redirects back to `/v1/integrations/stripe/oauth/callback` where Drip exchanges the code, creates the integration, and auto-provisions the webhook endpoint. Gated on the `STRIPE_QUICKSTART_ENABLED` feature flag; returns 404 if disabled for the workspace.
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/oauth/callback:
+    get:
+      operationId: stripeQuickstartOAuthCallback
+      summary: Stripe Connect OAuth redirect handler
+      tags:
+      - Integrations
+      description: Public redirect endpoint Stripe posts the user back to after they authorize the Connect app. Verifies the state HMAC + expiry, exchanges the code for the connected `acct_…` id, creates the integration, auto-provisions the webhook endpoint, and 302-redirects the browser to the dashboard with a `?quickstart=success|error` hint.
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/slack/install:
+    post:
+      operationId: commsSlackInstall
+      summary: Begin Slack OAuth (pre-call MVP)
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Authorize URL issued
+          content:
+            application/json:
+              schema:
+                description: Authorize URL issued
+                type: object
+                required:
+                - authorizeUrl
+                - state
+                - expiresInSeconds
+                properties:
+                  authorizeUrl:
+                    type: string
+                    format: uri
+                  state:
+                    type: string
+                  expiresInSeconds:
+                    type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/slack/realtime/stream:
+    get:
+      operationId: commsSlackRealtimeStream
+      summary: Stream managed Slack realtime messages to desktop clients
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/slack/events/stream:
+    get:
+      operationId: commsSlackEventsStream
+      summary: Stream managed Slack realtime messages to desktop clients
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/linkedin/realtime/stream:
+    get:
+      operationId: commsLinkedInRealtimeStream
+      summary: Stream managed LinkedIn realtime events to desktop clients
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/linkedin/events/stream:
+    get:
+      operationId: commsLinkedInEventsStream
+      summary: Stream managed LinkedIn realtime events to desktop clients
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/linkedin/events:
+    post:
+      operationId: commsLinkedInRealtimePublish
+      summary: Publish local LinkedIn realtime events to desktop clients
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/slack/callback:
+    get:
+      operationId: commsSlackCallback
+      summary: Slack OAuth redirect handler
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/gmail/install:
+    post:
+      operationId: commsGmailInstall
+      summary: Begin Gmail OAuth (pre-call MVP)
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Authorize URL issued
+          content:
+            application/json:
+              schema:
+                description: Authorize URL issued
+                type: object
+                required:
+                - authorizeUrl
+                - state
+                - expiresInSeconds
+                properties:
+                  authorizeUrl:
+                    type: string
+                    format: uri
+                  state:
+                    type: string
+                  expiresInSeconds:
+                    type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/gmail/callback:
+    get:
+      operationId: commsGmailCallback
+      summary: Gmail OAuth redirect handler
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms/calendar/callback:
+    get:
+      operationId: commsCalendarCallback
+      summary: Google Calendar OAuth redirect handler
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/comms:
+    get:
+      operationId: commsList
+      summary: List comms integrations for the authenticated business
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Integrations list
+          content:
+            application/json:
+              schema:
+                description: Integrations list
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - id
+                      - provider
+                      - status
+                      - scopes
+                      - createdAt
+                      properties:
+                        id:
+                          type: string
+                        provider:
+                          type: string
+                          enum:
+                          - SLACK
+                          - GMAIL
+                        status:
+                          type: string
+                          enum:
+                          - ACTIVE
+                          - DISABLED
+                          - ERROR
+                          - PENDING
+                        externalAccountLabel:
+                          type: string
+                          nullable: true
+                        scopes:
+                          type: array
+                          items:
+                            type: string
+                        lastSyncedAt:
+                          type: string
+                          format: date-time
+                          nullable: true
+                        lastErrorMessage:
+                          type: string
+                          nullable: true
+                        createdAt:
+                          type: string
+                          format: date-time
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/slack/doctor:
+    get:
+      operationId: commsSlackDoctor
+      summary: Diagnose Slack OAuth, realtime events, and stored comms state for the authenticated business
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Slack diagnostics
+          content:
+            application/json:
+              schema:
+                description: Slack diagnostics
+                type: object
+                additionalProperties: true
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/messages:
+    get:
+      operationId: commsMessagesList
+      summary: List recently ingested comms messages for the authenticated business
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+          enum:
+          - SLACK
+          - GMAIL
+        in: query
+        name: provider
+        required: false
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: since
+        required: false
+      - schema:
+          type: string
+          format: date-time
+        in: query
+        name: before
+        required: false
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        in: query
+        name: limit
+        required: false
+      responses:
+        '200':
+          description: Comms messages list
+          content:
+            application/json:
+              schema:
+                description: Comms messages list
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - id
+                      - source
+                      - direction
+                      - externalId
+                      - body
+                      - sentAt
+                      properties:
+                        id:
+                          type: string
+                        source:
+                          type: string
+                          enum:
+                          - SLACK_DM
+                          - SLACK_CHANNEL
+                          - GMAIL
+                        direction:
+                          type: string
+                          enum:
+                          - INBOUND
+                          - OUTBOUND
+                        externalId:
+                          type: string
+                        threadExternalId:
+                          type: string
+                          nullable: true
+                        senderEmail:
+                          type: string
+                          nullable: true
+                        senderHandle:
+                          type: string
+                          nullable: true
+                        channelName:
+                          type: string
+                          nullable: true
+                        subject:
+                          type: string
+                          nullable: true
+                        body:
+                          type: string
+                        permalink:
+                          type: string
+                          nullable: true
+                        sentAt:
+                          type: string
+                          format: date-time
+                        metadata:
+                          type:
+                          - 'null'
+                          - object
+                          additionalProperties: true
+                  nextCursor:
+                    type: string
+                    nullable: true
+                  hasMore:
+                    type: boolean
+                  complete:
+                    type: boolean
+                  highWaterTs:
+                    type: number
+                    nullable: true
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                description: Bad request
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '502':
+          description: Upstream provider error
+          content:
+            application/json:
+              schema:
+                description: Upstream provider error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/slack/send:
+    post:
+      operationId: commsSlackSend
+      summary: Send a Slack message through the authenticated business integration
+      tags:
+      - Integrations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - target
+              - body
+              properties:
+                target:
+                  type: string
+                  minLength: 1
+                body:
+                  type: string
+                  minLength: 1
+                  maxLength: 40000
+      responses:
+        '200':
+          description: Slack message sent
+          content:
+            application/json:
+              schema:
+                description: Slack message sent
+                type: object
+                required:
+                - sourceId
+                - channelId
+                - ts
+                properties:
+                  sourceId:
+                    type: string
+                  channelId:
+                    type: string
+                  threadExternalId:
+                    type: string
+                    nullable: true
+                  ts:
+                    type: string
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                description: Bad request
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '502':
+          description: Upstream provider error
+          content:
+            application/json:
+              schema:
+                description: Upstream provider error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/{id}:
+    delete:
+      operationId: commsDelete
+      summary: Disconnect a comms integration
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '204':
+          description: Disconnected
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/integrations/comms/{id}/sync:
+    post:
+      operationId: commsManualSync
+      summary: Trigger an immediate poll for a comms integration
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Sync result
+          content:
+            application/json:
+              schema:
+                description: Sync result
+                type: object
+                required:
+                - inserted
+                - matchedCustomers
+                - errors
+                properties:
+                  inserted:
+                    type: integer
+                    minimum: 0
+                  matchedCustomers:
+                    type: integer
+                    minimum: 0
+                  errors:
+                    type: array
+                    items:
+                      type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '501':
+          description: Provider not yet supported by manual sync
+          content:
+            application/json:
+              schema:
+                description: Provider not yet supported by manual sync
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/customers/{customerId}/comms/link:
+    post:
+      operationId: commsLinkHandle
+      summary: Manually attribute past + future comm messages to a customer
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: customerId
+        required: true
+      responses:
+        '200':
+          description: Number of messages linked
+          content:
+            application/json:
+              schema:
+                description: Number of messages linked
+                type: object
+                required:
+                - matched
+                properties:
+                  matched:
+                    type: integer
+                    minimum: 0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                description: Unauthorized
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                description: Forbidden
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                description: Not found
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                description: Validation error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                description: Rate limit exceeded
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                description: Internal error
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+        '503':
+          description: OAuth provider not configured
+          content:
+            application/json:
+              schema:
+                description: OAuth provider not configured
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+                  code:
+                    type: string
+                    description: Error code
+                  details:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+                    description: Validation error details
+                required:
+                - error
+                - code
+  /v1/sync/touches:
+    post:
+      operationId: syncTouches
+      summary: Sync customer touches from drip-cli
+      tags:
+      - Integrations
+      description: Push a batch of communication touches (iMessage / Slack / Gmail / LinkedIn / calendar / GitHub) to Drip. Body is truncated server-side to 200 chars; full message contents should never be sent. Each touch is matched to an existing Customer by email (case-insensitive); unmatched rows are still stored with customerId=null so a future re-resolve can backfill the link. Idempotent on `sourceId`. Capped at 500 touches per request.
+      responses:
+        '200':
+          description: Default Response
+  /v1/opens-since:
+    get:
+      operationId: listEmailOpensSince
+      summary: List email opens since a unix timestamp
+      tags:
+      - Integrations
+      description: Return email-pixel opens with `opened_at >= ts` (unix seconds). drip-cli polls this endpoint with its last-sync watermark, matches incoming tokens against its local `email_opens` table, and updates open counts for tokens it owns. Unknown tokens are ignored. Capped at 5000 rows per call (default 1000); the cli re-polls with an advanced watermark.
+      parameters:
+      - schema:
+          type: integer
+          minimum: 0
+        in: query
+        name: ts
+        required: true
+        description: Unix seconds. Returns opens with opened_at >= this value.
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 5000
+          default: 1000
+        in: query
+        name: limit
+        required: false
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/migrate/dry-run:
+    post:
+      operationId: stripeMigrateDryRun
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/migrate/execute:
+    post:
+      operationId: stripeMigrateExecute
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/migrate/status:
+    get:
+      operationId: stripeMigrateStatus
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/migrate/runs:
+    get:
+      operationId: stripeMigrateListRuns
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/migrate/runs/{id}:
+    get:
+      operationId: stripeMigrateGetRun
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: stripeMigrateRollback
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/migrate/runs/{id}/rollback:
+    post:
+      operationId: stripeMigrateRollbackPost
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/stripe/customers:
+    get:
+      operationId: stripeListCustomers
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/import/dry-run:
+    post:
+      operationId: csvImportDryRun
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/import/execute:
+    post:
+      operationId: csvImportExecute
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/import/status:
+    get:
+      operationId: csvImportStatus
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/import/runs:
+    get:
+      operationId: csvImportListRuns
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/import/runs/{id}:
+    get:
+      operationId: csvImportGetRun
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: csvImportRollback
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/import/runs/{id}/rollback:
+    post:
+      operationId: csvImportRollbackPost
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/lead-sources/webhook/connect:
+    post:
+      operationId: connectLeadWebhookSource
+      summary: Create or rotate a lead-source webhook setup
+      description: Provisions (or rotates) a generic lead-source webhook for the authenticated business. Returns the public ingest endpoint, a bearer token to use in the `Authorization` header, the connection identifier, and a sample request body. Requires a secret key (`sk_*`) with the `ADMIN` role.
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Webhook setup created or rotated
+  /v1/lead-sources/webhook/status:
+    get:
+      operationId: getLeadWebhookSourceStatus
+      summary: Get lead-source webhook status
+      description: Returns the current webhook connection status, including connection identifier, endpoint URL, token last-4, last ingest time, and last error message. Returns 404 when the webhook has not been configured for the business.
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Current webhook connection status
+        '404':
+          description: Lead webhook has not been configured (code `CLAY_CONNECTOR_NOT_FOUND`)
+  /v1/lead-sources/webhook/leads:
+    get:
+      operationId: listLeadWebhookLeads
+      summary: List webhook leads for desktop sync
+      description: Returns a cursor-paginated batch of normalized webhook leads ingested for the authenticated business. Use `cursor` and `limit` (1–500, default 500) to page through results. Returns 404 when the webhook has not been configured.
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque pagination cursor returned by a previous response.
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 500
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of leads to return.
+      responses:
+        '200':
+          description: Paginated list of ingested webhook leads
+        '404':
+          description: Lead webhook has not been configured (code `CLAY_CONNECTOR_NOT_FOUND`)
+  /v1/connectors/leads/{connectionId}/ingest:
+    post:
+      operationId: ingestLeadWebhookLeads
+      summary: Ingest leads from a webhook
+      description: 'Public webhook ingest endpoint. Authenticate with the bearer token returned by the connect call (`Authorization: Bearer <token>`). The request body must contain a `leads` array of up to 500 records per call. Returns 202 with counts of received, created, duplicate, and skipped leads.
+
+
+        Error codes: `CLAY_CONNECTOR_NOT_FOUND` (404), `CLAY_CONNECTOR_DISCONNECTED` (403), `CLAY_CONNECTOR_TOKEN_REQUIRED` (401), `CLAY_CONNECTOR_TOKEN_INVALID` (401), `CLAY_EMPTY_PAYLOAD` (422), `CLAY_BATCH_TOO_LARGE` (422).'
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+        in: path
+        name: connectionId
+        required: true
+        description: Connection identifier returned by the connect call.
+      responses:
+        '202':
+          description: Leads accepted for ingestion
+  /v1/lead-sources/clay/connect:
+    post:
+      operationId: connectClayLeadSource
+      summary: Create or rotate Clay lead-source webhook setup
+      description: Clay-branded alias of `POST /v1/lead-sources/webhook/connect`. Behaves identically; prefer the generic `/lead-sources/webhook/connect` route for new integrations.
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/lead-sources/clay/status:
+    get:
+      operationId: getClayLeadSourceStatus
+      summary: Get Clay lead-source webhook status
+      description: Clay-branded alias of `GET /v1/lead-sources/webhook/status`. Behaves identically; prefer the generic `/lead-sources/webhook/status` route for new integrations.
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/lead-sources/clay/leads:
+    get:
+      operationId: listClayIngestedLeads
+      summary: List Clay-ingested leads for desktop sync
+      description: Clay-branded alias of `GET /v1/lead-sources/webhook/leads`. Behaves identically; prefer the generic `/lead-sources/webhook/leads` route for new integrations.
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: cursor
+        required: false
+        description: Opaque pagination cursor returned by a previous response.
+      - schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 500
+        in: query
+        name: limit
+        required: false
+        description: Maximum number of leads to return.
+      responses:
+        '200':
+          description: Paginated list of ingested Clay leads
+        '404':
+          description: Lead webhook has not been configured (code `CLAY_CONNECTOR_NOT_FOUND`)
+  /v1/connectors/clay/{connectionId}/ingest:
+    post:
+      operationId: ingestClayLeads
+      summary: Ingest leads from Clay webhook
+      description: Clay-branded alias of `POST /v1/connectors/leads/{connectionId}/ingest`. Behaves identically; prefer the generic `/connectors/leads/{connectionId}/ingest` route for new integrations.
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: connectionId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/salesforce/{id}/sync/accounts:
+    post:
+      operationId: triggerSalesforceAccountSync
+      summary: Trigger a Salesforce Account → Drip Customer sync
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/salesforce/{id}/sync/opportunities:
+    post:
+      operationId: triggerSalesforceOpportunitySync
+      summary: Trigger a Salesforce Opportunity → Drip Contract sync
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/salesforce/{id}/sync/rollup:
+    post:
+      operationId: triggerSalesforceSpendRollupPush
+      summary: Push per-Account spend rollups to Salesforce
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/salesforce/{id}/backfill:
+    post:
+      operationId: triggerSalesforceBackfill
+      summary: Run a full Salesforce Accounts + Opportunities backfill via Bulk API 2.0
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/salesforce/{id}/field-mappings:
+    get:
+      operationId: listSalesforceFieldMappings
+      summary: List Salesforce field mappings for an integration
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    post:
+      operationId: createSalesforceFieldMapping
+      summary: Create a Salesforce field mapping
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/salesforce/{id}/field-mappings/{mappingId}:
+    patch:
+      operationId: updateSalesforceFieldMapping
+      summary: Update a Salesforce field mapping
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      - schema:
+          type: string
+        in: path
+        name: mappingId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: deleteSalesforceFieldMapping
+      summary: Delete a Salesforce field mapping
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      - schema:
+          type: string
+        in: path
+        name: mappingId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/connect:
+    post:
+      operationId: xeroConnect
+      summary: Start the Xero OAuth 2.0 PKCE flow
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/callback:
+    get:
+      operationId: xeroCallback
+      summary: Xero OAuth 2.0 callback
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero:
+    get:
+      operationId: xeroList
+      summary: List Xero integrations
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: xeroDisconnect
+      summary: Disconnect the Xero integration
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/tenants:
+    get:
+      operationId: xeroListTenants
+      summary: List Xero tenants connected to the active integration
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/test:
+    post:
+      operationId: xeroTest
+      summary: Test the Xero connection
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/accounts/map:
+    post:
+      operationId: xeroUpsertAccountMappings
+      summary: Upsert Xero account-code mappings
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/accounts:
+    get:
+      operationId: xeroListAccounts
+      summary: List Xero chart of accounts for a tenant
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/xero/push/{exportId}:
+    post:
+      operationId: xeroPushExport
+      summary: Push a GL export to Xero as ManualJournals
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: exportId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/connect:
+    post:
+      operationId: quickBooksConnect
+      summary: Start the QuickBooks Online OAuth 2.0 PKCE flow
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/callback:
+    get:
+      operationId: quickBooksCallback
+      summary: QuickBooks Online OAuth 2.0 callback
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks:
+    get:
+      operationId: quickBooksList
+      summary: List QuickBooks integrations
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: quickBooksDisconnect
+      summary: Disconnect the QuickBooks integration
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/test:
+    post:
+      operationId: quickBooksTest
+      summary: Test the QuickBooks connection
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/accounts/map:
+    post:
+      operationId: quickBooksUpsertAccountMappings
+      summary: Upsert QuickBooks account-code mappings
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/accounts:
+    get:
+      operationId: quickBooksListAccounts
+      summary: List QuickBooks Online chart of accounts
+      tags:
+      - Integrations
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/push/{exportId}:
+    post:
+      operationId: quickBooksPushExport
+      summary: Push a GL export to QuickBooks Online as JournalEntries
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: exportId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/config:
+    patch:
+      operationId: quickBooksUpdateConfig
+      summary: Update QuickBooks integration settings (defaultItemId, autoPush)
+      tags:
+      - Integrations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                defaultItemId:
+                  type: string
+                  description: QBO Item ID used for all invoice line items when pushing native invoices. Must be an existing active Item in your QBO company (e.g. a "Services" product).
+                autoPush:
+                  type: boolean
+                  description: When true, GL exports are pushed to QBO automatically.
+                integrationId:
+                  type: string
+      responses:
+        '200':
+          description: Default Response
+  /v1/integrations/quickbooks/push-invoice/{invoiceId}:
+    post:
+      operationId: quickBooksPushInvoice
+      summary: Push a Drip invoice to QuickBooks Online as a native Invoice
+      tags:
+      - Integrations
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: invoiceId
+        required: true
+      responses:
+        '200':
+          description: Default Response
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'
