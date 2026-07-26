@@ -1,0 +1,92 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/drippay-openapi-original.json
+note: >-
+  Entity graph derived from the Drip API resource paths and id-reference fields.
+  The billing core is customer-centric; usage flows into invoices via billable
+  metrics and pricing plans.
+entities:
+- name: customer
+  path: /v1/customers
+  key_ops: [createCustomer, getCustomer, updateCustomer, getCustomerBalance]
+  relationships:
+  - has_many: subscriptions
+  - has_many: invoices
+  - has_many: events
+  - has_many: usage_events
+  - has_one: entitlement
+    via: customerId
+  - has_many: spending_caps
+  - has_one: address
+- name: pricing_plan
+  path: /v1/pricing-plans
+  key_ops: [createPricingPlan, getPricingPlan, listPricingPlanVersions]
+  relationships:
+  - has_many: billable_metrics
+  - belongs_to: product_category
+- name: billable_metric
+  path: /v1/billable-metrics
+  key_ops: [createBillableMetric, evaluateBillableMetric]
+- name: subscription
+  path: /v1/subscriptions
+  key_ops: [createSubscription, cancelSubscription, pauseSubscription, resumeSubscription]
+  relationships:
+  - belongs_to: customer
+    via: customerId
+  - belongs_to: pricing_plan
+  - has_many: invoices
+- name: usage_event
+  path: /v1/usage
+  key_ops: [recordUsage, listUsageEvents, getUsageQuota]
+  relationships:
+  - belongs_to: customer
+    via: customerId
+  - belongs_to: billable_metric
+    via: meter
+- name: invoice
+  path: /v1/invoices
+  key_ops: [generateInvoice, issueInvoice, markInvoicePaid, voidInvoice]
+  relationships:
+  - belongs_to: customer
+    via: customerId
+  - has_many: line_items
+  - has_many: credit_notes
+- name: credit_note
+  path: /v1/credit-notes
+  key_ops: [createCreditNote, issueCreditNote, voidCreditNote]
+  relationships:
+  - belongs_to: invoice
+    via: invoiceId
+- name: coupon
+  path: /v1/coupons
+  key_ops: [createCoupon, createPromotionCode, redeemPromotionCode]
+- name: entitlement_plan
+  path: /v1/entitlement-plans
+  key_ops: [createEntitlementPlan, checkEntitlement, assignCustomerEntitlement]
+  relationships:
+  - has_many: entitlement_rules
+- name: contract
+  path: /v1/contracts
+  key_ops: [createContract, amendContract, addContractPriceOverride]
+  relationships:
+  - belongs_to: customer
+- name: charge
+  path: /v1/charges
+  key_ops: [listCharges, refundCharge]
+  relationships:
+  - belongs_to: customer
+- name: run
+  path: /v1/runs
+  key_ops: [startRun, recordRun, emitRunEvent]
+  relationships:
+  - belongs_to: customer
+  note: Execution-ledger entity for AI-agent runs, metered into usage.
+- name: webhook
+  path: /v1/webhooks
+  key_ops: [createWebhook, rotateWebhookSecret, listWebhookDeliveries]
+  relationships:
+  - has_many: webhook_deliveries
+- name: integration
+  path: /v1/integrations
+  key_ops: [createIntegration, connectStripeIntegration]
+  note: Stripe, Salesforce, Xero, QuickBooks, Slack, Gmail, Clay, and lead-source connectors.

@@ -1,0 +1,43 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.usedrip.ai/changelog
+scheme: semver
+current_version: dripos 0.1.23
+note: >-
+  Published product changelog for the drip Mac app / dripos backend. All recent
+  entries are additive; no breaking changes noted in the captured window.
+entries:
+- version: dripos 0.1.23
+  date: '2026-05-25'
+  breaking: false
+  highlights:
+  - Stronger LinkedIn bridge session handling
+  - Safer LinkedIn draft-send retry behavior
+  - Gmail reply subject handling
+  - Improved Copilot routing and group conversation support
+- date: '2026-05-10'
+  breaking: false
+  highlights:
+  - Email-open sync endpoint (/v1/opens-since) for tracking-pixel opens
+  - Combined Google OAuth (one consent, two integration rows) for Gmail + Calendar
+  - Credential verification endpoint accepting multiple auth formats
+  - Stripe OAuth now returns to the native desktop app
+  - Dashboard endpoints accept API keys alongside session cookies
+- date: '2026-05-07'
+  breaking: false
+  highlights:
+  - Copilot now supports OpenAI in addition to Anthropic Claude, with opt-in fast mode
+- date: '2026-05-06'
+  breaking: false
+  highlights:
+  - Google Calendar added as a first-class comms provider
+  - Plain-English copilot chat interface with six tenant-scoped tools
+- date: '2026-05-05'
+  breaking: false
+  highlights:
+  - Customer page adds drafts, company peers, wiki links, Stripe crosswalk verification
+  - Enhanced identity-resolution fallback logic
+- date: '2026-05-04'
+  breaking: false
+  highlights:
+  - Stripe Connect auto-activation once credentials validate

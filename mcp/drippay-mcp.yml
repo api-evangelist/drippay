@@ -1,0 +1,39 @@
+generated: '2026-07-18'
+method: searched
+status: published
+source: https://usedrip.ai/mcp
+server:
+  name: dripos-cloud
+  transport: http
+  url: https://mcp.drippay.dev/mcp
+  description: >-
+    Hosted MCP server that connects AI agents to drip's outbound sales
+    automation — lead sourcing, contact enrichment, and personalized message
+    drafting. Research and drafting run server-side; message sending stays
+    under user control in the desktop app.
+auth:
+  methods:
+  - type: oauth
+    recommended: true
+    connect: claude mcp add --transport http dripos-cloud https://mcp.drippay.dev/mcp
+  - type: bearer
+    header: 'Authorization: Bearer sk_live_...'
+    connect: >-
+      claude mcp add --transport http dripos-cloud https://mcp.drippay.dev/mcp
+      --header "Authorization: Bearer sk_live_..."
+  model: Encrypted grant key with scoped API tokens stored as hashes; revocable OAuth grants disable associated keys.
+tools:
+- name: drip_find_leads
+  description: Source matching prospects based on an ICP description.
+- name: drip_get_contacts
+  description: Retrieve verified business emails and phone numbers.
+- name: drip_draft_messages
+  description: Research leads and draft personalized openers.
+- name: drip_provision_inboxes
+  description: Order managed sending domains and mailboxes.
+- name: drip_inbox_status
+  description: Poll inbox readiness status during warmup.
+- name: drip_signals
+  description: Track executive changes for outreach timing.
+- name: drip_account
+  description: Read account balance and credit usage.

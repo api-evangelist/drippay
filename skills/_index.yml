@@ -1,0 +1,20 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/drippay-openapi-original.json
+skills:
+- file: drippay-meter-and-bill.md
+  name: Meter usage and bill a customer
+  api: openapi/drippay-openapi-original.json
+  operations: [createCustomer, recordUsage, listUsageEvents, generateInvoice, issueInvoice, markInvoicePaid]
+- file: drippay-subscription-lifecycle.md
+  name: Create a plan and manage a subscription
+  api: openapi/drippay-openapi-original.json
+  operations: [createPricingPlan, createSubscription, attachPlanToCustomer, updateSubscription, cancelSubscription]
+- file: drippay-entitlements.md
+  name: Assign and check entitlements
+  api: openapi/drippay-openapi-original.json
+  operations: [createEntitlementPlan, assignCustomerEntitlement, checkEntitlement, getCustomerEntitlementUsage]
+- file: drippay-webhooks-setup.md
+  name: Register and verify webhooks
+  api: openapi/drippay-openapi-original.json
+  operations: [listWebhookEventTypes, createWebhook, testWebhook, rotateWebhookSecret, listWebhookDeliveries]

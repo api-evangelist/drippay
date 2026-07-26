@@ -1,0 +1,19 @@
+generated: '2026-07-18'
+method: searched
+source: https://usedrip.ai/ , https://status.usedrip.ai/ , openapi/drippay-openapi-original.json
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /v1
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No published deprecation/Sunset policy found; no operations marked deprecated in the OpenAPI.
+sla:
+  url: https://usedrip.ai/#status-sla
+  note: Status and SLA referenced in the site footer; no numeric uptime target published.
+status_page:
+  url: https://status.usedrip.ai/
+  platform: incident.io
+  components: [Dashboard, App]
+deprecated_operations: []

@@ -1,22 +1,821 @@
 aid: drippay
 name: Drippay
-description: Drippay is a company surfaced as a portfolio company of y-combinator and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Drippay, Inc. ("drip") is a Y Combinator company (YC P26) building two
+  connected products. drip is a local-first Mac app that turns LinkedIn,
+  iMessage, and email conversations into a self-filling CRM with AI drafting,
+  follow-up, and meeting booking. The Drip API is a usage-based billing and
+  execution-ledger platform for AI agents — a Stripe-like metering and
+  monetization backend exposing customers, subscriptions, pricing plans,
+  billable metrics, usage events, invoices, credit notes, coupons,
+  entitlements, charges, dunning, tax, contracts, drift detection, and webhooks
+  over a REST interface at api.drippay.dev. It ships official Node, Python, and
+  C++ SDKs, an idempotency-key contract, cursor pagination, a hosted MCP server,
+  and a SOC 2 Type I security posture monitored with Vanta.
 url: https://raw.githubusercontent.com/api-evangelist/drippay/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://usedrip.ai/favicon.ico
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - y-combinator
-x-tier: stub
+x-tier: enriched
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
-apis: []
+- Billing
+- Usage-Based Billing
+- Metering
+- Monetization
+- Payments
+- AI Agents
+- Developer Tools
+- Webhooks
+- MCP
+- CRM
+- Sales Automation
+apis:
+- aid: drippay:drippay-billablemetrics-api
+  name: Drippay BillableMetrics API
+  description: Evaluate and preview billable metrics.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - BillableMetrics
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-billablemetrics-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-business-api
+  name: Drippay Business API
+  description: Business-level settings and configuration.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Business
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-business-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-charges-api
+  name: Drippay Charges API
+  description: View charge history and settlement status.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Charges
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-charges-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-contracts-api
+  name: Drippay Contracts API
+  description: >-
+    Per-customer commercial agreements with custom pricing, prepaid commits, and spend caps. All contract
+    endpoints require a secret key (`sk_*`) with the `ADMIN` role.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Contracts
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-contracts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-coupons-api
+  name: Drippay Coupons API
+  description: Coupons and promotion codes for discounts.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Coupons
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-coupons-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-credit-notes-api
+  name: Drippay Credit Notes API
+  description: Create, issue, and void credit notes.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Credit Notes
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-credit-notes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-customer-portal-api
+  name: Drippay Customer Portal API
+  description: Self-service customer portal for profile, subscriptions, and address management.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Customer Portal
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-customer-portal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-customers-api
+  name: Drippay Customers API
+  description: Create and manage billable customers.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-customers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-drift-api
+  name: Drippay Drift API
+  description: The Drift API from Drippay — 6 operation(s) for drift.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Drift
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-drift-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-dunning-api
+  name: Drippay Dunning API
+  description: >-
+    Automatic retry + dunning email flow for failed payments. Configure a per-business retry schedule,
+    list failed charges in collections, and manually re-trigger retries.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Dunning
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-dunning-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-entitlements-api
+  name: Drippay Entitlements API
+  description: Quota management and pre-request access checks.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Entitlements
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-entitlements-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-events-api
+  name: Drippay Events API
+  description: Record execution events for observability.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Events
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-integrations-api
+  name: Drippay Integrations API
+  description: Manage billing, CRM, and marketplace integrations (Stripe, Xero, Salesforce).
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-internal-api
+  name: Drippay Internal API
+  description: The Internal API from Drippay — 1 operation(s) for internal.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-internal-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-invoices-api
+  name: Drippay Invoices API
+  description: >-
+    Generate, issue, and manage invoices. Supports usage-based and subscription-based billing periods.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-pricing-plans-api
+  name: Drippay Pricing Plans API
+  description: >-
+    Define per-unit pricing for usage types. Creating, updating, and deleting plans requires a secret
+    key (`sk_*`) with the `ADMIN` role.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Pricing Plans
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-pricing-plans-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-product-categories-api
+  name: Drippay Product Categories API
+  description: >-
+    Controlled taxonomy for strict-products governance. Groups pricing plans into service-line categories
+    for ARR rollups and revenue reporting.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Product Categories
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-product-categories-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-runs-api
+  name: Drippay Runs API
+  description: Start, update, and inspect agent runs.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Runs
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-runs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-subscriptions-api
+  name: Drippay Subscriptions API
+  description: Recurring billing and subscription lifecycle management.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-tax-api
+  name: Drippay Tax API
+  description: >-
+    Sales tax configuration: customer tax addresses, exemptions, business registrations, and jurisdiction
+    rates. Requires a secret key with ADMIN role and full mode (`SIMPLE_MODE=false`).
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Tax
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-tax-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-usage-api
+  name: Drippay Usage API
+  description: Record metered usage. Creates charges when a pricing plan matches.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-webhooks-api
+  name: Drippay Webhooks API
+  description: Manage webhook endpoints for real-time event notifications.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-workflows-api
+  name: Drippay Workflows API
+  description: Define workflow templates for agent execution.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-workflows-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+common:
+- type: TrustCenter
+  url: security/drippay-trust-center.yml
+- type: DeveloperPortal
+  url: https://usedrip.ai/
+- type: Documentation
+  url: https://docs.usedrip.ai/
+- type: APIReference
+  url: https://docs.usedrip.ai/api-reference
+- type: GettingStarted
+  url: https://docs.usedrip.ai/quickstart
+- type: Pricing
+  url: https://usedrip.ai/pricing
+- type: Login
+  url: https://usedrip.ai/login
+- type: SignUp
+  url: https://usedrip.ai/download/mac
+- type: TermsOfService
+  url: https://usedrip.ai/terms
+- type: PrivacyPolicy
+  url: https://usedrip.ai/privacy
+- type: Support
+  url: https://usedrip.ai/contact
+- type: Blog
+  url: https://usedrip.ai/guides
+- type: GitHubOrganization
+  url: https://github.com/DripYCx26
+- type: StatusPage
+  url: https://status.usedrip.ai/
+- type: RateLimits
+  url: conventions/drippay-conventions.yml
+- type: Compliance
+  url: https://usedrip.ai/security
+- type: Security
+  url: https://usedrip.ai/security
+- type: SecurityTxt
+  url: well-known/drippay-security.txt
+- type: WellKnown
+  url: well-known/drippay-well-known.yml
+- type: VulnerabilityDisclosure
+  url: security/drippay-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/drippay-domain-security.yml
+- type: Packages
+  url: packages/drippay-packages.yml
+- type: SDKs
+  url: packages/drippay-packages.yml
+- type: MCPServer
+  url: mcp/drippay-mcp.yml
+- type: LLMsTxt
+  url: llms/drippay-llms.txt
+- type: Lifecycle
+  url: lifecycle/drippay-lifecycle.yml
+- type: ChangeLog
+  url: changelog/drippay-changelog.yml
+- type: Sandbox
+  url: sandbox/drippay-sandbox.yml
+- type: AgentSkill
+  url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

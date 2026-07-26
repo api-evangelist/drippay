@@ -1,0 +1,35 @@
+generated: '2026-07-18'
+method: searched
+source: npm, PyPI, GitHub org DripYCx26
+packages:
+- language: javascript
+  registry: npm
+  name: "@drip-sdk/node"
+  url: https://www.npmjs.com/package/@drip-sdk/node
+  install: npm install @drip-sdk/node
+  version: 0.1.2
+  repository: https://github.com/DripYCx26/drip-sdk
+  description: Official Node.js SDK for Drip - Usage-based billing for AI agents
+  official: true
+- language: python
+  registry: pypi
+  name: drip-sdk
+  url: https://pypi.org/project/drip-sdk/
+  install: pip install drip-sdk
+  repository: https://github.com/DripYCx26/drip-sdk-python
+  description: Official Python SDK for Drip - usage-based billing infrastructure with on-chain settlement
+  official: true
+- language: cpp
+  registry: github
+  name: drip-sdk-cpp
+  url: https://github.com/DripYCx26/drip-sdk-cpp
+  repository: https://github.com/DripYCx26/drip-sdk-cpp
+  description: Official C++ SDK for Drip
+  official: true
+- language: shell
+  registry: homebrew
+  name: drip
+  url: https://github.com/DripYCx26/homebrew-drip
+  install: brew install DripYCx26/drip/drip
+  description: Homebrew tap for the drip Mac app distribution
+  official: true

@@ -1,0 +1,24 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.usedrip.ai/ , openapi/drippay-openapi-original.json (info.description quickstart)
+test_live_separation:
+  scheme: key-prefix
+  test_key_prefix: sk_test_
+  live_key_prefix: sk_live_
+  notes: >-
+    Secret keys carry an environment prefix. Use a sk_test_ key against the API
+    for non-billing / test flows; sk_live_ keys transact real usage and billing.
+    The SDK reads DRIP_API_KEY from the environment automatically.
+env_var: DRIP_API_KEY
+internal_tracking:
+  note: >-
+    trackUsage / recordInternalUsage record usage internally without billing —
+    a built-in dry-run path for metering before charging.
+  operations: [recordInternalUsage, recordInternalUsageBatch, trackUsage]
+cost_estimation:
+  note: Hypothetical and from-usage cost estimation endpoints let you preview charges without invoicing.
+  operations: [estimateCostsFromHypothetical, estimateCostsFromUsage, previewInvoice, previewBillableMetricSql]
+test_cards: null
+notes: >-
+  No published test card numbers or magic test identifiers were found; card
+  settlement is delegated to Stripe. Test values are not fabricated here.

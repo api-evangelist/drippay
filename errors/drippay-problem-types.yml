@@ -1,0 +1,59 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/drippay-openapi-original.json
+format: custom-json
+envelope:
+  content_type: application/json
+  fields:
+    error: Human-readable error message
+    code: Machine-readable error code
+    details: Array of { path } validation entries (present on 400/422)
+notes: >-
+  The Drip API does not use RFC 9457 application/problem+json; errors are
+  returned as a plain JSON envelope { error, code, details[] }. The catalog
+  below is derived from the response codes declared across 245 operations.
+problems:
+- status: 400
+  title: Bad Request
+  meaning: Malformed request or invalid input; check details[] for field paths.
+  occurrences: 35
+- status: 401
+  title: Unauthorized
+  meaning: Invalid or missing API key (Authorization bearer).
+  occurrences: 106
+- status: 402
+  title: Payment Required
+  meaning: Billing/credit condition blocks the operation.
+  occurrences: 1
+- status: 403
+  title: Forbidden
+  meaning: Authenticated key lacks permission for the resource or operation.
+  occurrences: 25
+- status: 404
+  title: Not Found
+  meaning: Referenced resource (customer, invoice, plan, etc.) does not exist.
+  occurrences: 86
+- status: 409
+  title: Conflict
+  meaning: State conflict — duplicate, already-issued, or idempotency collision.
+  occurrences: 7
+- status: 422
+  title: Unprocessable Entity
+  meaning: Semantic validation failed; details[] lists the offending fields.
+  occurrences: 13
+- status: 429
+  title: Too Many Requests
+  meaning: Rate limit exceeded; retry after backoff.
+  occurrences: 21
+- status: 500
+  title: Internal Server Error
+  occurrences: 10
+- status: 501
+  title: Not Implemented
+  occurrences: 1
+- status: 502
+  title: Bad Gateway
+  occurrences: 2
+- status: 503
+  title: Service Unavailable
+  occurrences: 19

@@ -1,0 +1,46 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/drippay-openapi-original.json
+docs: https://docs.usedrip.ai/
+summary: >-
+  Cross-cutting request/response semantics for the Drip API, derived from the
+  published OpenAPI and quickstart docs.
+authentication:
+  style: bearer
+  header: 'Authorization: Bearer sk_live_... | sk_test_...'
+  notes: Secret keys are server-side only; separate test and live key prefixes.
+  see: authentication/drippay-authentication.yml
+idempotency:
+  supported: true
+  mechanism: request parameter
+  param: idempotencyKey
+  scope: mutating operations (POST usage/events/runs/customers/billing flows)
+  notes: >-
+    The OpenAPI declares an idempotencyKey parameter on write operations so a
+    retried create/record does not double-charge or double-record. This is the
+    canonical usage-based-billing idempotency contract.
+  evidence: openapi parameter idempotencyKey
+pagination:
+  style: cursor
+  params: [cursor, limit, offset]
+  notes: List endpoints accept a cursor plus limit; offset is also accepted on some collections.
+rate_limiting:
+  documented: true
+  response_status: 429
+  evidence: 21 operations declare a 429 response; rate limiting referenced across the spec.
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /v1
+error_envelope:
+  format: custom-json
+  fields:
+  - error   # human-readable message
+  - code    # machine error code
+  - details # array of { path, ... } validation entries
+  content_type: application/json
+  see: errors/drippay-problem-types.yml
+webhooks:
+  supported: true
+  signing: HMAC secret per endpoint (rotate-secret supported)
+  see: asyncapi/drippay-webhooks.yml

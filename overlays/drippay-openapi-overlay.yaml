@@ -1,0 +1,25 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Drip API
+  version: 1.0.0
+extends: openapi/drippay-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-rating: 4
+    x-apievangelist-category: usage-based-billing
+    x-apievangelist-idempotency: idempotencyKey
+    x-apievangelist-auth: bearer-secret-key
+    x-apievangelist-pagination: cursor
+    x-apievangelist-webhooks: asyncapi/drippay-webhooks.yml
+    x-apievangelist-sdks:
+    - "@drip-sdk/node"
+    - drip-sdk (python)
+    - drip-sdk-cpp
+    x-apievangelist-mcp-server: https://mcp.drippay.dev/mcp
+- target: $.info
+  update:
+    x-apievangelist-compliance:
+    - SOC 2 Type I
+    - GDPR
+    - CCPA

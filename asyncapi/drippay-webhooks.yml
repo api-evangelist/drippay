@@ -1,0 +1,38 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/drippay-openapi-original.json (Webhooks tag) , https://docs.usedrip.ai/
+spec_type: Webhooks
+transport: https-webhook
+delivery:
+  registration_op: createWebhook
+  signing: HMAC secret per endpoint
+  rotate_op: rotateWebhookSecret
+  test_op: testWebhook
+  delivery_log_ops: [listWebhookDeliveries, getWebhookDelivery, retryWebhookDelivery]
+  event_type_catalog_op: listWebhookEventTypes
+event_types:
+- customer.created
+- customer.balance.low
+- customer.deposit.confirmed
+- customer.withdraw.confirmed
+- customer.entitlement.assigned
+- customer.spending.warning
+- customer.spending.blocked
+- customer.spending.exceeded
+- customer.usage_cap.reached
+- usage.recorded
+- charge.succeeded
+- charge.failed
+- charge.refunded
+- invoice.created
+- invoice.issued
+- invoice.paid
+- invoice.voided
+- subscription.created
+- subscription.cancelled
+- webhook.endpoint.unhealthy
+notes: >-
+  The Drip API ships a first-class webhook subsystem (register endpoints,
+  rotate signing secrets, inspect and retry deliveries) but does not publish an
+  AsyncAPI document. Event types above are enumerated from the OpenAPI Webhooks
+  operations and event-type constants.

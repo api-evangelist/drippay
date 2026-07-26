@@ -1,0 +1,34 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/drippay-openapi-original.json , https://usedrip.ai/security
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: Published OpenAPI 3.1.0 document at docs.usedrip.ai/openapi.json
+- id: bearer-token-auth
+  conforms: true
+  evidence: securityScheme bearerAuth (http bearer), sk_live_/sk_test_ keys
+- id: oauth2
+  conforms: false
+  evidence: API uses secret API keys; OAuth applies only to the hosted MCP server
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a custom { error, code, details } JSON envelope, not application/problem+json
+- id: idempotency
+  conforms: true
+  evidence: idempotencyKey parameter on mutating operations
+- id: cursor-pagination
+  conforms: true
+  evidence: List endpoints accept cursor/limit/offset
+- id: webhooks-hmac
+  conforms: true
+  evidence: Per-endpoint signing secret with rotate-secret and delivery retry
+- id: soc2-type-1
+  conforms: true
+  evidence: SOC 2 Type I audit completed; continuous monitoring via Vanta (usedrip.ai/security, trust.usedrip.ai)
+- id: gdpr
+  conforms: true
+  evidence: GDPR and CCPA privacy requests supported (usedrip.ai/security)
+- id: hipaa
+  conforms: false
+  evidence: Explicitly not intended for protected health information

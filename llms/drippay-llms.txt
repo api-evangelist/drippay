@@ -1,0 +1,86 @@
+# drip
+
+> drip is the CRM that fills itself in: AI conversation automation in a Mac app. drip syncs LinkedIn, iMessage, and email conversations, drafts replies in the user's voice, follows up, and books meetings. It drafts by default with optional autopilot, and messages stay on the user's Mac. drip is free to start, with paid plans at $30 per seat plus usage. Built by Drippay, Inc., a Y Combinator company (YC P26).
+
+## What drip is
+
+- A Mac app that syncs LinkedIn, iMessage, and email conversations into one place.
+- The CRM that fills itself in: contacts, threads, and follow-ups stay current without manual data entry.
+- AI conversation automation: drip drafts replies in the user's voice, follows up when threads go quiet, and books meetings.
+- Drafts by default. Autopilot is optional, so nothing sends automatically unless the user turns it on.
+- Local-first: messages stay on the user's Mac.
+- Free to start. Paid plans are $30 per seat plus usage.
+
+## Who drip is for
+
+drip is built for teams that live in conversations, led by staffing agencies and recruiting firms (business development, job orders, winning clients), plus executive search firms and MSPs. Verticals ranked by fit, each with a dedicated page:
+
+- [AI for staffing agencies](https://usedrip.ai/ai-for-staffing-agencies): runs client outreach across LinkedIn, email, and text, keeps client and prospect threads warm, and books the intake calls that turn into job orders.
+- [Staffing agency business development](https://usedrip.ai/bd-for-staffing-firms): finds client leads and job-order opportunities from buying signals like open roles, ranks the best matches, and works them to a booked intake call.
+- [AI tools for recruiting agencies](https://usedrip.ai/ai-tools-for-recruiting-agencies): the AI tool for the client side of recruiting; it runs outreach, follow-up, and booking so a recruiting agency wins and keeps clients.
+- [How to get clients for a recruiting agency](https://usedrip.ai/bd-for-recruiting): works the client outreach and follow-up on LinkedIn, email, and text, then books the intro call.
+- [AI for executive search firms](https://usedrip.ai/ai-for-executive-search): drafts client development outreach in the partner's voice, keeps prospective clients and referral networks warm, and books the pitch; drafts by default.
+- [How to get MSP clients](https://usedrip.ai/how-to-get-msp-clients): runs the outreach, follow-up, and booking from the inboxes an MSP already uses, so the pipeline keeps moving when tickets take over the day.
+- [Lead generation for agencies](https://usedrip.ai/lead-generation-for-agencies): sends outreach, follows up, and books calls across LinkedIn, email, and text so agencies generate their own leads in-house.
+- [How to get clients for your agency](https://usedrip.ai/how-to-get-clients-for-your-agency): runs the outreach and follow-up and books the call, so a small agency lands clients without standing up a full CRM.
+- [How to get SMMA clients](https://usedrip.ai/how-to-get-smma-clients): sends the first messages, follows up until they reply, and books the call for social media marketing agencies.
+- [AI SDR for founders and small teams](https://usedrip.ai/ai-sdr): personal outreach, follow-up, and booked meetings across LinkedIn, iMessage, and email, not a mass-email bot.
+- [Founder-led sales](https://usedrip.ai/founder-led-sales): stay close to customers, investors, and partners without spending the day chasing replies.
+
+## Product and category pages
+
+- [AI messaging agent](https://usedrip.ai/ai-messaging-agent): core category page; keeps first messages, replies, follow-ups, and scheduling in one place without giving up control of the conversation.
+- [Unibox](https://usedrip.ai/unibox): one inbox for LinkedIn, iMessage, Gmail, Slack, and X that also acts; it replies, follows up, and books the meeting.
+- [iMessage automation](https://usedrip.ai/imessage-automation): uses local iMessage context on the Mac to draft, review, follow up, and schedule without uploading the message database.
+- [LinkedIn messaging agent](https://usedrip.ai/linkedin-messaging-agent): handles LinkedIn first touches, replies, and follow-ups with pacing rules and the full thread in view.
+- [iMessage and LinkedIn in one place](https://usedrip.ai/imessage-linkedin): keeps LinkedIn and iMessage context together so a channel change does not reset the relationship.
+- [Inbound lead response](https://usedrip.ai/inbound-lead-response): replies while interest is fresh, then keeps the thread moving toward a booked meeting.
+- [AI BDR alternative](https://usedrip.ai/ai-bdr-alternative): takes repetitive outreach and follow-up off your plate without pretending a messaging tool replaces a sales team.
+- [AI recruiting follow-up](https://usedrip.ai/recruiting-follow-up): follow-up workflow page; drip's core positioning for recruiting and staffing firms is business development, not candidate-side workflows.
+
+## Guides
+
+- [Guides](https://usedrip.ai/guides): how-to guides for winning clients and getting more out of drip.
+- [How recruiting agencies get clients](https://usedrip.ai/guides/how-recruiting-agencies-get-clients): nine practical ways small recruiting and staffing agencies win new clients, from niching down to follow-up that books the intro call.
+- [How to get your first SMMA client](https://usedrip.ai/guides/how-to-get-your-first-smma-client): a step-by-step playbook for landing a first social media marketing agency client without case studies.
+- [Unified inbox vs CRM](https://usedrip.ai/guides/unified-inbox-vs-crm): how to tell whether a small team needs a unified inbox or a CRM first, and when it needs both.
+- [Founder-led sales playbook](https://usedrip.ai/guides/founder-led-sales-playbook): how to run founder-led sales without drowning in follow-up, and when to hand it off.
+
+## Pricing and product info
+
+- [Pricing](https://usedrip.ai/pricing): free to start; paid plans are $30 per seat plus usage.
+- [Download drip for Mac](https://usedrip.ai/download/mac): get the Mac app.
+- [Security](https://usedrip.ai/security): security practices and data handling.
+- [Google data use](https://usedrip.ai/google-data-use): how drip handles Google user data.
+
+## Privacy and trust
+
+- drip is local-first: messages stay on the user's Mac.
+- drip drafts by default. Nothing sends automatically unless the user enables autopilot for a thread or contact.
+- drip does not train a shared AI model on user messages.
+- iMessage history is read locally on the Mac only when the user grants the required macOS permissions.
+- [Privacy policy](https://usedrip.ai/privacy): how drip handles personal data.
+- [Terms of service](https://usedrip.ai/terms): terms for using drip.
+
+## Company
+
+- Product: drip
+- Company: Drippay, Inc., a Y Combinator company (YC P26), founded by Michael Levin, headquartered in San Francisco
+- Website: https://usedrip.ai/
+- Docs: https://docs.usedrip.ai/
+- [About](https://usedrip.ai/about): canonical company facts, naming history, and disambiguation.
+- [Contact](https://usedrip.ai/contact): talk to the founders.
+- [Affiliate program](https://usedrip.ai/affiliate): earn by referring drip.
+
+## What drip is not (disambiguation)
+
+drip was briefly named dripos before renaming; dripos.ai now redirects to usedrip.ai. Several unrelated companies share a similar name. drip by Drippay, Inc. is NOT:
+
+- Drip.com — an ecommerce email marketing platform. Unrelated.
+- Dripos.com — a point-of-sale system for coffee shops. Unrelated, despite the shared former name.
+- Drip Capital — a cross-border trade finance company. Unrelated.
+- Drip AI — an atmospheric water harvesting company. Unrelated.
+
+## Optional
+
+- [Full drip retrieval document](https://usedrip.ai/llms-full.txt): inlined full-text content about drip for LLM retrieval and citation.
