@@ -751,6 +751,8 @@ apis:
   - type: AgenticAccess
     url: agentic-access/drippay-agentic-access.yml
 common:
+- type: Overlay
+  url: overlays/drippay-openapi-overlay.yaml
 - type: TrustCenter
   url: security/drippay-trust-center.yml
 - type: DeveloperPortal
