@@ -1,17 +1,21 @@
 aid: drippay
 name: Drippay
 description: >-
-  Drippay, Inc. ("drip") is a Y Combinator company (YC P26) building two
-  connected products. drip is a local-first Mac app that turns LinkedIn,
-  iMessage, and email conversations into a self-filling CRM with AI drafting,
-  follow-up, and meeting booking. The Drip API is a usage-based billing and
-  execution-ledger platform for AI agents — a Stripe-like metering and
-  monetization backend exposing customers, subscriptions, pricing plans,
-  billable metrics, usage events, invoices, credit notes, coupons,
-  entitlements, charges, dunning, tax, contracts, drift detection, and webhooks
-  over a REST interface at api.drippay.dev. It ships official Node, Python, and
-  C++ SDKs, an idempotency-key contract, cursor pagination, a hosted MCP server,
-  and a SOC 2 Type I security posture monitored with Vanta.
+  Drippay, Inc. is a Y Combinator company (YC P26) that operates two connected
+  products. dreach — renamed from drip in 2026, with usedrip.ai now redirecting
+  to dreach.ai — is a local-first Mac app for staffing, recruiting and executive
+  search firms: an Opportunity Radar that watches hiring demand and leadership
+  changes, drafts outreach in the user's voice, follows up, and books meetings,
+  with a hosted MCP server at mcp.drippay.dev exposing seven outbound tools to
+  any HTTP MCP client over OAuth. The Drip API is a separate usage-based billing
+  and execution-ledger platform for AI agents — a Stripe-like metering and
+  monetization backend covering customers, subscriptions, pricing plans,
+  billable metrics, usage events, invoices, credit notes, coupons, entitlements,
+  charges, dunning, tax, contracts, drift detection and webhooks across 245 REST
+  operations at api.drippay.dev. It ships official Node, Python and C++ SDKs and
+  a drip-cli binary, an idempotencyKey contract, cursor pagination, role-scoped
+  secret keys, an x402 payment-required flow for agent self-settlement, and a
+  SOC 2 Type I posture monitored with Vanta.
 url: https://raw.githubusercontent.com/api-evangelist/drippay/refs/heads/main/apis.yml
 accessModel:
   pricing: unknown
@@ -25,7 +29,7 @@ accessModel:
   - authentication
   generated: '2026-07-22'
   method: derived
-image: https://usedrip.ai/favicon.ico
+image: https://dreach.ai/favicon.ico
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -34,7 +38,7 @@ x-tier: enriched
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-13'
 tags:
 - Company
 - Billing
@@ -48,6 +52,11 @@ tags:
 - MCP
 - CRM
 - Sales Automation
+- Agentic Payments
+- x402
+- Staffing
+- Recruiting
+- Outbound Sales
 apis:
 - aid: drippay:drippay-billablemetrics-api
   name: Drippay BillableMetrics API
@@ -756,7 +765,7 @@ common:
 - type: TrustCenter
   url: security/drippay-trust-center.yml
 - type: DeveloperPortal
-  url: https://usedrip.ai/
+  url: https://dreach.ai/
 - type: Documentation
   url: https://docs.usedrip.ai/
 - type: APIReference
@@ -764,29 +773,29 @@ common:
 - type: GettingStarted
   url: https://docs.usedrip.ai/quickstart
 - type: Pricing
-  url: https://usedrip.ai/pricing
+  url: https://dreach.ai/pricing
 - type: Login
-  url: https://usedrip.ai/login
+  url: https://dreach.ai/register
 - type: SignUp
-  url: https://usedrip.ai/download/mac
+  url: https://dreach.ai/register
 - type: TermsOfService
-  url: https://usedrip.ai/terms
+  url: https://dreach.ai/terms
 - type: PrivacyPolicy
-  url: https://usedrip.ai/privacy
+  url: https://dreach.ai/privacy
 - type: Support
-  url: https://usedrip.ai/contact
+  url: https://dreach.ai/contact
 - type: Blog
-  url: https://usedrip.ai/guides
+  url: https://dreach.ai/guides
 - type: GitHubOrganization
   url: https://github.com/DripYCx26
 - type: StatusPage
   url: https://status.usedrip.ai/
 - type: RateLimits
-  url: conventions/drippay-conventions.yml
+  url: rate-limits/drippay-rate-limits.yml
 - type: Compliance
-  url: https://usedrip.ai/security
+  url: https://dreach.ai/security
 - type: Security
-  url: https://usedrip.ai/security
+  url: https://dreach.ai/security
 - type: SecurityTxt
   url: well-known/drippay-security.txt
 - type: WellKnown
@@ -811,13 +820,41 @@ common:
   url: sandbox/drippay-sandbox.yml
 - type: AgentSkill
   url: skills/_index.yml
+- type: AgentSkill
+  url: skills/drippay-drip-published.md
+- type: AgentCard
+  url: a2a/drippay-a2a.yml
+- type: OAuthScopes
+  url: scopes/drippay-scopes.yml
+- type: CLI
+  url: cli/drippay-cli.yml
+- type: Plans
+  url: plans/drippay-plans-pricing.yml
+- type: ToolCrosswalk
+  url: mcp/drippay-tool-crosswalk.yml
+- type: Authentication
+  url: authentication/drippay-authentication.yml
+- type: Idempotency
+  url: conventions/drippay-conventions.yml
+- type: Conventions
+  url: conventions/drippay-conventions.yml
+- type: ErrorCatalog
+  url: errors/drippay-problem-types.yml
+- type: DataModel
+  url: data-model/drippay-data-model.yml
+- type: Webhooks
+  url: asyncapi/drippay-webhooks.yml
+- type: Conformance
+  url: conformance/drippay-conformance.yml
+- type: AgenticAccess
+  url: agentic-access/drippay-agentic-access.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 10
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
