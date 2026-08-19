@@ -1,0 +1,46 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Business API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Business",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get business settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/business/settings"
+          },
+          "docs": "Returns business-level billing settings, including the default reporting currency used when no contract or pricing plan overrides it."
+        },
+        {
+          "info": {
+            "name": "Update business settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/business/settings"
+          },
+          "docs": "Update business-level billing settings. Currently only the default reporting currency is mutable via this endpoint."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

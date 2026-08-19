@@ -1,6 +1,9 @@
-generated: '2026-07-18'
-method: derived
-source: openapi/drippay-openapi-original.json , https://usedrip.ai/security
+generated: '2026-08-13'
+method: searched
+source: >-
+  openapi/_original/drippay-openapi-original.json , https://dreach.ai/security ,
+  live /.well-known probes on api.drippay.dev, mcp.drippay.dev and
+  docs.usedrip.ai (2026-08-13)
 standards:
 - id: openapi-3.1
   conforms: true
@@ -32,3 +35,63 @@ standards:
 - id: hipaa
   conforms: false
   evidence: Explicitly not intended for protected health information
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: >-
+    https://api.drippay.dev/.well-known/oauth-authorization-server returns HTTP
+    200 with issuer, authorization/token/registration/introspection endpoints,
+    S256 PKCE and scopes_supported [read, write].
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  evidence: >-
+    https://mcp.drippay.dev/.well-known/oauth-protected-resource returns HTTP
+    200 naming api.drippay.dev as the authorization server.
+- id: oauth2-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint published at /v1/mcp-oauth/register (RFC 7591).
+- id: pkce-s256
+  conforms: true
+  evidence: code_challenge_methods_supported ["S256"].
+- id: x402-payments
+  conforms: true
+  evidence: >-
+    POST /v1/usage returns 402 with a full x402 1.0.0 paymentRequest for EIP-712
+    signing (USDC on base-sepolia), plus nonce, expiresAt and serverTime for
+    replay protection and clock sync. Retried with X-Payment-* headers.
+- id: mcp
+  conforms: true
+  evidence: >-
+    Hosted streamable-HTTP MCP server at https://mcp.drippay.dev/mcp; live
+    tools/list returns a well-formed JSON-RPC error when unauthenticated.
+- id: a2a-agent-card
+  conforms: true
+  grade: conformant
+  evidence: >-
+    https://docs.usedrip.ai/.well-known/agent-card.json returns HTTP 200 with an
+    object capabilities block, protocolVersion "0.3" and an array of skills.
+    Graded conformant against A2A 1.0.0 in a2a/drippay-a2a.yml, with the
+    deviation that protocolVersion is pre-1.0 and the interface URLs point at
+    the docs site rather than an A2A endpoint.
+- id: agent-skills
+  conforms: true
+  evidence: >-
+    Provider-published Agent Skill served at
+    https://docs.usedrip.ai/.well-known/agent-skills/drip/skill.md and
+    referenced from the agent card. Saved verbatim to
+    skills/drippay-drip-published.md.
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: >-
+    /.well-known/security.txt served on both dreach.ai and usedrip.ai with
+    Contact, Expires (2027-03-04), Preferred-Languages, Canonical and Policy.
+- id: rate-limit-headers
+  conforms: false
+  evidence: >-
+    21 operations declare a 429 but no Retry-After, RateLimit-* or
+    X-RateLimit-* header is defined anywhere in the OpenAPI and no limits are
+    published. See rate-limits/drippay-rate-limits.yml.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    A first-class webhook subsystem exists (register, HMAC-sign, rotate, replay,
+    inspect deliveries) but no AsyncAPI document is published.

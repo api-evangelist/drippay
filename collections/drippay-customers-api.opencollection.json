@@ -1,0 +1,386 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Customers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List customers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of customers to return"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of customers to skip (for pagination)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by customer status"
+              },
+              {
+                "name": "onchainAddress",
+                "value": "",
+                "type": "query",
+                "description": "Filter by on-chain address"
+              },
+              {
+                "name": "isInternal",
+                "value": "",
+                "type": "query",
+                "description": "Filter by internal customers (true = internal only, false = billing customers only)"
+              }
+            ]
+          },
+          "docs": "List all customers for your business. Requires a secret key (`sk_*`). Returns up to 100 customers sorted by creation date (newest first)."
+        },
+        {
+          "info": {
+            "name": "Create a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a customer. Just pass `externalCustomerId` (your user ID). Add `onchainAddress` later for on-chain billing.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**"
+        },
+        {
+          "info": {
+            "name": "Get a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Customer ID"
+              }
+            ]
+          },
+          "docs": "Retrieve a customer by their ID. Requires a secret key (`sk_*`)."
+        },
+        {
+          "info": {
+            "name": "Update a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/customers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Update a customer"
+        },
+        {
+          "info": {
+            "name": "Get customer billing-field history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/billing-history",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Return every snapshot of this customer's billing-relevant fields (name, email), oldest → newest. A v1 snapshot is created when the customer is first created; each subsequent change appends a new version and seals the previous one."
+        },
+        {
+          "info": {
+            "name": "Get RevOps summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/revops-summary",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Customer ID"
+              }
+            ]
+          },
+          "docs": "Aggregated revenue/operations summary for a customer: reputation band, lifetime revenue, cost, gross margin, success rate, and top unit types. Requires a secret key (`sk_*`)."
+        },
+        {
+          "info": {
+            "name": "Sync customer balance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:id/sync-balance",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Customer ID"
+              }
+            ]
+          },
+          "docs": "\nTriggers an immediate balance sync for a customer. This fetches the current\non-chain balance and updates the database snapshot.\n\nUse this endpoint:\n- After a customer deposits funds on-chain\n- To verify balance accuracy before a charge\n- For debugging balance discrepancies\n\nThe response includes both previous and new balances, along with whether\na change was detected. Requires a secret key (`sk_*`).\n        "
+        },
+        {
+          "info": {
+            "name": "Provision smart account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:id/provision",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Customer ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nDeploy an ERC-4337 smart account for a customer and deposit USDC into the BillingModule.\n\nOn testnet (Base Sepolia), this automatically mints and deposits test USDC.\nOn mainnet, the customer must deposit USDC separately after deployment.\n\nThe smart account is owned by the billing authority for server-side management.\nRequires a secret key (`sk_*`).\n        "
+        },
+        {
+          "info": {
+            "name": "Set customer spending cap",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.drippay.dev/v1/customers/:id/spending-cap",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set or update a per-customer spending cap. Supports DAILY_CHARGE_LIMIT, MONTHLY_CHARGE_LIMIT, and SINGLE_CHARGE_LIMIT. When autoBlock=true (default), charges are rejected at 100% of the cap. Requires a secret key (`sk_*`)."
+        },
+        {
+          "info": {
+            "name": "List customer spending caps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/spending-caps",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List all active spending caps for a customer, including current usage and last alert level. Requires a secret key (`sk_*`)."
+        },
+        {
+          "info": {
+            "name": "Remove customer spending cap",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/customers/:id/spending-caps/:capId",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "capId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deactivate a spending cap for a customer. Requires a secret key (`sk_*`)."
+        },
+        {
+          "info": {
+            "name": "Attach a Quickstart-managed plan to a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:id/attach-plan",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Drip customer id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a Stripe Subscription on the merchant's connected account for the given Drip (customer, plan) pair. The plan MUST be Drip-managed (`managedBy=DRIP`); run provisionPlanOnStripe / POST `/pricing-plans/:id/reprovision-stripe` first if the plan is still `EXTERNAL`. Idempotent: re-calling with the same customer + plan returns the existing subscription.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Sync a Drip customer to Stripe (create cus_xxx and link)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:id/sync-stripe-customer",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Drip customer id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a Stripe Customer on the merchant's connected Stripe account for the given Drip customer and persist the resulting `cus_xxx` on the Drip customer row. Idempotent: if the Drip customer already has a `stripeCustomerId`, returns it unchanged. Works with API-key or OAuth-connected Stripe integrations. Email/name are pulled from the Drip customer's `metadata.email` / `metadata.name`, falling back to `externalCustomerId` when it looks like an email, then to `emailOverride` from the request body"
+        },
+        {
+          "info": {
+            "name": "Get customer hierarchy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/hierarchy",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the full ancestor chain (parent, grandparent, …) and all descendants for a customer."
+        },
+        {
+          "info": {
+            "name": "Get customer roll-up stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/rollup",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Aggregated invoice totals and usage across this customer and all descendants."
+        },
+        {
+          "info": {
+            "name": "List recent touches for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/touches",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Customer ID"
+              }
+            ]
+          },
+          "docs": "Return the most recent touches for a customer, ordered by `ts` descending. Default limit 10, max 100. Touches are pushed by drip-cli via POST /v1/sync/touches; this endpoint surfaces the last-N preview metadata."
+        },
+        {
+          "info": {
+            "name": "Get customer balance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/balance",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Customer ID"
+              }
+            ]
+          },
+          "docs": "\nRetrieve the current balance for a customer. Returns the latest cached\nbalance from the database (synced periodically from on-chain).\n\nFor real-time balance, call `POST /v1/customers/:id/sync-balance` first.\n        "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

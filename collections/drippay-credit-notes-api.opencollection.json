@@ -1,0 +1,100 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Credit Notes API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Credit Notes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List credit notes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/credit-notes"
+          },
+          "docs": "List credit notes"
+        },
+        {
+          "info": {
+            "name": "Create a draft credit note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/credit-notes"
+          },
+          "docs": "\nCreate a credit note in DRAFT status against an existing invoice. The credit\nnote is not applied to the invoice until you call POST /credit-notes/:id/issue.\n\nRequired for refunds, corrections, and post-issuance adjustments — especially\nin EU/LATAM jurisdictions where simply voiding an invoice is not legally\nsufficient.\n\nValidates that:\n- the invoice exists and belongs to the business\n- the invoice is not in DRAFT or VOIDED status\n- the credit note total does not exceed the remaining invoice val"
+        },
+        {
+          "info": {
+            "name": "Get a credit note",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/credit-notes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a credit note"
+        },
+        {
+          "info": {
+            "name": "Issue a draft credit note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/credit-notes/:id/issue",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Apply a DRAFT credit note to its invoice. Increments invoice.adjustmentsUsdc and recomputes invoice status. Idempotent: returns 409 if the credit note is not in DRAFT status."
+        },
+        {
+          "info": {
+            "name": "Void a credit note",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/credit-notes/:id/void",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Voiding an ISSUED credit note reverses its application to the invoice. Voiding a DRAFT credit note is a no-op cleanup. Requires a reason of at least 5 characters."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

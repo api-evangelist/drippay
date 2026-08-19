@@ -1,0 +1,173 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Contracts API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Contracts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List contracts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/contracts",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query",
+                "description": "Filter contracts by customer ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter contracts by status"
+              }
+            ]
+          },
+          "docs": "List all contracts for your business, optionally filtered by customer or status. Results are ordered by creation date (newest first).\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Create a contract",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/contracts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a per-customer commercial agreement with custom pricing, prepaid commits, and spend caps.\n\nContracts override default pricing plans for a specific customer. Use them for:\n- **Enterprise deals** with negotiated rates (via price overrides)\n- **Prepaid commits** where the customer pays upfront and draws down a balance\n- **Spend caps** to enforce maximum billing per period\n- **Minimum commits** to guarantee a revenue floor\n- **Volume discounts** applied as a percentage across all usage\n- **Fr"
+        },
+        {
+          "info": {
+            "name": "Get a contract",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/contracts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contract ID"
+              }
+            ]
+          },
+          "docs": "Retrieve a specific contract by ID, including its current prepaid balance and all price overrides.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Amend a contract",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/contracts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contract ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an active contract's terms. Only ACTIVE contracts can be amended.\n\nProvide only the fields you want to change — unspecified fields remain unchanged. Note that `includedUnits` and `metadata` are replaced entirely (not merged) when provided.\n\nCannot change: `customerId`, `startDate`, `prepaidAmountUsdc`, or `status` (use `DELETE` to cancel).\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Cancel a contract",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/contracts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contract ID"
+              }
+            ]
+          },
+          "docs": "Cancel an active contract. Sets status to `CANCELLED`.\n\nCancellation is permanent — cancelled contracts cannot be reactivated. Any remaining prepaid balance is frozen. Price overrides from this contract stop applying to new charges immediately.\n\nAlready-cancelled contracts return a 400 error.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Add a price override",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/contracts/:id/overrides",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contract ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add or update a per-unit-type price override on a contract.\n\nPrice overrides replace the default pricing plan rate for a specific usage type. For example, if your default `api_call` plan charges $0.001/call, a contract override of $0.0008/call gives this customer a negotiated enterprise rate.\n\nIf an override for the given `unitType` already exists, it is updated (upsert behavior). Only ACTIVE contracts accept new overrides.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Remove a price override",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/contracts/:id/overrides/:unitType",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Contract ID"
+              },
+              {
+                "name": "unitType",
+                "value": "",
+                "type": "path",
+                "description": "Unit type to remove the override for (e.g., \"api_call\", \"token\")"
+              }
+            ]
+          },
+          "docs": "Remove a per-unit-type price override from a contract. After removal, the customer reverts to the default pricing plan rate for that usage type.\n\nThe `unitType` path parameter must exactly match the override's unit type (e.g., `api_call`).\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

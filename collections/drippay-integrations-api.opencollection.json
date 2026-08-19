@@ -1,0 +1,1211 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Integrations API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Integrations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Salesforce Change Data Capture webhook (HMAC-signed)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/webhooks/salesforce/:integrationId",
+            "params": [
+              {
+                "name": "integrationId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Salesforce Change Data Capture webhook (HMAC-signed)"
+        },
+        {
+          "info": {
+            "name": "List marketplace & CRM integrations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations"
+          },
+          "docs": "List marketplace & CRM integrations"
+        },
+        {
+          "info": {
+            "name": "Create a marketplace / CRM integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations"
+          },
+          "docs": "Create a new marketplace or CRM integration.\n\nSupported providers:\n- `AWS_MARKETPLACE` - AWS Marketplace Metering Service\n- `AZURE_MARKETPLACE` - Azure Marketplace SaaS metering\n- `GCP_MARKETPLACE` - GCP Cloud Commerce / Service Control\n- `STRIPE` - Stripe Billing Meter Events\n- `SALESFORCE` - Salesforce CRM (custom usage object)\n- `METRONOME` - Metronome usage ingestion\n\nSecret config fields are encrypted at rest and never returned on read.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` r"
+        },
+        {
+          "info": {
+            "name": "Get a marketplace integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a marketplace integration"
+        },
+        {
+          "info": {
+            "name": "Update an integration (rotate secrets, toggle status)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/integrations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Update an integration (rotate secrets, toggle status)"
+        },
+        {
+          "info": {
+            "name": "Delete an integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an integration"
+        },
+        {
+          "info": {
+            "name": "Test an integration connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/:id/test",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Test an integration connection"
+        },
+        {
+          "info": {
+            "name": "Submit a metered usage record to the provider",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/:id/usage",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Forwards a single metered usage record to the connected marketplace or CRM. A MarketplaceMeterSubmission row is always written as an audit trail, even if the provider call fails. Idempotency is guaranteed via the `idempotencyKey` field (auto-generated when omitted)."
+        },
+        {
+          "info": {
+            "name": "List recent meter submissions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/:id/submissions",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List recent meter submissions"
+        },
+        {
+          "info": {
+            "name": "Validate Stripe credentials (no side effects)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/test"
+          },
+          "docs": "Validates a Stripe secret or restricted key (and optional webhook secret) against Stripe's /v1/account endpoint. Probes tax/billing/invoicing capabilities when scoped keys are provided. Returns account metadata on success. **No database writes.** Requires a secret key with the `ADMIN` role."
+        },
+        {
+          "info": {
+            "name": "Connect a Stripe account via API key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/connect"
+          },
+          "docs": "Validates Stripe credentials, creates a `MarketplaceIntegration` row (idempotent on Stripe account ID), optionally flips `taxProvider` to `STRIPE_TAX`, and returns the webhook URL the merchant must paste into their Stripe dashboard. Retrying this endpoint with the same Stripe account returns the existing integration with `alreadyExists: true`. Requires `API_PUBLIC_BASE_URL` to be set; webhook URL has no host header fallback. **Requires a secret key with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Begin Stripe Connect OAuth (Quickstart mode)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/oauth/init"
+          },
+          "docs": "Generates a Stripe Connect authorize URL and a signed state token. The frontend redirects the user's browser to `authorizeUrl`; Stripe then redirects back to `/v1/integrations/stripe/oauth/callback` where Drip exchanges the code, creates the integration, and auto-provisions the webhook endpoint. Gated on the `STRIPE_QUICKSTART_ENABLED` feature flag; returns 404 if disabled for the workspace."
+        },
+        {
+          "info": {
+            "name": "Stripe Connect OAuth redirect handler",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/oauth/callback"
+          },
+          "docs": "Public redirect endpoint Stripe posts the user back to after they authorize the Connect app. Verifies the state HMAC + expiry, exchanges the code for the connected `acct_…` id, creates the integration, auto-provisions the webhook endpoint, and 302-redirects the browser to the dashboard with a `?quickstart=success|error` hint."
+        },
+        {
+          "info": {
+            "name": "Begin Slack OAuth (pre-call MVP)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/comms/slack/install"
+          },
+          "docs": "Begin Slack OAuth (pre-call MVP)"
+        },
+        {
+          "info": {
+            "name": "Stream managed Slack realtime messages to desktop clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/slack/realtime/stream"
+          },
+          "docs": "Stream managed Slack realtime messages to desktop clients"
+        },
+        {
+          "info": {
+            "name": "Stream managed Slack realtime messages to desktop clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/slack/events/stream"
+          },
+          "docs": "Stream managed Slack realtime messages to desktop clients"
+        },
+        {
+          "info": {
+            "name": "Stream managed LinkedIn realtime events to desktop clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/linkedin/realtime/stream"
+          },
+          "docs": "Stream managed LinkedIn realtime events to desktop clients"
+        },
+        {
+          "info": {
+            "name": "Stream managed LinkedIn realtime events to desktop clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/linkedin/events/stream"
+          },
+          "docs": "Stream managed LinkedIn realtime events to desktop clients"
+        },
+        {
+          "info": {
+            "name": "Publish local LinkedIn realtime events to desktop clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/comms/linkedin/events"
+          },
+          "docs": "Publish local LinkedIn realtime events to desktop clients"
+        },
+        {
+          "info": {
+            "name": "Slack OAuth redirect handler",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/slack/callback"
+          },
+          "docs": "Slack OAuth redirect handler"
+        },
+        {
+          "info": {
+            "name": "Begin Gmail OAuth (pre-call MVP)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/comms/gmail/install"
+          },
+          "docs": "Begin Gmail OAuth (pre-call MVP)"
+        },
+        {
+          "info": {
+            "name": "Gmail OAuth redirect handler",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/gmail/callback"
+          },
+          "docs": "Gmail OAuth redirect handler"
+        },
+        {
+          "info": {
+            "name": "Google Calendar OAuth redirect handler",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/calendar/callback"
+          },
+          "docs": "Google Calendar OAuth redirect handler"
+        },
+        {
+          "info": {
+            "name": "List comms integrations for the authenticated business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms"
+          },
+          "docs": "List comms integrations for the authenticated business"
+        },
+        {
+          "info": {
+            "name": "Diagnose Slack OAuth, realtime events, and stored comms state for the authenticated business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/slack/doctor"
+          },
+          "docs": "Diagnose Slack OAuth, realtime events, and stored comms state for the authenticated business"
+        },
+        {
+          "info": {
+            "name": "List recently ingested comms messages for the authenticated business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/comms/messages",
+            "params": [
+              {
+                "name": "provider",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "before",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List recently ingested comms messages for the authenticated business"
+        },
+        {
+          "info": {
+            "name": "Send a Slack message through the authenticated business integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/comms/slack/send",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Send a Slack message through the authenticated business integration"
+        },
+        {
+          "info": {
+            "name": "Disconnect a comms integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/comms/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Disconnect a comms integration"
+        },
+        {
+          "info": {
+            "name": "Trigger an immediate poll for a comms integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/comms/:id/sync",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Trigger an immediate poll for a comms integration"
+        },
+        {
+          "info": {
+            "name": "Manually attribute past + future comm messages to a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:customerId/comms/link",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Manually attribute past + future comm messages to a customer"
+        },
+        {
+          "info": {
+            "name": "Sync customer touches from drip-cli",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/sync/touches"
+          },
+          "docs": "Push a batch of communication touches (iMessage / Slack / Gmail / LinkedIn / calendar / GitHub) to Drip. Body is truncated server-side to 200 chars; full message contents should never be sent. Each touch is matched to an existing Customer by email (case-insensitive); unmatched rows are still stored with customerId=null so a future re-resolve can backfill the link. Idempotent on `sourceId`. Capped at 500 touches per request."
+        },
+        {
+          "info": {
+            "name": "List email opens since a unix timestamp",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/opens-since",
+            "params": [
+              {
+                "name": "ts",
+                "value": "",
+                "type": "query",
+                "description": "Unix seconds. Returns opens with opened_at >= this value."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Return email-pixel opens with `opened_at >= ts` (unix seconds). drip-cli polls this endpoint with its last-sync watermark, matches incoming tokens against its local `email_opens` table, and updates open counts for tokens it owns. Unknown tokens are ignored. Capped at 5000 rows per call (default 1000); the cli re-polls with an advanced watermark."
+        },
+        {
+          "info": {
+            "name": "stripeMigrateDryRun",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/dry-run"
+          }
+        },
+        {
+          "info": {
+            "name": "stripeMigrateExecute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/execute"
+          }
+        },
+        {
+          "info": {
+            "name": "stripeMigrateStatus",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/status"
+          }
+        },
+        {
+          "info": {
+            "name": "stripeMigrateListRuns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/runs"
+          }
+        },
+        {
+          "info": {
+            "name": "stripeMigrateGetRun",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/runs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "stripeMigrateRollback",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/runs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "stripeMigrateRollbackPost",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/migrate/runs/:id/rollback",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "stripeListCustomers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/stripe/customers"
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportDryRun",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/import/dry-run"
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportExecute",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/import/execute"
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportStatus",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/import/status"
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportListRuns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/import/runs"
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportGetRun",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/import/runs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportRollback",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/import/runs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "csvImportRollbackPost",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/import/runs/:id/rollback",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          }
+        },
+        {
+          "info": {
+            "name": "Create or rotate a lead-source webhook setup",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/lead-sources/webhook/connect"
+          },
+          "docs": "Provisions (or rotates) a generic lead-source webhook for the authenticated business. Returns the public ingest endpoint, a bearer token to use in the `Authorization` header, the connection identifier, and a sample request body. Requires a secret key (`sk_*`) with the `ADMIN` role."
+        },
+        {
+          "info": {
+            "name": "Get lead-source webhook status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/lead-sources/webhook/status"
+          },
+          "docs": "Returns the current webhook connection status, including connection identifier, endpoint URL, token last-4, last ingest time, and last error message. Returns 404 when the webhook has not been configured for the business."
+        },
+        {
+          "info": {
+            "name": "List webhook leads for desktop sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/lead-sources/webhook/leads",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor returned by a previous response."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of leads to return."
+              }
+            ]
+          },
+          "docs": "Returns a cursor-paginated batch of normalized webhook leads ingested for the authenticated business. Use `cursor` and `limit` (1–500, default 500) to page through results. Returns 404 when the webhook has not been configured."
+        },
+        {
+          "info": {
+            "name": "Ingest leads from a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/connectors/leads/:connectionId/ingest",
+            "params": [
+              {
+                "name": "connectionId",
+                "value": "",
+                "type": "path",
+                "description": "Connection identifier returned by the connect call."
+              }
+            ]
+          },
+          "docs": "Public webhook ingest endpoint. Authenticate with the bearer token returned by the connect call (`Authorization: Bearer <token>`). The request body must contain a `leads` array of up to 500 records per call. Returns 202 with counts of received, created, duplicate, and skipped leads.\n\nError codes: `CLAY_CONNECTOR_NOT_FOUND` (404), `CLAY_CONNECTOR_DISCONNECTED` (403), `CLAY_CONNECTOR_TOKEN_REQUIRED` (401), `CLAY_CONNECTOR_TOKEN_INVALID` (401), `CLAY_EMPTY_PAYLOAD` (422), `CLAY_BATCH_TOO_LARGE` (42"
+        },
+        {
+          "info": {
+            "name": "Create or rotate Clay lead-source webhook setup",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/lead-sources/clay/connect"
+          },
+          "docs": "Clay-branded alias of `POST /v1/lead-sources/webhook/connect`. Behaves identically; prefer the generic `/lead-sources/webhook/connect` route for new integrations."
+        },
+        {
+          "info": {
+            "name": "Get Clay lead-source webhook status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/lead-sources/clay/status"
+          },
+          "docs": "Clay-branded alias of `GET /v1/lead-sources/webhook/status`. Behaves identically; prefer the generic `/lead-sources/webhook/status` route for new integrations."
+        },
+        {
+          "info": {
+            "name": "List Clay-ingested leads for desktop sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/lead-sources/clay/leads",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor returned by a previous response."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of leads to return."
+              }
+            ]
+          },
+          "docs": "Clay-branded alias of `GET /v1/lead-sources/webhook/leads`. Behaves identically; prefer the generic `/lead-sources/webhook/leads` route for new integrations."
+        },
+        {
+          "info": {
+            "name": "Ingest leads from Clay webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/connectors/clay/:connectionId/ingest",
+            "params": [
+              {
+                "name": "connectionId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Clay-branded alias of `POST /v1/connectors/leads/{connectionId}/ingest`. Behaves identically; prefer the generic `/connectors/leads/{connectionId}/ingest` route for new integrations."
+        },
+        {
+          "info": {
+            "name": "Trigger a Salesforce Account → Drip Customer sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/sync/accounts",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Trigger a Salesforce Account → Drip Customer sync"
+        },
+        {
+          "info": {
+            "name": "Trigger a Salesforce Opportunity → Drip Contract sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/sync/opportunities",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Trigger a Salesforce Opportunity → Drip Contract sync"
+        },
+        {
+          "info": {
+            "name": "Push per-Account spend rollups to Salesforce",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/sync/rollup",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Push per-Account spend rollups to Salesforce"
+        },
+        {
+          "info": {
+            "name": "Run a full Salesforce Accounts + Opportunities backfill via Bulk API 2.0",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/backfill",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Run a full Salesforce Accounts + Opportunities backfill via Bulk API 2.0"
+        },
+        {
+          "info": {
+            "name": "List Salesforce field mappings for an integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/field-mappings",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List Salesforce field mappings for an integration"
+        },
+        {
+          "info": {
+            "name": "Create a Salesforce field mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/field-mappings",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Create a Salesforce field mapping"
+        },
+        {
+          "info": {
+            "name": "Update a Salesforce field mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/field-mappings/:mappingId",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mappingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Update a Salesforce field mapping"
+        },
+        {
+          "info": {
+            "name": "Delete a Salesforce field mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/salesforce/:id/field-mappings/:mappingId",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mappingId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete a Salesforce field mapping"
+        },
+        {
+          "info": {
+            "name": "Start the Xero OAuth 2.0 PKCE flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/xero/connect"
+          },
+          "docs": "Start the Xero OAuth 2.0 PKCE flow"
+        },
+        {
+          "info": {
+            "name": "Xero OAuth 2.0 callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/xero/callback"
+          },
+          "docs": "Xero OAuth 2.0 callback"
+        },
+        {
+          "info": {
+            "name": "List Xero integrations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/xero"
+          },
+          "docs": "List Xero integrations"
+        },
+        {
+          "info": {
+            "name": "Disconnect the Xero integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/xero"
+          },
+          "docs": "Disconnect the Xero integration"
+        },
+        {
+          "info": {
+            "name": "List Xero tenants connected to the active integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/xero/tenants"
+          },
+          "docs": "List Xero tenants connected to the active integration"
+        },
+        {
+          "info": {
+            "name": "Test the Xero connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/xero/test"
+          },
+          "docs": "Test the Xero connection"
+        },
+        {
+          "info": {
+            "name": "Upsert Xero account-code mappings",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/xero/accounts/map"
+          },
+          "docs": "Upsert Xero account-code mappings"
+        },
+        {
+          "info": {
+            "name": "List Xero chart of accounts for a tenant",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/xero/accounts"
+          },
+          "docs": "List Xero chart of accounts for a tenant"
+        },
+        {
+          "info": {
+            "name": "Push a GL export to Xero as ManualJournals",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/xero/push/:exportId",
+            "params": [
+              {
+                "name": "exportId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Push a GL export to Xero as ManualJournals"
+        },
+        {
+          "info": {
+            "name": "Start the QuickBooks Online OAuth 2.0 PKCE flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/connect"
+          },
+          "docs": "Start the QuickBooks Online OAuth 2.0 PKCE flow"
+        },
+        {
+          "info": {
+            "name": "QuickBooks Online OAuth 2.0 callback",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/callback"
+          },
+          "docs": "QuickBooks Online OAuth 2.0 callback"
+        },
+        {
+          "info": {
+            "name": "List QuickBooks integrations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks"
+          },
+          "docs": "List QuickBooks integrations"
+        },
+        {
+          "info": {
+            "name": "Disconnect the QuickBooks integration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks"
+          },
+          "docs": "Disconnect the QuickBooks integration"
+        },
+        {
+          "info": {
+            "name": "Test the QuickBooks connection",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/test"
+          },
+          "docs": "Test the QuickBooks connection"
+        },
+        {
+          "info": {
+            "name": "Upsert QuickBooks account-code mappings",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/accounts/map"
+          },
+          "docs": "Upsert QuickBooks account-code mappings"
+        },
+        {
+          "info": {
+            "name": "List QuickBooks Online chart of accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/accounts"
+          },
+          "docs": "List QuickBooks Online chart of accounts"
+        },
+        {
+          "info": {
+            "name": "Push a GL export to QuickBooks Online as JournalEntries",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/push/:exportId",
+            "params": [
+              {
+                "name": "exportId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Push a GL export to QuickBooks Online as JournalEntries"
+        },
+        {
+          "info": {
+            "name": "Update QuickBooks integration settings (defaultItemId, autoPush)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/config",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update QuickBooks integration settings (defaultItemId, autoPush)"
+        },
+        {
+          "info": {
+            "name": "Push a Drip invoice to QuickBooks Online as a native Invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/integrations/quickbooks/push-invoice/:invoiceId",
+            "params": [
+              {
+                "name": "invoiceId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Push a Drip invoice to QuickBooks Online as a native Invoice"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

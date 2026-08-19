@@ -1,0 +1,194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Runs API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Runs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/runs",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List agent runs with optional filters."
+        },
+        {
+          "info": {
+            "name": "Start a new agent run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/runs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nStart tracking a new agent run for a customer workflow.\n\nReturns a run ID that can be used to emit events and track execution.\nThe run starts in PENDING status and transitions to RUNNING when the first event is emitted.\n        "
+        },
+        {
+          "info": {
+            "name": "Get run details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/runs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "\nGet run metadata and summary totals.\n\nFor full event history with retry chains, anomalies, and debugging details,\nuse GET /runs/:id/timeline instead.\n        "
+        },
+        {
+          "info": {
+            "name": "Update or end a run",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/runs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "\nUpdate a run's status or end it.\n\nWhen transitioning to COMPLETED, FAILED, CANCELLED, or TIMEOUT, the run's\nendedAt timestamp is automatically set and duration is computed.\n        "
+        },
+        {
+          "info": {
+            "name": "Get run timeline",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/runs/:id/timeline",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Cursor for pagination"
+              },
+              {
+                "name": "includeAnomalies",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "collapseRetries",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "\nGet a comprehensive timeline view of an agent run including:\n- Full event history with retry chain tracking\n- Anomaly detection and alerts\n- Human-readable explanations\n- Summary statistics\n- Pagination for large runs\n\nThis is THE killer feature for debugging what happened in an agent execution.\n        "
+        },
+        {
+          "info": {
+            "name": "Emit an event to a run (legacy)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/run-events"
+          },
+          "docs": "\nEmit a single usage event to a run. The event is stored idempotently using the idempotencyKey.\n\n**Note:** This is the legacy endpoint. For the newer execution-first API with richer metadata,\nuse POST /v1/events instead.\n\nThis endpoint records the event for visibility/debugging. For events that should also create a charge,\nuse POST /v1/usage instead.\n        "
+        },
+        {
+          "info": {
+            "name": "Batch emit events to runs (legacy)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/run-events/batch"
+          },
+          "docs": "\nEmit multiple events in a single request. All events are stored idempotently.\n\n**Note:** This is the legacy endpoint. For the newer execution-first API with richer metadata,\nuse POST /v1/events instead.\n\nEach event can specify its own runId, customerId, and workflowId. If runId is provided,\nthe event is attached to that run. Otherwise, it's a standalone event.\n        "
+        },
+        {
+          "info": {
+            "name": "Record a complete run in one call",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/runs/record",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nOne-call convenience endpoint that atomically creates a workflow (if needed),\nstarts a run, emits events, and ends the run.\n\nThis replaces the 4-step SDK orchestration:\n1. GET /workflows (resolve slug)\n2. POST /runs (start)\n3. POST /run-events/batch (emit events)\n4. PATCH /runs/:id (end)\n\nThe `workflow` field can be a workflow ID or a slug. If a slug is provided\nand no matching workflow exists, one is auto-created.\n        "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

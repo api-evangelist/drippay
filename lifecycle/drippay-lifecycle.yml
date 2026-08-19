@@ -1,6 +1,9 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
-source: https://usedrip.ai/ , https://status.usedrip.ai/ , openapi/drippay-openapi-original.json
+source: >-
+  https://dreach.ai/ , https://status.usedrip.ai/ ,
+  https://github.com/DripYCx26/drip-releases (release stream) ,
+  openapi/_original/drippay-openapi-original.json
 versioning:
   scheme: uri-path
   current: v1
@@ -17,3 +20,42 @@ status_page:
   platform: incident.io
   components: [Dashboard, App]
 deprecated_operations: []
+release_cadence:
+  source: https://github.com/DripYCx26/drip-releases
+  channel: Public GitHub releases for the drip / dreach Mac app and the drip-cli binary
+  latest_app_release: v0.1.159
+  latest_app_release_date: '2026-08-13'
+  cli_version: 0.1.22
+  observed: >-
+    Multiple app releases per day on 2026-08-13 (v0.1.154 through v0.1.159).
+    The application ships continuously while the published SDKs have not been
+    republished since 2026-03-20 — a 146-day gap. See
+    packages/drippay-packages.yml.
+  note: >-
+    The Mac cask tracks `releases/latest/download` with `version :latest` and
+    `sha256 :no_check`, so app distribution is unpinned and unverifiable.
+rename:
+  from: drip (usedrip.ai)
+  to: dreach (dreach.ai)
+  observed: '2026-08-13'
+  evidence: >-
+    Every usedrip.ai path returns HTTP 308 to the dreach.ai equivalent
+    (usedrip.ai/login redirects to dreach.ai/register). The company is unchanged
+    — Drippay, Inc., YC P26 — and dreach.ai/about publishes the naming history
+    and disambiguation. The API host (api.drippay.dev), docs host
+    (docs.usedrip.ai), status page and trust center were NOT renamed and still
+    serve from their original hostnames.
+  unaffected_hosts:
+  - https://api.drippay.dev
+  - https://docs.usedrip.ai
+  - https://mcp.drippay.dev
+  - https://status.usedrip.ai
+  - https://trust.usedrip.ai
+changelog:
+  url: https://docs.usedrip.ai/changelog
+  status: 200
+  checked: '2026-08-13'
+  note: >-
+    Human-written product changelog, last dated entry 2026-05-25 (dripos
+    0.1.23). It has not tracked the release stream since. See
+    changelog/drippay-changelog.yml.

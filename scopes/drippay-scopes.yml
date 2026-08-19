@@ -1,0 +1,58 @@
+generated: '2026-08-13'
+method: probed
+source: https://api.drippay.dev/.well-known/oauth-authorization-server
+docs: https://dreach.ai/mcp
+summary: >-
+  The Drip REST API itself is secret-key authenticated (sk_live_/sk_test_ bearer
+  keys) and declares no oauth2 securityScheme, so the REST surface has no scope
+  model — role-based key permissions carry that job (see
+  authentication/drippay-authentication.yml). OAuth exists for one surface only:
+  the hosted MCP server at https://mcp.drippay.dev/mcp, whose authorization
+  server is api.drippay.dev. The scopes below are read verbatim from the RFC
+  8414 authorization-server metadata document.
+applies_to:
+  surface: mcp
+  resource: https://mcp.drippay.dev
+  note: >-
+    RFC 9728 protected-resource metadata at
+    https://mcp.drippay.dev/.well-known/oauth-protected-resource (HTTP 200)
+    names https://api.drippay.dev as the authorization server and
+    bearer_methods_supported ["header"].
+authorization_server:
+  issuer: https://api.drippay.dev
+  authorization_endpoint: https://api.drippay.dev/v1/mcp-oauth/authorize
+  token_endpoint: https://api.drippay.dev/v1/mcp-oauth/token
+  registration_endpoint: https://api.drippay.dev/v1/mcp-oauth/register
+  introspection_endpoint: https://api.drippay.dev/v1/mcp-oauth/introspect
+  response_types_supported: [code]
+  grant_types_supported: [authorization_code, refresh_token]
+  code_challenge_methods_supported: [S256]
+  token_endpoint_auth_methods_supported: [none]
+  dynamic_client_registration: true
+scope_count: 2
+scopes:
+- name: read
+  description: >-
+    Read-only access to the granting account through the MCP server — account
+    balance, credit usage, contact and signal lookups. Drippay's MCP page states
+    "Access is scoped to read or write, so a read-only connection cannot make
+    changes."
+  source: oauth-authorization-server scopes_supported
+- name: write
+  description: >-
+    Mutating access through the MCP server — sourcing leads, drafting messages,
+    and provisioning managed sending domains and inboxes.
+  source: oauth-authorization-server scopes_supported
+notes: >-
+  Granularity is coarse: two scopes cover all seven hosted MCP tools, so a
+  client that needs any write tool receives authority over every write tool.
+  Drippay stores one dedicated encrypted API key per OAuth grant and revoking
+  the grant disables that key; access and refresh tokens are stored only as
+  hashes (https://dreach.ai/mcp).
+x-evidence:
+- url: https://api.drippay.dev/.well-known/oauth-authorization-server
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://mcp.drippay.dev/.well-known/oauth-protected-resource
+  http_status: 200
+  fetched: '2026-08-13'

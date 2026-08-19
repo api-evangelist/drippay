@@ -1,0 +1,109 @@
+generated: '2026-08-13'
+method: derived
+source: mcp/drippay-mcp.yml , https://dreach.ai/mcp , openapi/_original/drippay-openapi-original.json
+summary: >-
+  Drippay, Inc. runs two surfaces that are NOT projections of one data core.
+  The OpenAPI at api.drippay.dev describes the Drip billing and execution-ledger
+  platform (245 operations across customers, usage, invoices, subscriptions,
+  entitlements, tax, contracts, webhooks). The hosted MCP server at
+  mcp.drippay.dev exposes seven outbound-sales tools belonging to the dreach Mac
+  product (lead sourcing, contact enrichment, message drafting, inbox
+  provisioning, executive-change signals, account balance). Six of the seven MCP
+  tools have NO backing public REST operation, and 245 REST operations have no
+  MCP tool. This crosswalk records that divergence rather than implying a
+  mapping that does not exist.
+surfaces:
+  openapi:
+    path: openapi/_original/drippay-openapi-original.json
+    source: https://docs.usedrip.ai/openapi.json
+    base_url: https://api.drippay.dev
+    operations: 245
+    gated: false
+    auth: bearer secret key (sk_live_ / sk_test_), role-scoped READONLY/OPERATOR/ADMIN
+  mcp:
+    url: https://mcp.drippay.dev/mcp
+    transport: streamable-http
+    gated: true
+    probe: >-
+      POST tools/list on 2026-08-13 returned HTTP 401 jsonrpc error -32001
+      "unauthorized" — "Missing Authorization header. Send `Authorization:
+      Bearer sk_...`". Live inputSchemas therefore require authenticated
+      introspection; the tool names and descriptions below come from the
+      provider's own MCP page (https://dreach.ai/mcp).
+    auth: oauth (RFC 8414 AS at api.drippay.dev, scopes read/write) or bearer sk_ key
+  graphql:
+    present: false
+crosswalk:
+- tool: drip_account
+  category: account
+  rest: [getCustomerBalance, syncCustomerBalance]
+  binding: semantic
+  confidence: low
+  note: >-
+    "Read account balance and credit usage" plausibly reads the same balance
+    surface the billing API exposes per customer, but the MCP tool is scoped to
+    the caller's own dreach account while the REST operations are scoped to an
+    arbitrary billable customer id. Not verified — MCP introspection is gated.
+mcp_only:
+- tool: drip_find_leads
+  reason: >-
+    Lead sourcing from an ICP description. No public REST operation performs
+    sourcing; the REST lead surface is ingest-only
+    (connectLeadWebhookSource, ingestClayLeads, listLeadWebhookLeads) — it
+    accepts leads a customer already has rather than finding new ones.
+- tool: drip_get_contacts
+  reason: Contact enrichment (verified business emails and phones). No REST equivalent published.
+- tool: drip_draft_messages
+  reason: >-
+    Research and personalized opener drafting. Drafting runs in the dreach
+    product, not the billing API; no REST operation exposes it.
+- tool: drip_provision_inboxes
+  reason: Ordering managed sending domains and mailboxes. No REST equivalent published.
+- tool: drip_inbox_status
+  reason: Polling inbox warmup readiness. No REST equivalent published.
+- tool: drip_signals
+  reason: Executive-change monitoring for outreach timing. No REST equivalent published.
+rest_only:
+  count: 243
+  note: >-
+    Every billing-domain operation is REST-only. No MCP tool touches customers,
+    usage recording, pricing plans, billable metrics, invoices, credit notes,
+    coupons, subscriptions, entitlements, charges, dunning, tax, contracts,
+    drift, runs, workflows or webhook management. Enumerating all 243 here would
+    duplicate the OpenAPI; see openapi/ for the authoritative list.
+  representative_tags:
+  - Customers
+  - Usage
+  - Events
+  - Charges
+  - Pricing Plans
+  - Contracts
+  - Entitlements
+  - Webhooks
+  - Subscriptions
+  - Workflows
+  - Runs
+  - Dunning
+  - Invoices
+  - Tax
+  - Credit Notes
+  - Coupons
+  - Integrations
+  - Business
+  - BillableMetrics
+  - Customer Portal
+  - GL Exports
+  - Product Categories
+coverage:
+  mcp_tools: 7
+  mcp_tools_bound_to_rest: 1
+  mcp_only: 6
+  rest_operations: 245
+  rest_operations_with_a_tool: 2
+  rest_only: 243
+  overlap_ratio: 0.008
+finding: >-
+  An agent that connects only the MCP server can run outbound sales but cannot
+  meter, price, invoice or collect. An agent that holds only a REST key can bill
+  but cannot source or draft. The two surfaces do not substitute for each other,
+  and no published artifact from Drippay says so.

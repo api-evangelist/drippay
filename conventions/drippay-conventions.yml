@@ -1,6 +1,8 @@
-generated: '2026-07-18'
-method: derived
-source: openapi/drippay-openapi-original.json
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.usedrip.ai/openapi.json (info.description Authentication /
+  Idempotency / Error Codes sections) , openapi/_original/drippay-openapi-original.json
 docs: https://docs.usedrip.ai/
 summary: >-
   Cross-cutting request/response semantics for the Drip API, derived from the
@@ -25,9 +27,12 @@ pagination:
   params: [cursor, limit, offset]
   notes: List endpoints accept a cursor plus limit; offset is also accepted on some collections.
 rate_limiting:
-  documented: true
+  documented: partial
   response_status: 429
-  evidence: 21 operations declare a 429 response; rate limiting referenced across the spec.
+  evidence: 21 of 245 operations declare a 429 response.
+  headers: none documented — no Retry-After, RateLimit-* or X-RateLimit-*.
+  numbers_published: false
+  see: rate-limits/drippay-rate-limits.yml
 versioning:
   scheme: uri-path
   current: v1
@@ -44,3 +49,31 @@ webhooks:
   supported: true
   signing: HMAC secret per endpoint (rotate-secret supported)
   see: asyncapi/drippay-webhooks.yml
+authorization:
+  model: role-on-key
+  roles: [READONLY, OPERATOR, ADMIN]
+  note: >-
+    The REST API has no OAuth and therefore no scopes. Authority is carried by a
+    hierarchical role attached to each secret key; ADMIN is required to mutate
+    pricing plans and contracts, and a lower role returns 403.
+  oauth_surface: >-
+    OAuth exists only for the hosted MCP server, with two coarse scopes
+    (read, write) — see scopes/drippay-scopes.yml.
+  see: authentication/drippay-authentication.yml
+agent_payment:
+  standard: x402 1.0.0
+  trigger: 402 Payment Required on POST /v1/usage when the balance is insufficient
+  flow: >-
+    The 402 body carries a complete payment request (amount in USDC, recipient,
+    chain base-sepolia, nonce, expiresAt, serverTime). The client signs it with
+    its session key via EIP-712 and retries the call with X-Payment-* headers.
+    A checkout_url is offered as the human fallback.
+  significance: >-
+    This is the convention that makes the API self-settling for an agent: the
+    error response is a machine-actionable instruction rather than a dead end.
+  see: errors/drippay-problem-types.yml
+numeric_representation:
+  monetary_amounts: >-
+    Returned as strings (e.g. "0.001000") to preserve precision. Clients must
+    not parse them as floats.
+  source: https://docs.usedrip.ai/openapi.json (info.description "Important Notes")

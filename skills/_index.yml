@@ -1,20 +1,48 @@
-generated: '2026-07-18'
-method: generated
-source: openapi/drippay-openapi-original.json
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.usedrip.ai/.well-known/agent-skills/drip/skill.md (provider
+  published) , openapi/_original/drippay-openapi-original.json (generated)
+note: >-
+  One skill is published by Drippay itself and saved verbatim; the remaining
+  four are generated from real operationIds in the published OpenAPI. The
+  published skill covers the dreach Mac application, the generated ones cover
+  the Drip billing API — the same product split recorded in
+  mcp/drippay-tool-crosswalk.yml.
 skills:
+- file: drippay-drip-published.md
+  name: Drip
+  method: searched
+  source: https://docs.usedrip.ai/.well-known/agent-skills/drip/skill.md
+  fetched: '2026-08-13'
+  http_status: 200
+  surface: dreach Mac application
+  referenced_by: a2a/drippay-agent-card.json (skills[0].url)
+  description: >-
+    Provider-authored skill for helping users connect communication sources,
+    search customer history, review AI drafts, configure meeting follow-up and
+    import leads. Saved verbatim — not edited.
 - file: drippay-meter-and-bill.md
   name: Meter usage and bill a customer
-  api: openapi/drippay-openapi-original.json
+  method: generated
+  surface: Drip billing API
+  api: openapi/_original/drippay-openapi-original.json
   operations: [createCustomer, recordUsage, listUsageEvents, generateInvoice, issueInvoice, markInvoicePaid]
 - file: drippay-subscription-lifecycle.md
   name: Create a plan and manage a subscription
-  api: openapi/drippay-openapi-original.json
+  method: generated
+  surface: Drip billing API
+  api: openapi/_original/drippay-openapi-original.json
   operations: [createPricingPlan, createSubscription, attachPlanToCustomer, updateSubscription, cancelSubscription]
 - file: drippay-entitlements.md
   name: Assign and check entitlements
-  api: openapi/drippay-openapi-original.json
+  method: generated
+  surface: Drip billing API
+  api: openapi/_original/drippay-openapi-original.json
   operations: [createEntitlementPlan, assignCustomerEntitlement, checkEntitlement, getCustomerEntitlementUsage]
 - file: drippay-webhooks-setup.md
   name: Register and verify webhooks
-  api: openapi/drippay-openapi-original.json
+  method: generated
+  surface: Drip billing API
+  api: openapi/_original/drippay-openapi-original.json
   operations: [listWebhookEventTypes, createWebhook, testWebhook, rotateWebhookSecret, listWebhookDeliveries]

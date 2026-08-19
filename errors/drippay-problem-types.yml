@@ -1,6 +1,10 @@
-generated: '2026-07-18'
-method: derived
-source: openapi/drippay-openapi-original.json
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.usedrip.ai/openapi.json — the provider's own "Error Codes" and
+  "API Key Roles" tables published in info.description, plus the response codes
+  declared across all 245 operations in
+  openapi/_original/drippay-openapi-original.json
 format: custom-json
 envelope:
   content_type: application/json
@@ -23,8 +27,34 @@ problems:
   occurrences: 106
 - status: 402
   title: Payment Required
-  meaning: Billing/credit condition blocks the operation.
+  meaning: >-
+    Insufficient balance on POST /v1/usage. This is the most agent-relevant
+    error in the API: the body is not a dead end but a machine-actionable
+    payment instruction.
+  code: PAYMENT_REQUIRED
   occurrences: 1
+  operation: POST /v1/usage
+  remediation: >-
+    Sign the returned x402 payment request with the session key (EIP-712) and
+    retry the call with X-Payment-* headers, or send the user to checkout_url to
+    top up the balance.
+  payload:
+    payment:
+      amount: Amount required, in USDC
+      recipient: Payment recipient address
+      currency: USDC
+      chain: base-sepolia
+      description: Human-readable charge description
+      usageId: Unique usage identifier
+      expiresAt: Unix timestamp (seconds) when the payment offer expires
+      timestamp: Unix timestamp (seconds) when the request was created
+      nonce: Unique nonce for replay protection
+    x402:
+      version: 1.0.0
+      paymentRequest: Complete payment request to sign via EIP-712
+    serverTime: '{ seconds, milliseconds, iso } for client clock synchronization'
+    checkout_url: URL for balance top-up (nullable)
+  standard: x402 1.0.0
 - status: 403
   title: Forbidden
   meaning: Authenticated key lacks permission for the resource or operation.
@@ -57,3 +87,55 @@ problems:
 - status: 503
   title: Service Unavailable
   occurrences: 19
+documented_error_reference:
+  source: https://docs.usedrip.ai/openapi.json (info.description "## Error Codes")
+  note: >-
+    Drippay publishes a five-row error table with a remediation hint per status.
+    It is the provider's own text, reproduced verbatim below. It omits 402, 429,
+    5xx and the role-based 403, all of which the contract declares — so the
+    published reference is narrower than the contract.
+  rows:
+  - status: 400
+    meaning: Bad request
+    fix: Check request body matches schema
+  - status: 401
+    meaning: Invalid API key
+    fix: 'Verify `Authorization: Bearer sk_...` header'
+  - status: 404
+    meaning: Not found
+    fix: Customer/pricing plan doesn't exist. Create customer first.
+  - status: 409
+    meaning: Duplicate
+    fix: Resource with this ID already exists
+  - status: 422
+    meaning: Validation error
+    fix: Check required fields and types
+role_based_403:
+  source: https://docs.usedrip.ai/openapi.json (info.description "## API Key Roles")
+  note: >-
+    403 Forbidden is role-driven, not resource-driven. Secret keys carry a
+    hierarchical role and the docs name the exact failure: "To create, update,
+    or delete pricing plans and contracts, you must use a secret key (sk_*) with
+    the ADMIN role. Using a lower-role key returns 403 Forbidden."
+  roles:
+  - name: READONLY
+    level: lowest
+    permissions: List and read resources (customers, charges, pricing plans, events)
+  - name: OPERATOR
+    level: mid
+    permissions: '+ Create customers, charge usage, track internal usage, emit events, manage runs'
+  - name: ADMIN
+    level: highest
+    permissions: '+ Create/update/delete pricing plans, manage contracts, manage API keys'
+  - name: 'public key (pk_*)'
+    level: n/a
+    permissions: Always READONLY; cannot create or modify resources.
+gaps:
+- id: no-error-code-registry
+  detail: >-
+    Responses carry a machine-readable `code` string but Drippay publishes no
+    registry of those code values. Only PAYMENT_REQUIRED and NOT_FOUND were
+    observed live. An agent cannot branch on `code` without discovering values
+    by hitting them.
+- id: no-rfc9457
+  detail: Errors are a custom JSON envelope, not application/problem+json.

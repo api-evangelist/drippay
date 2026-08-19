@@ -1,0 +1,68 @@
+generated: '2026-08-13'
+method: searched
+source: https://github.com/DripYCx26/homebrew-drip/blob/main/Formula/drip-cli.rb
+name: drip-cli
+description: >-
+  Local autopilot daemon for customer intelligence. drip-cli is the headless
+  companion to the drip / dreach Mac app — it runs the local sync and follow-up
+  loop on the user's own machine, polling the Drip API for state (for example
+  GET /v1/opens-since for email-pixel opens, matched against the local
+  email_opens table) and driving the local database the app reads from.
+official: true
+license: MIT
+version: 0.1.22
+homepage: https://drippay.dev
+distribution:
+  registry: homebrew-tap
+  tap: DripYCx26/drip
+  formula: Formula/drip-cli.rb
+  repository: https://github.com/DripYCx26/homebrew-drip
+  release_artifacts: https://github.com/DripYCx26/drip-releases
+install:
+- method: homebrew
+  command: brew install DripYCx26/drip/drip-cli
+- method: direct-binary
+  command: >-
+    curl -L
+    https://github.com/DripYCx26/drip-releases/releases/download/v0.1.22/drip-cli-darwin-arm64
+    -o drip-cli
+platforms:
+- os: macos
+  arch: arm64
+  artifact: drip-cli-darwin-arm64
+- os: macos
+  arch: x86_64
+  artifact: drip-cli-darwin-x64
+- os: linux
+  arch: x86_64
+  artifact: drip-cli-linux-x64
+commands:
+  note: >-
+    Drippay publishes no command reference for drip-cli. The only invocation
+    named in a public first-party source is `drip-cli --help`, used as the
+    Homebrew formula's smoke test. The command surface is deliberately NOT
+    enumerated here — nothing was inferred or invented.
+  documented: []
+  verified:
+  - command: drip-cli --help
+    source: homebrew formula `test do` block
+companion_cask:
+  name: drip
+  description: >-
+    The Mac application itself ships from the same tap as a cask
+    (`brew install --cask DripYCx26/drip/drip`), pinned to `version :latest`
+    with `sha256 :no_check` — it always pulls
+    releases/latest/download/dripos_universal.dmg, so a consumer cannot pin a
+    version or verify a checksum.
+  formula: Casks/drip.rb
+notes: >-
+  The CLI is versioned independently of the Mac app: the tap pins drip-cli at
+  0.1.22 while the app release stream in DripYCx26/drip-releases had reached
+  v0.1.159 on 2026-08-13.
+x-evidence:
+- url: https://api.github.com/repos/DripYCx26/homebrew-drip/contents/Formula/drip-cli.rb
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://api.github.com/repos/DripYCx26/drip-releases/releases
+  http_status: 200
+  fetched: '2026-08-13'

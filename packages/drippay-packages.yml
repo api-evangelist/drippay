@@ -1,6 +1,15 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
-source: npm, PyPI, GitHub org DripYCx26
+source: >-
+  registry.npmjs.org, pypi.org, GitHub org DripYCx26 (releases + tags),
+  homebrew tap DripYCx26/homebrew-drip
+note: >-
+  Version and publication dates re-read from each registry's metadata endpoint
+  on 2026-08-13. The two registry-published SDKs (npm, PyPI) both last shipped
+  0.1.2 on 2026-03-20 — nearly five months before this check — while the
+  application release stream (DripYCx26/drip-releases) shipped v0.1.159 on
+  2026-08-13, several releases per day. The client libraries are materially
+  behind the product they wrap.
 packages:
 - language: javascript
   registry: npm
@@ -8,28 +17,79 @@ packages:
   url: https://www.npmjs.com/package/@drip-sdk/node
   install: npm install @drip-sdk/node
   version: 0.1.2
+  published: '2026-03-20'
   repository: https://github.com/DripYCx26/drip-sdk
   description: Official Node.js SDK for Drip - Usage-based billing for AI agents
   official: true
+  source: https://registry.npmjs.org/@drip-sdk/node
 - language: python
   registry: pypi
   name: drip-sdk
   url: https://pypi.org/project/drip-sdk/
   install: pip install drip-sdk
+  version: 0.1.2
+  published: '2026-03-20'
   repository: https://github.com/DripYCx26/drip-sdk-python
   description: Official Python SDK for Drip - usage-based billing infrastructure with on-chain settlement
   official: true
+  source: https://pypi.org/pypi/drip-sdk/json
 - language: cpp
   registry: github
   name: drip-sdk-cpp
   url: https://github.com/DripYCx26/drip-sdk-cpp
+  version: 0.1.0
+  published: null
   repository: https://github.com/DripYCx26/drip-sdk-cpp
-  description: Official C++ SDK for Drip
+  description: Drip C++ SDK - Metered billing for AI agents, APIs, and infrastructure
   official: true
-- language: shell
-  registry: homebrew
-  name: drip
+  note: >-
+    Distributed as source from GitHub only — no package-manager registry, so no
+    metadata endpoint exists to date the release. Latest git tag is v0.1.0; the
+    repository was last pushed 2026-02-14, making it the least current of the
+    three SDKs.
+  source: https://api.github.com/repos/DripYCx26/drip-sdk-cpp/tags
+- language: go
+  registry: homebrew-tap
+  name: drip-cli
   url: https://github.com/DripYCx26/homebrew-drip
-  install: brew install DripYCx26/drip/drip
-  description: Homebrew tap for the drip Mac app distribution
+  install: brew install DripYCx26/drip/drip-cli
+  version: 0.1.22
+  published: null
+  repository: https://github.com/DripYCx26/drip-releases
+  description: Local autopilot daemon for customer intelligence (first-party CLI binary)
   official: true
+  license: MIT
+  note: >-
+    Version read from the pinned `version "0.1.22"` in the tap's
+    Formula/drip-cli.rb; Homebrew taps expose no publication-date metadata
+    endpoint, so `published` is honestly null. Binaries ship for macOS
+    arm64/x64 and Linux x64 with sha256 checksums. See cli/drippay-cli.yml.
+  source: https://github.com/DripYCx26/homebrew-drip/blob/main/Formula/drip-cli.rb
+- language: n/a
+  registry: homebrew-tap
+  name: drip
+  kind: cask
+  url: https://github.com/DripYCx26/homebrew-drip
+  install: brew install --cask DripYCx26/drip/drip
+  version: null
+  published: null
+  repository: https://github.com/DripYCx26/drip-releases
+  description: Homebrew cask for the drip / dreach Mac application
+  official: true
+  note: >-
+    The cask is declared `version :latest` with `sha256 :no_check` and always
+    pulls releases/latest/download/dripos_universal.dmg. The distribution is
+    unpinned and unverifiable by design — a consumer cannot tell which build
+    they are installing, so `version` is null as a finding rather than a gap.
+    The newest app release observed on 2026-08-13 was v0.1.159.
+  source: https://github.com/DripYCx26/homebrew-drip/blob/main/Casks/drip.rb
+currency_check:
+  checked: '2026-08-13'
+  newest_sdk_release: '2026-03-20'
+  newest_app_release: '2026-08-13'
+  gap_days: 146
+  finding: >-
+    Both registry-published SDKs are 146 days behind the shipping application.
+    Neither has been republished since 2026-03-20, and neither carries the
+    x402 payment flow, the contracts/tax/dunning surfaces, or the MCP OAuth
+    path that the current OpenAPI declares.

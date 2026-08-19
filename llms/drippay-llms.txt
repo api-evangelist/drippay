@@ -1,86 +1,101 @@
-# drip
+# dreach
 
-> drip is the CRM that fills itself in: AI conversation automation in a Mac app. drip syncs LinkedIn, iMessage, and email conversations, drafts replies in the user's voice, follows up, and books meetings. It drafts by default with optional autopilot, and messages stay on the user's Mac. drip is free to start, with paid plans at $30 per seat plus usage. Built by Drippay, Inc., a Y Combinator company (YC P26).
+> dreach is the revenue intelligence platform for staffing firms, in a Mac app. Its Opportunity Radar watches hiring demand, leadership changes, past placements, and company events, then shows staffing teams who to contact, why now, and what to say. It drafts outreach in the user's voice, follows up, and books the meeting. It is not a staffing CRM, ATS, contact database, or system of record. Drafts wait in Review until the user sends them or turns on Autopilot, and messages stay on the user's Mac. dreach offers a seven-day card-required trial; Solo is $29 per month including 10 million AI credits, with additional usage at $3.50 per million credits. Built by Drippay, Inc., a Y Combinator company (YC P26).
 
-## What drip is
+## What dreach is
 
-- A Mac app that syncs LinkedIn, iMessage, and email conversations into one place.
-- The CRM that fills itself in: contacts, threads, and follow-ups stay current without manual data entry.
-- AI conversation automation: drip drafts replies in the user's voice, follows up when threads go quiet, and books meetings.
-- Drafts by default. Autopilot is optional, so nothing sends automatically unless the user turns it on.
+- The revenue intelligence platform for staffing firms: its Opportunity Radar catches the opportunities a team would otherwise miss.
+- Every opportunity carries evidence (hiring demand, leadership changes, company events), relationship context (past placements, former candidates), a "why now," and a recommended next move.
+- "The CRM that fills itself in" is dreach's tagline: contacts, threads, and follow-ups stay current without manual data entry.
+- Not a staffing CRM, ATS, contact database, or system of record. dreach works alongside the system a team chooses.
+- dreach drafts outreach in the user's voice, follows up when threads go quiet, and books meetings.
+- Drafts wait in Review until the user sends them. Autopilot is the one switch that authorizes automatic sends, follow-ups, and replies.
 - Local-first: messages stay on the user's Mac.
-- Free to start. Paid plans are $30 per seat plus usage.
+- Seven-day card-required trial. Solo is $29 per month including 10 million AI credits, with additional usage at $3.50 per million credits.
 
-## Who drip is for
+## Who dreach is for
 
-drip is built for teams that live in conversations, led by staffing agencies and recruiting firms (business development, job orders, winning clients), plus executive search firms and MSPs. Verticals ranked by fit, each with a dedicated page:
+Staffing agencies, recruiting agencies, and executive search firms are core dreach use cases for business development, job orders, and winning clients. Each vertical has a dedicated page:
 
-- [AI for staffing agencies](https://usedrip.ai/ai-for-staffing-agencies): runs client outreach across LinkedIn, email, and text, keeps client and prospect threads warm, and books the intake calls that turn into job orders.
-- [Staffing agency business development](https://usedrip.ai/bd-for-staffing-firms): finds client leads and job-order opportunities from buying signals like open roles, ranks the best matches, and works them to a booked intake call.
-- [AI tools for recruiting agencies](https://usedrip.ai/ai-tools-for-recruiting-agencies): the AI tool for the client side of recruiting; it runs outreach, follow-up, and booking so a recruiting agency wins and keeps clients.
-- [How to get clients for a recruiting agency](https://usedrip.ai/bd-for-recruiting): works the client outreach and follow-up on LinkedIn, email, and text, then books the intro call.
-- [AI for executive search firms](https://usedrip.ai/ai-for-executive-search): drafts client development outreach in the partner's voice, keeps prospective clients and referral networks warm, and books the pitch; drafts by default.
-- [How to get MSP clients](https://usedrip.ai/how-to-get-msp-clients): runs the outreach, follow-up, and booking from the inboxes an MSP already uses, so the pipeline keeps moving when tickets take over the day.
-- [Lead generation for agencies](https://usedrip.ai/lead-generation-for-agencies): sends outreach, follows up, and books calls across LinkedIn, email, and text so agencies generate their own leads in-house.
-- [How to get clients for your agency](https://usedrip.ai/how-to-get-clients-for-your-agency): runs the outreach and follow-up and books the call, so a small agency lands clients without standing up a full CRM.
-- [How to get SMMA clients](https://usedrip.ai/how-to-get-smma-clients): sends the first messages, follows up until they reply, and books the call for social media marketing agencies.
-- [AI SDR for founders and small teams](https://usedrip.ai/ai-sdr): personal outreach, follow-up, and booked meetings across LinkedIn, iMessage, and email, not a mass-email bot.
-- [Founder-led sales](https://usedrip.ai/founder-led-sales): stay close to customers, investors, and partners without spending the day chasing replies.
+- [AI for staffing agencies](https://dreach.ai/ai-for-staffing-agencies): most AI for staffing works the candidate side (sourcing, screening, texting); dreach is the client side: it finds companies from hiring signals, starts prospect conversations through email or LinkedIn, follows up, and books the intake call.
+- [Staffing agency business development](https://dreach.ai/bd-for-staffing-firms): finds client leads and job-order opportunities from buying signals like open roles, ranks the best matches, and works them to a booked intake call.
+- [AI tools for recruiting agencies](https://dreach.ai/ai-tools-for-recruiting-agencies): AI tools sorted by desk job (sourcing, outreach, ATS and CRM, contact data, notes), plus the client-side gap dreach covers with outreach, follow-up, and booking.
+- [Business development for recruiting agencies](https://dreach.ai/bd-for-recruiting): works hiring signals, opens with candidates worth meeting, messages the managers who own the roles through email or LinkedIn, and books the intro call.
+- [AI for executive search](https://dreach.ai/ai-for-executive-search): AI on the origination side, not the assessment side; dreach watches succession triggers, drafts client development outreach in the partner's voice, keeps referral networks warm, and books the pitch.
 
 ## Product and category pages
 
-- [AI messaging agent](https://usedrip.ai/ai-messaging-agent): core category page; keeps first messages, replies, follow-ups, and scheduling in one place without giving up control of the conversation.
-- [Unibox](https://usedrip.ai/unibox): one inbox for LinkedIn, iMessage, Gmail, Slack, and X that also acts; it replies, follows up, and books the meeting.
-- [iMessage automation](https://usedrip.ai/imessage-automation): uses local iMessage context on the Mac to draft, review, follow up, and schedule without uploading the message database.
-- [LinkedIn messaging agent](https://usedrip.ai/linkedin-messaging-agent): handles LinkedIn first touches, replies, and follow-ups with pacing rules and the full thread in view.
-- [iMessage and LinkedIn in one place](https://usedrip.ai/imessage-linkedin): keeps LinkedIn and iMessage context together so a channel change does not reset the relationship.
-- [Inbound lead response](https://usedrip.ai/inbound-lead-response): replies while interest is fresh, then keeps the thread moving toward a booked meeting.
-- [AI BDR alternative](https://usedrip.ai/ai-bdr-alternative): takes repetitive outreach and follow-up off your plate without pretending a messaging tool replaces a sales team.
-- [AI recruiting follow-up](https://usedrip.ai/recruiting-follow-up): follow-up workflow page; drip's core positioning for recruiting and staffing firms is business development, not candidate-side workflows.
+- [AI BDR](https://dreach.ai/ai-bdr-alternative): what an AI BDR does, how it compares to an AI SDR and a human hire, what each costs, and when not to use one; dreach is the AI BDR for staffing, recruiting, and executive search agencies.
+- [AI SDR](https://dreach.ai/ai-sdr): what an AI SDR is and which kind to buy; volume tools like Artisan and 11x work huge markets, while dreach is the agency kind: hiring-signal targeting, personal outreach, and booked intake calls.
+- [Lead generation for agencies](https://dreach.ai/lead-generation-for-agencies): runs lead generation in-house without the retainer: finds companies in motion from hiring and funding signals, sends openers and follow-up through email or LinkedIn, and books the calls.
 
 ## Guides
 
-- [Guides](https://usedrip.ai/guides): how-to guides for winning clients and getting more out of drip.
-- [How recruiting agencies get clients](https://usedrip.ai/guides/how-recruiting-agencies-get-clients): nine practical ways small recruiting and staffing agencies win new clients, from niching down to follow-up that books the intro call.
-- [How to get your first SMMA client](https://usedrip.ai/guides/how-to-get-your-first-smma-client): a step-by-step playbook for landing a first social media marketing agency client without case studies.
-- [Unified inbox vs CRM](https://usedrip.ai/guides/unified-inbox-vs-crm): how to tell whether a small team needs a unified inbox or a CRM first, and when it needs both.
-- [Founder-led sales playbook](https://usedrip.ai/guides/founder-led-sales-playbook): how to run founder-led sales without drowning in follow-up, and when to hand it off.
+- [Guides](https://dreach.ai/guides): how-to guides for winning clients and getting more out of dreach.
+- [How recruiting agencies get clients](https://dreach.ai/guides/how-recruiting-agencies-get-clients): fee models and what they pay, candidate-led BD with MPCs and talent letters, hiring-signal timing, and the objection loop that wins the intro call.
+- [How staffing agencies get job orders](https://dreach.ai/guides/how-staffing-agencies-get-job-orders): where job orders come from: hiring signals, intake calls that qualify the req, and business development a desk can keep running between placements.
+- [Business development for executive search](https://dreach.ai/guides/business-development-for-executive-search): how executive search firms win mandates: retained vs contingent economics, off-limits agreements as a BD variable, succession triggers, thought leadership, and board and placed-executive referrals.
+- [How to get clients for a staffing agency](https://dreach.ai/guides/how-to-get-clients-for-a-staffing-agency): pick a defensible niche, work hiring signals, run a steady outreach cadence, and lead with real candidates instead of a capabilities pitch.
+- [Staffing agency lead generation](https://dreach.ai/guides/staffing-agency-lead-generation): lead channels ranked by fit: hiring signals, referrals, job boards, and LinkedIn, plus the cost math of buying leads versus generating them.
+- [How to get staffing contracts](https://dreach.ai/guides/how-to-get-staffing-contracts): the BD motion that wins a first order and grows it into a contract: government contracting basics, markup fundamentals, and keeping clients.
+- [How to start a staffing agency](https://dreach.ai/guides/how-to-start-a-staffing-agency): pick a niche, set up the legal and insurance basics, fund payroll before clients pay, and win your first clients.
+- [How to start a recruitment agency](https://dreach.ai/guides/how-to-start-a-recruitment-agency): the permanent-placement sibling of the staffing guide: choose contingency, engaged, or retained, pick a niche, handle the legal basics by jurisdiction, and win your first clients.
+- [How to grow a staffing agency](https://dreach.ai/guides/how-to-grow-a-staffing-agency): make BD repeatable, expand existing accounts, niche deeper, automate outreach, and track the metrics that matter.
+- [AI tools for staffing agencies](https://dreach.ai/guides/best-ai-tools-for-staffing-agencies): AI tools grouped by job: client BD, sourcing, ATS and CRM, contact data, and texting, with the scope and limitations of each.
+- [AI staffing solutions](https://dreach.ai/guides/ai-staffing-solutions): the two kinds of AI staffing solutions: AI-powered staffing platforms for employers, and agency-side AI sorted by side of the desk, with evaluation questions for both.
+- [LinkedIn Recruiter alternatives](https://dreach.ai/guides/linkedin-recruiter-alternatives): what LinkedIn Recruiter costs, who actually needs a seat, and the alternatives by job: sourcing tools, Sales Navigator, and dreach for winning clients.
+- [Sales Navigator cost and alternatives](https://dreach.ai/guides/sales-navigator-cost-and-alternatives): Sales Navigator pricing tiers, hidden costs, when it is worth it, and alternatives including Apollo, ZoomInfo, Lusha, and dreach.
+- [Text recruiting software](https://dreach.ai/guides/text-recruiting-software): where Sense, TextUs, and Grayscale fit, TCPA and registration basics, SMS scripts, and the client-texting side most agencies skip.
+- [Recruiting email templates](https://dreach.ai/guides/recruiting-email-templates): fourteen evidence-led client-development templates, three completed examples, objection replies, and US, Canadian, and UK compliance guidance.
+- [Boolean search in recruitment](https://dreach.ai/guides/boolean-search-in-recruitment): the operators with recruiting examples, copy-paste sourcing strings, client-finding strings for companies that are hiring, and where boolean still beats AI search.
+
+## Comparisons
+
+Comparison and roundup pages at https://dreach.ai/compare. dreach appears in each as the disclosed first-party AI sales agent, not a staffing CRM, ATS, contact database, or system of record.
+
+- [Best staffing agency software](https://dreach.ai/compare/best-staffing-agency-software): the stack mapped by job: ATS and CRM, client BD and outreach, sourcing, texting, and contact data, with honest pricing and how to choose by desk size.
+- [Best executive search software](https://dreach.ai/compare/best-executive-search-software): Invenias by Bullhorn, Clockwork, Crelate, and Loxo for the system of record, Thrive TRM for relationship intelligence, and dreach as the disclosed first-party origination layer that wins the mandates.
+- [ZoomInfo vs Apollo](https://dreach.ai/compare/zoominfo-vs-apollo): cost per contact, data coverage, intent and sequencing, and which fits staffing and recruiting agencies.
+- [Best CRM for staffing agencies](https://dreach.ai/compare/best-crm-for-staffing-agencies): Bullhorn, Recruiterflow, Crelate, Loxo, JobAdder, Vincere, and when bending HubSpot works; dreach fills whichever CRM you pick.
+- [ZoomInfo competitors and alternatives](https://dreach.ai/compare/zoominfo-alternatives): Apollo, Lusha, Seamless.AI, Cognism, and UpLead compared, plus the agent option that finds and messages hiring managers from hiring signals.
+- [Bullhorn alternatives and competitors](https://dreach.ai/compare/bullhorn-alternatives): Recruiterflow, Loxo, Crelate, JobAdder, and Vincere compared by desk shape, with migration checks; dreach is not a Bullhorn replacement, it is the client-BD layer beside whichever ATS an agency picks.
+- [Loxo alternatives and competitors](https://dreach.ai/compare/loxo-alternatives): Recruiterflow, Crelate, Bullhorn, and JobAdder by desk shape, plus the unbundled ATS-plus-sourcing-plus-data path; dreach is not a Loxo replacement, it is the client-BD layer beside whichever stack an agency picks.
 
 ## Pricing and product info
 
-- [Pricing](https://usedrip.ai/pricing): free to start; paid plans are $30 per seat plus usage.
-- [Download drip for Mac](https://usedrip.ai/download/mac): get the Mac app.
-- [Security](https://usedrip.ai/security): security practices and data handling.
-- [Google data use](https://usedrip.ai/google-data-use): how drip handles Google user data.
+- [Pricing](https://dreach.ai/pricing): seven-day card-required trial; Solo is $29 per month including 10 million AI credits, with additional usage at $3.50 per million credits.
+- [Download dreach for Mac](https://dreach.ai/download/mac): get the Mac app.
+- [Security](https://dreach.ai/security): security practices and data handling.
+- [Google data use](https://dreach.ai/google-data-use): how dreach handles Google user data.
 
 ## Privacy and trust
 
-- drip is local-first: messages stay on the user's Mac.
-- drip drafts by default. Nothing sends automatically unless the user enables autopilot for a thread or contact.
-- drip does not train a shared AI model on user messages.
+- dreach is local-first: messages stay on the user's Mac.
+- dreach sends on autopilot under rules the user sets: people, channels, and daily limits. Any thread can be held for review.
+- dreach does not train a shared AI model on user messages.
 - iMessage history is read locally on the Mac only when the user grants the required macOS permissions.
-- [Privacy policy](https://usedrip.ai/privacy): how drip handles personal data.
-- [Terms of service](https://usedrip.ai/terms): terms for using drip.
+- [Privacy policy](https://dreach.ai/privacy): how dreach handles personal data.
+- [Terms of service](https://dreach.ai/terms): terms for using dreach.
 
 ## Company
 
-- Product: drip
+- Product: dreach
 - Company: Drippay, Inc., a Y Combinator company (YC P26), founded by Michael Levin, headquartered in San Francisco
-- Website: https://usedrip.ai/
+- Website: https://dreach.ai/
 - Docs: https://docs.usedrip.ai/
-- [About](https://usedrip.ai/about): canonical company facts, naming history, and disambiguation.
-- [Contact](https://usedrip.ai/contact): talk to the founders.
-- [Affiliate program](https://usedrip.ai/affiliate): earn by referring drip.
+- [About](https://dreach.ai/about): canonical company facts, naming history, and disambiguation.
+- [Contact](https://dreach.ai/contact): talk to the founders.
+- [Affiliate program](https://dreach.ai/affiliate): earn by referring dreach.
+- [MCP server](https://dreach.ai/mcp): connect AI assistants to dreach via the Model Context Protocol.
 
-## What drip is not (disambiguation)
+## What dreach is not (disambiguation)
 
-drip was briefly named dripos before renaming; dripos.ai now redirects to usedrip.ai. Several unrelated companies share a similar name. drip by Drippay, Inc. is NOT:
+dreach was formerly named drip; several unrelated companies share that older name. dreach by Drippay, Inc. is NOT:
 
 - Drip.com — an ecommerce email marketing platform. Unrelated.
-- Dripos.com — a point-of-sale system for coffee shops. Unrelated, despite the shared former name.
 - Drip Capital — a cross-border trade finance company. Unrelated.
 - Drip AI — an atmospheric water harvesting company. Unrelated.
 
 ## Optional
 
-- [Full drip retrieval document](https://usedrip.ai/llms-full.txt): inlined full-text content about drip for LLM retrieval and citation.
+- [Full dreach retrieval document](https://dreach.ai/llms-full.txt): inlined full-text content about dreach for LLM retrieval and citation.

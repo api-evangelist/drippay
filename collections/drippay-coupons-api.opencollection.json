@@ -1,0 +1,115 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Coupons API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Coupons",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List coupons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/coupons"
+          },
+          "docs": "List coupons"
+        },
+        {
+          "info": {
+            "name": "Create a coupon",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/coupons"
+          },
+          "docs": "Create a coupon"
+        },
+        {
+          "info": {
+            "name": "Get a coupon",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/coupons/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a coupon"
+        },
+        {
+          "info": {
+            "name": "Deactivate a coupon (soft delete)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/coupons/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deactivate a coupon (soft delete)"
+        },
+        {
+          "info": {
+            "name": "List promotion codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/promotion-codes"
+          },
+          "docs": "List promotion codes"
+        },
+        {
+          "info": {
+            "name": "Create a promotion code",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/promotion-codes"
+          },
+          "docs": "Create a promotion code"
+        },
+        {
+          "info": {
+            "name": "Redeem a promotion code against a charge or invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/promotion-codes/redeem"
+          },
+          "docs": "\nApply a promotion code to a gross amount. Returns the discount amount, the\nnew net amount, and the redemption record. Increments the redeem counters\non both the coupon and the promotion code atomically.\n\nValidates: code exists, coupon active, within validity window, not at\nredemption cap (global, per-code, per-customer), and (if restricted)\nmatches the redeeming customer.\n        "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

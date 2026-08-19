@@ -1,0 +1,122 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Drift API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Drift",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Stripe drift findings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/drift/stripe"
+          },
+          "docs": "List Stripe drift findings"
+        },
+        {
+          "info": {
+            "name": "List customer churn-risk findings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/drift/customer"
+          },
+          "docs": "List customer churn-risk findings"
+        },
+        {
+          "info": {
+            "name": "List config drift findings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/drift/config"
+          },
+          "docs": "List config drift findings"
+        },
+        {
+          "info": {
+            "name": "Per-kind drift summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/drift/summary"
+          },
+          "docs": "Per-kind drift summary"
+        },
+        {
+          "info": {
+            "name": "Get a single drift finding (Mac-app deep-link target)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/drift/findings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a single drift finding (Mac-app deep-link target)"
+        },
+        {
+          "info": {
+            "name": "Acknowledge / resolve / suppress a finding",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/drift/findings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Acknowledge / resolve / suppress a finding"
+        },
+        {
+          "info": {
+            "name": "Enqueue an on-demand drift detector run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/drift/:kind/run",
+            "params": [
+              {
+                "name": "kind",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Enqueue an on-demand drift detector run"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

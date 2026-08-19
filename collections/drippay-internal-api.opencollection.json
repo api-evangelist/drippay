@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Internal API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Internal",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Per-account desktop (dripos) feature-flag entitlements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/desktop/feature-flags",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the per-account feature-flag entitlements for the authenticated business. The desktop (dripos) client treats every flag as a grant that fails closed: any flag not returned with `enabled: true` is denied client-side. Entitlements are resolved server-side from a per-account allowlist keyed on the business's unique email. Requires a secret key (`sk_*`); public keys (`pk_*`) receive `403 Forbidden`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

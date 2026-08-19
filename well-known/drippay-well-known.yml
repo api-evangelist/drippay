@@ -1,12 +1,28 @@
-generated: '2026-07-18'
-method: searched
-source: live probes of Drippay hosts
+generated: '2026-08-13'
+method: probed
+source: live probes of every Drippay host on 2026-08-13
+note: >-
+  usedrip.ai now 308-redirects to dreach.ai (the product was renamed from drip
+  to dreach); both are probed below. The two richest documents are on hosts that
+  were not probed in the previous round: the RFC 8414 authorization-server
+  metadata on the API host, and the RFC 9728 protected-resource metadata on the
+  MCP host. An A2A agent card is served from the docs host — recorded here and
+  in a2a/drippay-a2a.yml.
 hosts:
-- host: https://usedrip.ai
+- host: https://dreach.ai
+  note: Current apex; usedrip.ai 308-redirects here.
   documents:
   - path: /.well-known/security.txt
     status: 200
     file: drippay-security.txt
+    note: Same RFC 9116 policy as usedrip.ai; still self-identifies as "drip (usedrip.ai)".
+  - path: /llms.txt
+    status: 200
+    file: ../llms/drippay-llms.txt
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
   - path: /.well-known/openid-configuration
     status: 404
   - path: /.well-known/oauth-authorization-server
@@ -15,11 +31,85 @@ hosts:
     status: 404
   - path: /.well-known/ai-plugin.json
     status: 404
-  - path: /llms.txt
-    status: 200
-    file: ../llms/drippay-llms.txt
-- host: https://drippay.dev
+- host: https://usedrip.ai
+  note: Legacy apex; every path 308-redirects to the dreach.ai equivalent.
   documents:
   - path: /.well-known/security.txt
     status: 200
-    note: same policy as usedrip.ai (Drippay, Inc.)
+    file: drippay-security.txt
+  - path: /llms.txt
+    status: 200
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://api.drippay.dev
+  note: Production API host for the Drip billing platform.
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: drippay-oauth-authorization-server.json
+    note: >-
+      RFC 8414 metadata. Issuer https://api.drippay.dev, PKCE S256, dynamic
+      client registration, scopes_supported [read, write]. Feeds
+      scopes/drippay-scopes.yml and authentication/drippay-authentication.yml.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /openapi.json
+    status: 404
+    note: >-
+      Checked per contract-discovery step 1 — the spec is NOT on the API host
+      root. It is published on the docs host at
+      https://docs.usedrip.ai/openapi.json (HTTP 200, 961,459 bytes, OpenAPI
+      3.1.0, 195 paths / 245 operations), byte-identical to the copy already in
+      openapi/_original/.
+- host: https://mcp.drippay.dev
+  note: Hosted MCP server.
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: drippay-oauth-protected-resource.json
+    note: >-
+      RFC 9728 metadata. resource https://mcp.drippay.dev, authorization_servers
+      [https://api.drippay.dev], bearer_methods_supported [header].
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    note: Correctly absent — the MCP host delegates to api.drippay.dev.
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://docs.usedrip.ai
+  note: Mintlify-hosted documentation.
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/drippay-agent-card.json
+    note: Valid A2A agent card — see a2a/drippay-a2a.yml for the conformance grade.
+  - path: /.well-known/agent-skills/drip/skill.md
+    status: 200
+    file: ../skills/drippay-drip-published.md
+    note: Provider-published Agent Skill referenced by the agent card.
+  - path: /llms.txt
+    status: 200
+  - path: /openapi.json
+    status: 200
+    note: The published OpenAPI 3.1.0 contract.
+  - path: /.well-known/security.txt
+    status: 404
+summary:
+  hosts_probed: 5
+  documents_found: 8
+  richest: >-
+    The OAuth pair (RFC 8414 + RFC 9728) fully describes how an agent
+    authenticates to the MCP server without any credential, and the agent card
+    plus published skill make the docs host the only genuinely agent-native
+    surface Drippay operates.

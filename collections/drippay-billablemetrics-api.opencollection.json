@@ -1,0 +1,129 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "BillableMetrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List billable metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/billable-metrics"
+          },
+          "docs": "List every billable metric defined for the business."
+        },
+        {
+          "info": {
+            "name": "Create a billable metric",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/billable-metrics"
+          },
+          "docs": "Creates a new billable metric. Name must be unique per business. Supply one or more event types — the metric will union events across all of them."
+        },
+        {
+          "info": {
+            "name": "Get a billable metric by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/billable-metrics/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a billable metric by id"
+        },
+        {
+          "info": {
+            "name": "Update a billable metric",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/billable-metrics/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Update a billable metric"
+        },
+        {
+          "info": {
+            "name": "Delete (soft-delete) a billable metric",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/billable-metrics/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Sets isActive=false. Rate cards that reference the metric keep working for historical charges because the row stays in the DB."
+        },
+        {
+          "info": {
+            "name": "Evaluate a billable metric over a period (no side effects)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/billable-metrics/:id/evaluate",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Executes the metric's SQL expression (or, if not set, the declarative aggregation) against the merchant's usage events for [periodStart, periodEnd) and returns the result. Read-only — no charges, invoices, or counters change."
+        },
+        {
+          "info": {
+            "name": "Preview an unsaved sqlExpression",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/billable-metrics/preview"
+          },
+          "docs": "Preview an unsaved sqlExpression"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

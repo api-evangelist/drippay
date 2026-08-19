@@ -1,0 +1,1843 @@
+{
+  "item": [
+    {
+      "id": "6dcf9b94-e5b2-4323-a9fe-b42ddf58d3c0",
+      "name": "Usage",
+      "description": {
+        "content": "Record metered usage. Creates charges when a pricing plan matches.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "36328c65-ad33-4a1b-9c6e-7eefb21d8ab5",
+          "name": "Record usage and charge",
+          "request": {
+            "name": "Record usage and charge",
+            "description": {
+              "content": "\nRecord a billable usage event and immediately charge the customer.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\nThis endpoint waits for on-chain confirmation before returning, ensuring\nthe charge is settled. For faster responses, use `POST /v1/usage/async`.\n\n**x402 Payment Flow:**\nIf the customer has insufficient balance, returns 402 with payment headers.\nThe client can sign a payment with their session key and retry with\n`X-Payment-*` headers to complete the charge.\n\n**Idempotency:**\nInclude an `idempotencyKey` to safely retry requests without duplicate charges.\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "usage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"externalCustomerId\": \"<string>\",\n  \"stripeCustomerId\": \"<string>\",\n  \"usageType\": \"generic\",\n  \"quantity\": 1,\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": false\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": true\n  },\n  \"output\": {\n    \"key_0\": true,\n    \"key_1\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "825bce6d-ad4d-4c7d-ae5e-2efb097691c3",
+              "name": "Usage recorded. Either an on-chain charge was created (charge object populated) or the customer has no on-chain address and the request was auto-promoted to internal/visibility mode (charge=null, mode=internal).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"usageEventId\": \"string\",\n  \"isDuplicate\": false,\n  \"charge\": {\n    \"id\": \"string\",\n    \"amountUsdc\": \"string\",\n    \"amountToken\": \"string\",\n    \"txHash\": \"string\",\n    \"status\": \"PENDING_SETTLEMENT\"\n  },\n  \"mode\": \"internal\",\n  \"autoPromoted\": false,\n  \"reason\": \"string\",\n  \"x402\": {\n    \"paymentVerified\": true,\n    \"sessionKeyId\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5c8f6409-a675-456b-8df1-323320353088",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "37bd9c5a-e701-4866-bf5a-ac621604f132",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d68edec5-6135-4f39-ab66-bffe58e45d27",
+              "name": "Payment required - insufficient balance. Includes x402 payment details for automatic payment flow.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"PAYMENT_REQUIRED\",\n  \"payment\": {\n    \"amount\": \"string\",\n    \"recipient\": \"string\",\n    \"currency\": \"USDC\",\n    \"chain\": \"base-sepolia\",\n    \"description\": \"string\",\n    \"usageId\": \"string\",\n    \"expiresAt\": 8198,\n    \"timestamp\": 3116,\n    \"nonce\": \"string\"\n  },\n  \"x402\": {\n    \"version\": \"1.0.0\",\n    \"paymentRequest\": {}\n  },\n  \"serverTime\": {\n    \"seconds\": 6867,\n    \"milliseconds\": 8010,\n    \"iso\": \"2016-01-23T07:51:14.654Z\"\n  },\n  \"checkout_url\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dd8c664d-73cb-4ea4-b923-9e9675e09e97",
+              "name": "Account paused — usage blocked until balance is restored",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d5f6aac-c51f-4178-8557-01d7d1a2e89e",
+              "name": "Customer or pricing plan not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ba8c741-86fd-4a84-8921-8755edfded66",
+              "name": "Rate limit exceeded. Retry after the duration specified in the Retry-After header.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "155cfc69-c155-4a51-aae1-19e12d4dea49",
+              "name": "Billing temporarily paused or dependency unavailable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f7dbd63c-600e-41e4-9dcc-8482940cc32f",
+          "name": "List usage events",
+          "request": {
+            "name": "List usage events",
+            "description": {
+              "content": "Retrieve recent usage events for your business, including associated charges.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "usage"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Maximum number of events to return"
+                },
+                {
+                  "disabled": false,
+                  "key": "customerId",
+                  "value": "<string>",
+                  "description": "Filter by customer ID"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2180adfe-5042-4e1f-9eaa-4cee969428de",
+              "name": "List of usage events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "customerId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"customerId\": \"string\",\n      \"customer\": {\n        \"id\": \"string\",\n        \"onchainAddress\": \"string\",\n        \"externalCustomerId\": \"string\"\n      },\n      \"usageType\": \"string\",\n      \"quantity\": \"string\",\n      \"description\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\"\n      },\n      \"createdAt\": \"1989-07-19T17:27:03.192Z\",\n      \"charge\": {\n        \"id\": \"string\",\n        \"amountUsdc\": \"string\",\n        \"txHash\": \"string\",\n        \"status\": \"string\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"customerId\": \"string\",\n      \"customer\": {\n        \"id\": \"string\",\n        \"onchainAddress\": \"string\",\n        \"externalCustomerId\": \"string\"\n      },\n      \"usageType\": \"string\",\n      \"quantity\": \"string\",\n      \"description\": \"string\",\n      \"metadata\": {\n        \"key_0\": false,\n        \"key_1\": true\n      },\n      \"createdAt\": \"1964-07-14T07:44:04.118Z\",\n      \"charge\": {\n        \"id\": \"string\",\n        \"amountUsdc\": \"string\",\n        \"txHash\": \"string\",\n        \"status\": \"string\"\n      }\n    }\n  ],\n  \"count\": 2536\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2f30fb9c-fe06-4e28-a58d-26934e7ba12e",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "customerId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "40c72ca9-3042-4932-921b-debd8e407ade",
+          "name": "Record usage (async)",
+          "request": {
+            "name": "Record usage (async)",
+            "description": {
+              "content": "\nRecord a billable usage event and return immediately without waiting for settlement.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\nThe charge will be processed in the background. Subscribe to webhooks\n(`charge.succeeded`, `charge.failed`) to get notified of the final status.\n\nUse this endpoint when you need fast response times and can handle\neventual consistency via webhooks.\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "usage",
+                "async"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"externalCustomerId\": \"<string>\",\n  \"stripeCustomerId\": \"<string>\",\n  \"usageType\": \"generic\",\n  \"quantity\": 1,\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": false\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": true\n  },\n  \"output\": {\n    \"key_0\": true,\n    \"key_1\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "73a53992-2850-48f7-be2d-6fb8300754bd",
+              "name": "Usage recorded, charge queued",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"usageEventId\": \"string\",\n  \"isDuplicate\": false,\n  \"charge\": {\n    \"id\": \"string\",\n    \"amountUsdc\": \"string\",\n    \"status\": \"PENDING\",\n    \"estimatedConfirmationTime\": \"string\"\n  },\n  \"message\": \"Charge queued for processing. Subscribe to webhooks for status updates.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49b80f52-b89e-4226-98a9-03835badc807",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "788558b1-4edb-49a7-b0e5-7e65a2c364df",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "21983105-e033-4730-805a-be7200c86517",
+              "name": "Account paused — usage blocked until balance is restored",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "711fab1a-a309-47b9-ac24-54ba04c5d6e8",
+              "name": "Customer or pricing plan not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4b0f73b-d0b0-404b-b3b5-c9efbb72556f",
+              "name": "Rate limit exceeded. Retry after the duration specified in the Retry-After header.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "01c0a193-ee4a-4d35-849c-46d923334300",
+              "name": "Billing temporarily paused or dependency unavailable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "async"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "55d1a404-b7ff-4392-b2b0-ae0f8a880bdf",
+          "name": "Record internal usage (no billing)",
+          "request": {
+            "name": "Record internal usage (no billing)",
+            "description": {
+              "content": "\nRecord a usage event for internal visibility tracking only. No billing or charges are created.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\n**Use cases:**\n- Track internal team usage without charging\n- Pilot programs where you want visibility before billing\n- Usage tracking before customer has on-chain wallet setup\n\nThis endpoint:\n- Does NOT create a Charge record\n- Does NOT require customer balance\n- Does NOT require blockchain/wallet setup for internal customers\n- Works with both internal and regular customers\n\nFor billing customers, use `POST /v1/usage` or `POST /v1/usage/async` instead.\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "usage",
+                "internal"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"externalCustomerId\": \"<string>\",\n  \"stripeCustomerId\": \"<string>\",\n  \"usageType\": \"generic\",\n  \"quantity\": 1,\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": false\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": true\n  },\n  \"output\": {\n    \"key_0\": true,\n    \"key_1\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8c8cc567-847d-4a43-93f8-103bd462cce5",
+              "name": "Internal usage recorded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"usageEventId\": \"string\",\n  \"customerId\": \"string\",\n  \"usageType\": \"string\",\n  \"quantity\": 7688.388723680021,\n  \"units\": \"string\",\n  \"description\": \"string\",\n  \"isInternal\": false,\n  \"message\": \"Usage recorded for internal visibility (no charge created)\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "16d8e309-0b6d-4018-b3f9-5306664358a4",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eb96e8df-91a0-4091-b2af-b82d2b936f41",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ea06666-ce22-427d-a8a2-0b49f409ec6d",
+              "name": "Customer not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c8c70a56-d108-484d-9267-427ebd1f0d12",
+              "name": "Rate limit exceeded. Retry after the duration specified in the Retry-After header.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df4eeff3-188b-4267-bb63-69da055b5291",
+              "name": "Billing temporarily paused or dependency unavailable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2668cd7e-723f-4537-be90-f031620710d1",
+          "name": "Record internal usage (batched, high throughput)",
+          "request": {
+            "name": "Record internal usage (batched, high throughput)",
+            "description": {
+              "content": "\nBatch-optimized variant of `POST /v1/usage/internal`.\n\nEvents are buffered in memory and flushed to the database every ~2 seconds\nusing a single bulk INSERT. This reduces per-event DB overhead by ~99% and\nis designed for customers sending 1M+ events/day.\n\nReturns 202 immediately. The event will be persisted within 2 seconds.\nIdempotency is still enforced via `idempotencyKey` — duplicates are\nsilently skipped during the bulk insert.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "usage",
+                "internal",
+                "batch"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"externalCustomerId\": \"<string>\",\n  \"stripeCustomerId\": \"<string>\",\n  \"usageType\": \"generic\",\n  \"quantity\": 1,\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": false\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": true\n  },\n  \"output\": {\n    \"key_0\": true,\n    \"key_1\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9fbfa10b-f9f7-48c9-9e58-fac9dd5a0466",
+              "name": "Usage accepted for batched insert",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"customerId\": \"string\",\n  \"usageType\": \"string\",\n  \"quantity\": 5870.44147871294,\n  \"idempotencyKey\": \"string\",\n  \"pendingEvents\": 548,\n  \"message\": \"Event queued for batched insert (~2s)\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9cc18f26-d646-405c-b9c8-7a375476a41b",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10898045-7659-4a6f-ae61-f61b3770a0ee",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8a1af70-7bd0-43cc-afee-46a75ae1f440",
+              "name": "Customer not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7092c65a-ee4b-417a-9124-ca63c6148e25",
+              "name": "Rate limit exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "internal",
+                    "batch"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_20240115_abc123\",\n  \"customerId\": \"cus_abc123def456\",\n  \"externalCustomerId\": \"user_42\",\n  \"stripeCustomerId\": \"cus_NffrFeUfNV2Hib\",\n  \"usageType\": \"api_call\",\n  \"quantity\": 100,\n  \"units\": \"API calls\",\n  \"description\": \"Eligibility check for Pharmacy ABC (workflow: insurance_verify)\",\n  \"metadata\": {\n    \"endpoint\": \"/v1/chat\",\n    \"model\": \"gpt-4\"\n  },\n  \"workflowId\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": false,\n    \"key_1\": true,\n    \"key_2\": true,\n    \"key_3\": \"string\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "14752bba-b6c9-491e-af9f-a7a9ef766127",
+          "name": "Get current-month event usage vs plan quota (API-key auth)",
+          "request": {
+            "name": "Get current-month event usage vs plan quota (API-key auth)",
+            "description": {
+              "content": "Safe to poll every few seconds — the underlying count is cached 30s per business. Response includes `resetAt` (ISO) and `overagePerEventUsd`; use `exceeded` as the gate signal.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "usage",
+                "quota"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9bc86b59-ed0c-4dff-9fef-3f8c2a60c8cd",
+              "name": "Default Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "usage",
+                    "quota"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.drippay.dev",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3b7e49a5-153a-44bc-8ec6-300627ea95d3",
+    "name": "Drip BillableMetrics Usage API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
+      "type": "text/plain"
+    }
+  }
+}

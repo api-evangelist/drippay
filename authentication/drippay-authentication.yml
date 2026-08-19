@@ -1,14 +1,95 @@
-generated: '2026-07-18'
-method: derived
-source: openapi/drippay-openapi-original.json
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.usedrip.ai/openapi.json (securitySchemes + info.description
+  "Authentication" / "API Key Roles" tables) ,
+  https://api.drippay.dev/.well-known/oauth-authorization-server ,
+  https://mcp.drippay.dev/.well-known/oauth-protected-resource ,
+  https://dreach.ai/mcp
+docs: https://docs.usedrip.ai/quickstart
 summary:
   types:
   - http
+  - oauth2
+  note: >-
+    Two distinct auth models, one per surface. The REST billing API at
+    api.drippay.dev is bearer secret-key only, with a hierarchical role on the
+    key doing the work scopes would normally do. The hosted MCP server at
+    mcp.drippay.dev accepts either OAuth 2.1 (authorization code + PKCE, dynamic
+    client registration) or the same secret key as a bearer header for headless
+    setups.
 schemes:
 - name: bearerAuth
   type: http
   scheme: bearer
   bearerFormat: API Key
-  description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'
+  surface: rest
+  description: 'API key from the Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'
+  header: 'Authorization: Bearer sk_live_...'
+  env_var: DRIP_API_KEY
+  key_types:
+  - prefix: sk_test_
+    kind: secret
+    use: Server-side API access, test mode
+  - prefix: sk_live_
+    kind: secret
+    use: Server-side API access, live mode
+  - prefix: pk_test_
+    kind: public
+    use: Public key identifier; always READONLY
+  - prefix: pk_live_
+    kind: public
+    use: Public key identifier; always READONLY
+  roles:
+    model: hierarchical — higher roles include all permissions of lower roles
+    values:
+    - name: READONLY
+      permissions: List and read resources (customers, charges, pricing plans, events)
+    - name: OPERATOR
+      permissions: '+ Create customers, charge usage, track internal usage, emit events, manage runs'
+    - name: ADMIN
+      permissions: '+ Create/update/delete pricing plans, manage contracts, manage API keys'
+    enforcement: >-
+      Creating, updating or deleting pricing plans and contracts requires an
+      ADMIN secret key; a lower-role key returns 403 Forbidden.
+  applied_to: 245 operations; 106 declare a 401 response and 25 declare 403.
   sources:
-  - openapi/drippay-openapi-original.json
+  - openapi/_original/drippay-openapi-original.json
+  - https://docs.usedrip.ai/openapi.json
+- name: mcpOAuth
+  type: oauth2
+  surface: mcp
+  flow: authorization_code
+  pkce: S256
+  issuer: https://api.drippay.dev
+  authorization_endpoint: https://api.drippay.dev/v1/mcp-oauth/authorize
+  token_endpoint: https://api.drippay.dev/v1/mcp-oauth/token
+  registration_endpoint: https://api.drippay.dev/v1/mcp-oauth/register
+  introspection_endpoint: https://api.drippay.dev/v1/mcp-oauth/introspect
+  grant_types: [authorization_code, refresh_token]
+  token_endpoint_auth_methods: [none]
+  dynamic_client_registration: true
+  scopes: [read, write]
+  protected_resource: https://mcp.drippay.dev
+  discovery:
+    rfc8414: https://api.drippay.dev/.well-known/oauth-authorization-server
+    rfc9728: https://mcp.drippay.dev/.well-known/oauth-protected-resource
+  credential_handling: >-
+    One dedicated, scoped API key is stored encrypted per OAuth grant; revoking
+    the grant disables that key. Access and refresh tokens are stored only as
+    hashes and are never logged in plain text (https://dreach.ai/mcp).
+  see: scopes/drippay-scopes.yml
+  sources:
+  - https://api.drippay.dev/.well-known/oauth-authorization-server
+  - https://dreach.ai/mcp
+runtime_behavior:
+  unauthenticated_mcp_call: >-
+    POST tools/list without credentials returns HTTP 401 with a JSON-RPC error
+    -32001 "unauthorized" whose data block names the problem, the cause and the
+    fix, and whose WWW-Authenticate header drives OAuth discovery in MCP
+    clients. This is unusually good machine-readable auth failure handling.
+  probed: '2026-08-13'
+notes: >-
+  The REST API has no OAuth and therefore no scope surface; role-on-key is the
+  entire authorization model. Public keys (pk_*) exist as identifiers but cannot
+  mutate anything.

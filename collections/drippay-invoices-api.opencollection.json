@@ -1,0 +1,280 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Invoices API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Invoices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate invoice from charges",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/generate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nGenerate an invoice from charges within a billing period.\nAutomatically aggregates charges by usage type into line items.\n\nThe invoice is created in DRAFT status. Use the issue endpoint to finalize it.\n        "
+        },
+        {
+          "info": {
+            "name": "Generate invoice from subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/generate-from-subscription",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nGenerate an invoice for a subscription billing period.\nSupports prorated amounts for partial periods (mid-cycle starts, cancellations, upgrades/downgrades).\nOptionally includes usage charges from the same period.\n\nThe invoice is created in DRAFT status. Use the issue endpoint to finalize it.\n        "
+        },
+        {
+          "info": {
+            "name": "List invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/invoices",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by customer ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status"
+              },
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Filter by created date (from)"
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "Filter by created date (to)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve all invoices for your business with optional filtering."
+        },
+        {
+          "info": {
+            "name": "Get invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Invoice ID"
+              }
+            ]
+          },
+          "docs": "Retrieve a specific invoice by ID."
+        },
+        {
+          "info": {
+            "name": "Update mutable invoice fields (DRAFT only)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Update NET terms, PO number, payment terms label, internal notes, or customer notes on a DRAFT invoice. Once issued, these fields are frozen."
+        },
+        {
+          "info": {
+            "name": "Add an ad-hoc line item to a draft invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/:id/line-items",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Append a one-off line item (setup fee, services rendered, manual adjustment) to a DRAFT invoice. Only allowed on DRAFT invoices — once issued, line items are immutable; use credit notes for corrections."
+        },
+        {
+          "info": {
+            "name": "Issue invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/:id/issue",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Invoice ID"
+              }
+            ]
+          },
+          "docs": "Finalize a draft invoice and mark it as pending payment."
+        },
+        {
+          "info": {
+            "name": "Mark invoice as paid",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/:id/paid",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Invoice ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nMark an invoice as paid. If amount is not provided, the full remaining balance is marked as paid.\nPartial payments can be recorded by specifying an amount.\n        "
+        },
+        {
+          "info": {
+            "name": "Void invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/:id/void",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Invoice ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancel an invoice. Cannot void invoices that have been paid."
+        },
+        {
+          "info": {
+            "name": "Get invoice summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/invoices/summary"
+          },
+          "docs": "Get aggregated invoice statistics for your business."
+        },
+        {
+          "info": {
+            "name": "Download invoice PDF",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/invoices/:id/pdf",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Invoice ID"
+              }
+            ]
+          },
+          "docs": "Generate and download a PDF version of the invoice."
+        },
+        {
+          "info": {
+            "name": "Preview the upcoming invoice for a subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/subscriptions/:id/upcoming-invoice",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "\nComputes what the customer's next invoice will look like, including any\nusage charges accumulated so far in the current billing period. Read-only —\nno charges, invoices, or line items are persisted.\n\nTax is computed using the same pipeline as the real invoice generator, so\nSTRIPE_TAX merchants get accurate previews (at the cost of a tiny Stripe\nTax usage call).\n\nReturns 409 NOT_BILLABLE when the subscription is paused, cancelled, or\nalready past its period end.\n        "
+        },
+        {
+          "info": {
+            "name": "Preview an invoice for a customer over an arbitrary period",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/invoices/preview"
+          },
+          "docs": "Preview an invoice for a customer over an arbitrary period"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

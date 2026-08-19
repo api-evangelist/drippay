@@ -1,0 +1,120 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Usage API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Usage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List usage events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/usage",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of events to return"
+              },
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by customer ID"
+              }
+            ]
+          },
+          "docs": "Retrieve recent usage events for your business, including associated charges."
+        },
+        {
+          "info": {
+            "name": "Record usage and charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/usage",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nRecord a billable usage event and immediately charge the customer.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\nThis endpoint waits for on-chain confirmation before returning, ensuring\nthe charge is settled. For faster responses, use `POST /v1/usage/async`.\n\n**x402 Payment Flow:**\nIf the customer has insufficient balance, returns 402 with payment headers.\nThe client can sign a payment with their session key and retry with\n`X-Payment-*` headers to complete the charge"
+        },
+        {
+          "info": {
+            "name": "Record usage (async)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/usage/async",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nRecord a billable usage event and return immediately without waiting for settlement.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\nThe charge will be processed in the background. Subscribe to webhooks\n(`charge.succeeded`, `charge.failed`) to get notified of the final status.\n\nUse this endpoint when you need fast response times and can handle\neventual consistency via webhooks.\n        "
+        },
+        {
+          "info": {
+            "name": "Record internal usage (no billing)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/usage/internal",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nRecord a usage event for internal visibility tracking only. No billing or charges are created.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**\n\n**Use cases:**\n- Track internal team usage without charging\n- Pilot programs where you want visibility before billing\n- Usage tracking before customer has on-chain wallet setup\n\nThis endpoint:\n- Does NOT create a Charge record\n- Does NOT require customer balance\n- Does NOT require blockchain/wallet setup for internal customers\n-"
+        },
+        {
+          "info": {
+            "name": "Record internal usage (batched, high throughput)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/usage/internal/batch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nBatch-optimized variant of `POST /v1/usage/internal`.\n\nEvents are buffered in memory and flushed to the database every ~2 seconds\nusing a single bulk INSERT. This reduces per-event DB overhead by ~99% and\nis designed for customers sending 1M+ events/day.\n\nReturns 202 immediately. The event will be persisted within 2 seconds.\nIdempotency is still enforced via `idempotencyKey` — duplicates are\nsilently skipped during the bulk insert.\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR"
+        },
+        {
+          "info": {
+            "name": "Get current-month event usage vs plan quota (API-key auth)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/usage/quota"
+          },
+          "docs": "Safe to poll every few seconds — the underlying count is cached 30s per business. Response includes `resetAt` (ISO) and `overagePerEventUsd`; use `exceeded` as the gate signal."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

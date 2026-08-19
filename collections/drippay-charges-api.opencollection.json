@@ -1,0 +1,152 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Charges API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Charges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List charges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/charges",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of charges to return"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Number of charges to skip (for pagination)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status"
+              },
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by customer ID"
+              }
+            ]
+          },
+          "docs": "Retrieve all charges for your business, sorted by creation date (newest first)."
+        },
+        {
+          "info": {
+            "name": "Get a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/charges/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Charge ID"
+              }
+            ]
+          },
+          "docs": "Retrieve details for a specific charge by ID."
+        },
+        {
+          "info": {
+            "name": "Export charges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/charges/export",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Export format"
+              }
+            ]
+          },
+          "docs": "\nExport all charges for your business in JSON or CSV format.\n\nCSV format is useful for importing into spreadsheets or accounting software.\n        "
+        },
+        {
+          "info": {
+            "name": "Refund a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/charges/:id/refund",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Charge ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nRefund a charge back to the customer. Only escrow-based charges can be refunded,\nand only before the escrow has been settled or expired.\n\n**Refund reasons:**\n- `customer_request` - Customer requested a refund\n- `merchant_error` - Charge was made in error\n- `fraud_reversal` - Fraudulent transaction reversal\n\nThe refund is processed on-chain and the funds are returned to the customer's account.\n        "
+        },
+        {
+          "info": {
+            "name": "Estimate costs from existing usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/cost-estimate/from-usage",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nEstimate costs from existing usage events without creating charges.\n\nQueries usage events in the specified period and calculates what they would cost\nbased on pricing plans. Supports custom pricing overrides for \"what-if\" scenarios.\n\n**Use cases:**\n- Budget planning and forecasting\n- Cost allocation previews\n- Retroactive pricing analysis\n- Comparing pricing strategies\n\nThe response includes per-usage-type line items with quantity, unit price,\nand estimated cost. Notes indicate which usage type"
+        },
+        {
+          "info": {
+            "name": "Estimate costs from hypothetical usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/cost-estimate/hypothetical",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nEstimate costs from hypothetical usage without creating charges.\n\nTakes a list of usage items (type + quantity) and calculates what they would\ncost based on your pricing plans. Useful for \"what-if\" scenarios, budget\nplanning, or previewing costs before usage occurs.\n\n**Use cases:**\n- Pre-execution cost preview for AI agents\n- Budget planning with different pricing scenarios\n- Customer-facing cost calculators\n- Comparing pricing strategies side by side\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

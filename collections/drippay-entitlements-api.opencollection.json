@@ -1,0 +1,279 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Entitlements API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Entitlements",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List entitlement plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/entitlement-plans"
+          },
+          "docs": "Get all entitlement plans (tiers) for your business."
+        },
+        {
+          "info": {
+            "name": "Create an entitlement plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/entitlement-plans",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new entitlement plan (tier) with feature rules."
+        },
+        {
+          "info": {
+            "name": "Get an entitlement plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/entitlement-plans/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get an entitlement plan"
+        },
+        {
+          "info": {
+            "name": "Update an entitlement plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/entitlement-plans/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an entitlement plan"
+        },
+        {
+          "info": {
+            "name": "Delete an entitlement plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/entitlement-plans/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Soft-delete an entitlement plan by deactivating it."
+        },
+        {
+          "info": {
+            "name": "List versions of an entitlement plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/entitlement-plans/:id/versions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Return every row in the same `versionGroupId` as the given plan, ordered oldest → newest. Each version includes the rule set that was live at that version."
+        },
+        {
+          "info": {
+            "name": "List rules for a plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/entitlement-plans/:id/rules",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List rules for a plan"
+        },
+        {
+          "info": {
+            "name": "Add a rule to a plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/entitlement-plans/:id/rules",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add a feature limit rule to an entitlement plan."
+        },
+        {
+          "info": {
+            "name": "Update an entitlement rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/entitlement-rules/:ruleId",
+            "params": [
+              {
+                "name": "ruleId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an entitlement rule"
+        },
+        {
+          "info": {
+            "name": "Delete an entitlement rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/entitlement-rules/:ruleId",
+            "params": [
+              {
+                "name": "ruleId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an entitlement rule"
+        },
+        {
+          "info": {
+            "name": "Get customer entitlement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:customerId/entitlement",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get a customer's assigned plan and current usage."
+        },
+        {
+          "info": {
+            "name": "Assign entitlement plan to customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.drippay.dev/v1/customers/:customerId/entitlement",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign or change a customer's entitlement plan."
+        },
+        {
+          "info": {
+            "name": "Check entitlement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/entitlements/check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nFast pre-request check: is this customer allowed to use this feature?\n\nReturns `allowed: true/false` with remaining quota. Use this before processing\nexpensive requests to avoid wasting compute on customers who are over quota.\n\nRedis-backed hot-path with DB fallback for persisted usage events.\n        "
+        },
+        {
+          "info": {
+            "name": "Get customer entitlement usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:customerId/entitlement/usage",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get current period usage vs limits for all features in a customer's plan."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,56 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/drippay-openapi-original.json
+docs: https://docs.usedrip.ai/
+summary: >-
+  Drippay declares rate limiting in its contract but does not publish the
+  numbers or the runtime headers. 21 of 245 operations declare a 429 "Rate limit
+  exceeded" response, and the 429 body is the same { error, code, details[] }
+  envelope every other error uses — no Retry-After, no RateLimit-* or
+  X-RateLimit-* header is described anywhere in the OpenAPI, and the docs site
+  (6 published pages plus a generated API reference) has no rate-limit page. An
+  agent can detect exhaustion from the status code but cannot budget against it
+  or learn when to retry.
+limit_count: 0
+limits: []
+response_signal:
+  status_on_exhaustion: 429
+  body:
+    content_type: application/json
+    schema: '{ error: string, code: string, details: [{ path, message }] }'
+    description: Rate limit exceeded
+  headers_documented: false
+  retry_after: not documented
+  ratelimit_headers: not documented
+coverage:
+  operations_total: 245
+  operations_declaring_429: 21
+  note: >-
+    The other 224 operations declare no 429 at all, so the contract does not say
+    whether they are unlimited or simply undocumented.
+adjacent_quota_controls:
+  note: >-
+    Distinct from HTTP rate limiting, the platform exposes real quota surfaces
+    an agent should read instead: spending caps and usage caps (customer.
+    spending.warning / spending.blocked / spending.exceeded / usage_cap.reached
+    webhook events), the Entitlements API for pre-request access checks, and a
+    402 Payment Required response on POST /v1/usage that carries an x402 payment
+    payload for automatic top-up. See errors/drippay-problem-types.yml.
+  see:
+  - errors/drippay-problem-types.yml
+  - asyncapi/drippay-webhooks.yml
+product_side_quotas:
+  note: >-
+    The dreach application publishes monthly AI-credit pools per plan with a
+    $3.50/1M overage rate capped at 2x the pool; past the cap AI pauses until
+    credits reset. That is a commercial quota, not an API rate limit.
+  see: plans/drippay-plans-pricing.yml
+x-evidence:
+- url: https://docs.usedrip.ai/openapi.json
+  http_status: 200
+  fetched: '2026-08-13'
+  note: 961,459-byte OpenAPI 3.1.0; grep finds no Retry-After / RateLimit-* / X-RateLimit-* header definitions.
+- url: https://docs.usedrip.ai/sitemap.xml
+  http_status: 200
+  fetched: '2026-08-13'
+  note: No rate-limit documentation page published.

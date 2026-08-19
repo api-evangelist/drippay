@@ -1,16 +1,14 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
 status: published
-source: https://usedrip.ai/mcp
+source: https://dreach.ai/mcp (formerly https://usedrip.ai/mcp, now a 308 redirect)
 server:
   name: dripos-cloud
   transport: http
   url: https://mcp.drippay.dev/mcp
-  description: >-
-    Hosted MCP server that connects AI agents to drip's outbound sales
-    automation — lead sourcing, contact enrichment, and personalized message
-    drafting. Research and drafting run server-side; message sending stays
-    under user control in the desktop app.
+  description: Hosted MCP server that connects AI agents to drip's outbound sales automation — lead sourcing,
+    contact enrichment, and personalized message drafting. Research and drafting run server-side; message
+    sending stays under user control in the desktop app.
 auth:
   methods:
   - type: oauth
@@ -18,10 +16,10 @@ auth:
     connect: claude mcp add --transport http dripos-cloud https://mcp.drippay.dev/mcp
   - type: bearer
     header: 'Authorization: Bearer sk_live_...'
-    connect: >-
-      claude mcp add --transport http dripos-cloud https://mcp.drippay.dev/mcp
-      --header "Authorization: Bearer sk_live_..."
-  model: Encrypted grant key with scoped API tokens stored as hashes; revocable OAuth grants disable associated keys.
+    connect: 'claude mcp add --transport http dripos-cloud https://mcp.drippay.dev/mcp --header "Authorization:
+      Bearer sk_live_..."'
+  model: Encrypted grant key with scoped API tokens stored as hashes; revocable OAuth grants disable associated
+    keys.
 tools:
 - name: drip_find_leads
   description: Source matching prospects based on an ICP description.
@@ -37,3 +35,45 @@ tools:
   description: Track executive changes for outreach timing.
 - name: drip_account
   description: Read account balance and credit usage.
+deployment:
+  mode: remote
+  endpoint: https://mcp.drippay.dev/mcp
+  install: null
+  package: null
+  auth: oauth
+  verified: probed
+  probe: gated
+  checked: '2026-08-13'
+  source: https://dreach.ai/mcp + live POST tools/list
+  note: >-
+    Remote-only. There is no stdio package to install — an MCP client is
+    configured with the URL alone (`claude mcp add --transport http drip-cloud
+    https://mcp.drippay.dev/mcp`), so an agent can reach this server without a
+    human installing anything first.
+probe:
+  method: POST tools/list (JSON-RPC 2.0)
+  url: https://mcp.drippay.dev/mcp
+  date: '2026-08-13'
+  http_status: 401
+  response: >-
+    jsonrpc error -32001 "unauthorized" — problem: "The request is missing a
+    valid drip credential."; cause: "Missing Authorization header."; fix:
+    "Connect with OAuth (your MCP client discovers it from this 401's
+    WWW-Authenticate header) or configure --header 'Authorization: Bearer
+    sk_...'".
+  conclusion: >-
+    Live tool inputSchemas require authenticated introspection. The seven tool
+    names and descriptions recorded above come from the provider's own MCP page,
+    not from introspection, so no input schemas are claimed here.
+oauth_discovery:
+  protected_resource: https://mcp.drippay.dev/.well-known/oauth-protected-resource
+  authorization_server: https://api.drippay.dev/.well-known/oauth-authorization-server
+  scopes: [read, write]
+  pkce: S256
+  dynamic_client_registration: true
+  see: scopes/drippay-scopes.yml
+crosswalk: mcp/drippay-tool-crosswalk.yml
+divergence: >-
+  These seven tools belong to the dreach outbound-sales product, NOT to the
+  245-operation Drip billing API. Only drip_account has even a semantic
+  counterpart in REST. See mcp/drippay-tool-crosswalk.yml.

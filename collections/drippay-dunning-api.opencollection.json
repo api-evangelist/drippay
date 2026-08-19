@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Dunning API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Dunning",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the active dunning schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/dunning/schedule"
+          },
+          "docs": "Returns the per-business retry schedule. Falls back to the system default when no custom schedule is configured."
+        },
+        {
+          "info": {
+            "name": "Upsert the dunning schedule for this business",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.drippay.dev/v1/dunning/schedule"
+          },
+          "docs": "Create or replace the retry schedule. `retries` is an ordered list of steps, each with a `dayOffset` (days after `firstFailedAt`), a `retryPayment` flag, and an optional `emailTemplate` (`dunning_first_notice` | `dunning_second_notice` | `dunning_final_notice`). Steps must be strictly increasing by `dayOffset`. Set `isActive: false` to disable automatic retries without losing the schedule — manual retries via `POST /collections/{id}/retry` still work."
+        },
+        {
+          "info": {
+            "name": "List failed payments in collections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/collections"
+          },
+          "docs": "Returns failed charges currently in the dunning pipeline. Filter by `status` (`OPEN`, `RETRYING`, `RESOLVED`, `ABANDONED`, `CANCELLED`) and/or `customerId`. Each row includes `retryAttempts`, `nextRetryAt`, and `lastRetryError` so you can surface collections state in your own UI."
+        },
+        {
+          "info": {
+            "name": "Get a single failed payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/collections/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns full detail for one failed payment, including the underlying charge, customer, retry history, schedule snapshot, and resolution metadata."
+        },
+        {
+          "info": {
+            "name": "Manually retry a failed payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/collections/:id/retry",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Shares the same logic as the scheduled dunning worker. Manual retries work even when the scheduler is disabled (isActive=false)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Pricing Plans API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pricing Plans",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List pricing plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/pricing-plans"
+          },
+          "docs": "Get all pricing plans for your business."
+        },
+        {
+          "info": {
+            "name": "Create a pricing plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/pricing-plans",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nCreate a new pricing plan for a usage type.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.** Public keys and lower-role secret keys will receive `403 Forbidden`.\n\nEach `unitType` can only have one active pricing plan. If you need to\nchange prices, update the existing plan or deactivate it first.\n\n**Example unit types:**\n- `api_call` - Per API request\n- `token` - Per token processed\n- `compute_second` - Per second of compute\n- `gb_storage` - Per GB stored\n        "
+        },
+        {
+          "info": {
+            "name": "Get a pricing plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/pricing-plans/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Pricing plan ID"
+              }
+            ]
+          },
+          "docs": "Retrieve a pricing plan by ID."
+        },
+        {
+          "info": {
+            "name": "Update a pricing plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/pricing-plans/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Pricing plan ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the name, price, or status of a pricing plan. Changes take effect immediately for new charges.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        },
+        {
+          "info": {
+            "name": "Delete a pricing plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/pricing-plans/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Pricing plan ID"
+              }
+            ]
+          },
+          "docs": "\nSoft-delete a pricing plan by deactivating it.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**\n\nThe plan is preserved for historical charges but will no longer be used\nfor new usage events. You can reactivate it by updating `isActive` to `true`.\n        "
+        },
+        {
+          "info": {
+            "name": "List versions of a pricing plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/pricing-plans/:id/versions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Pricing plan ID (any version)"
+              }
+            ]
+          },
+          "docs": "Return every version row in the same `versionGroupId` as the given plan, ordered oldest → newest. Pass the id of any version (active or archived) and you get the full history of that plan."
+        },
+        {
+          "info": {
+            "name": "Get pricing plan by unit type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/pricing-plans/by-type/:unitType",
+            "params": [
+              {
+                "name": "unitType",
+                "value": "",
+                "type": "path",
+                "description": "Usage type (e.g., \"api_call\", \"token\")"
+              }
+            ]
+          },
+          "docs": "Look up the active pricing plan for a specific usage type."
+        },
+        {
+          "info": {
+            "name": "Retry Stripe auto-provisioning for a plan",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/pricing-plans/:id/reprovision-stripe",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Pricing plan ID"
+              }
+            ]
+          },
+          "docs": "Retries the Drip-managed Stripe Product / Meter / Price provisioning for a pricing plan. Useful after an initial transient failure on plan create. Idempotent: already-provisioned objects are skipped; only the missing Stripe calls are made.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

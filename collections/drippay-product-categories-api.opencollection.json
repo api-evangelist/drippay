@@ -1,0 +1,90 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Product Categories API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Product Categories",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List product categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/product-categories",
+            "params": [
+              {
+                "name": "includeArchived",
+                "value": "",
+                "type": "query",
+                "description": "Include soft-archived categories. Defaults to true."
+              }
+            ]
+          },
+          "docs": "Return the controlled taxonomy used for strict-products governance. Includes archived categories by default so dashboards can render historical tags."
+        },
+        {
+          "info": {
+            "name": "Create a product category",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/product-categories"
+          },
+          "docs": "Create a new product category. `key` must be unique per business and is immutable once created — downstream reporting rolls up by key."
+        },
+        {
+          "info": {
+            "name": "Update a product category",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/product-categories/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Update the name, description, GL code, or revenue class of a product category. The `key` is immutable — create a new category if the taxonomy needs to split."
+        },
+        {
+          "info": {
+            "name": "Archive a product category",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/product-categories/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Soft-archive the category. Archived categories cannot be attached to new pricing plans but stay linked to historical ones so reporting is stable. To restore, PATCH `archivedAt` back to null via the un-archive endpoint is NOT exposed — recreate a new category or use PATCH if un-archive support is added later."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

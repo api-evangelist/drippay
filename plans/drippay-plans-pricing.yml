@@ -1,0 +1,90 @@
+generated: '2026-08-13'
+method: searched
+source: https://dreach.ai/pricing
+docs: https://dreach.ai/pricing
+note: >-
+  Pricing is published for the dreach Mac application (the renamed drip
+  product), not for the Drip billing API at api.drippay.dev — that API has no
+  separately published price list. Prices captured verbatim from the pricing
+  page on 2026-08-13. The former usedrip.ai/pricing URL 308-redirects here.
+currency: USD
+billing_period: month
+trial:
+  length_days: 7
+  card_required: true
+  note: Card required, cancel anytime; the chosen plan starts billing when the trial ends.
+credit_model:
+  unit: AI credits
+  counting: Input tokens plus five times output tokens.
+  refresh: monthly
+  overage_rate: 3.50 per 1M credits
+  overage_cap: 2x the plan's monthly credit pool
+  on_cap: >-
+    Past the cap (or during a trial) AI pauses until credits reset; the user can
+    still read, write, and send by hand.
+  checkout: Stripe
+plan_count: 4
+plans:
+- name: Solo
+  price: 29
+  currency: USD
+  period: month
+  unit: account
+  seats: 1
+  included_quota: 10000000 AI credits/month
+  overage: $3.50 per 1M credits
+  includes:
+  - Writes in your voice
+  - Sends first messages and follows up
+  - Handles replies for you
+  - Books meetings on your calendar
+- name: Pro
+  price: 99
+  currency: USD
+  period: month
+  unit: seat
+  seats: 1+
+  included_quota: 50000000 AI credits/month
+  overage: $3.50 per 1M credits
+  most_popular: true
+  includes:
+  - Everything in Solo
+  - 5x the monthly AI volume
+  - Priority support
+  - Setup and workflow help
+- name: Team
+  price: 199
+  currency: USD
+  period: month
+  unit: account
+  seats: 3
+  included_quota: 100000000 AI credits/month shared across the 3 seats
+  overage: $3.50 per 1M credits
+  includes:
+  - Everything in Pro
+  - 3 seats included
+  - 2x the Pro AI volume, shared
+  - Priority support
+- name: Custom
+  price: null
+  currency: USD
+  period: null
+  unit: team
+  seats: team-wide
+  included_quota: custom credit pool
+  overage: null
+  sales_led: true
+  contact: Talk to the founder
+  includes:
+  - Everything in Pro
+  - Bring your own Anthropic and OpenAI keys
+  - Local LLM access (Ollama) — Custom-only
+  - Shared team credit pool
+  - Dedicated support
+x-evidence:
+- url: https://dreach.ai/pricing
+  http_status: 200
+  fetched: '2026-08-13'
+- url: https://usedrip.ai/pricing
+  http_status: 308
+  fetched: '2026-08-13'

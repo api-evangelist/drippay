@@ -1,0 +1,2105 @@
+{
+  "item": [
+    {
+      "id": "4cec2134-b62f-4b91-859f-ee0cdb573f5b",
+      "name": "Events",
+      "description": {
+        "content": "Record execution events for observability.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b7652dd5-9498-4f49-a6e1-fc90c7e106ee",
+          "name": "Get customer events",
+          "request": {
+            "name": "Get customer events",
+            "description": {
+              "content": "Get events for a customer with optional filters.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "customers",
+                ":customerId",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "eventType",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "from",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "to",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "customerId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2d12835a-0246-4e73-86aa-250f009dbb8f",
+              "name": "Customer events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customerId",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customerId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"quantity\": 4975.705472808308,\n      \"units\": \"string\",\n      \"costUnits\": 9212.57379157619,\n      \"runId\": \"string\",\n      \"timestamp\": \"1989-06-14T20:39:25.747Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"quantity\": 1557.7377520879909,\n      \"units\": \"string\",\n      \"costUnits\": 7680.120127064966,\n      \"runId\": \"string\",\n      \"timestamp\": \"1964-05-30T06:45:18.515Z\"\n    }\n  ],\n  \"totals\": {\n    \"eventCount\": 6906,\n    \"totalQuantity\": \"string\",\n    \"totalCostUnits\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a267901a-9053-4014-8caf-6379a1121992",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customerId",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customerId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d50a962d-0a7a-4fb0-aa7d-8fa0a1fdb409",
+              "name": "Customer not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "customers",
+                    ":customerId",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "customerId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "80457ca8-9dda-4d85-944c-e5017477878f",
+          "name": "Record an execution event",
+          "request": {
+            "name": "Record an execution event",
+            "description": {
+              "content": "Record what happened. Only 2 fields required: `customerId` and `idempotencyKey`.\n\nAll other fields are optional with smart defaults. If you provide `input` or `output` payloads, they are automatically stored for later retrieval via `GET /events/:id/payload` (no need to set `storePayloads: true`).\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idempotencyKey\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"externalCustomerId\": \"<string>\",\n  \"actionName\": \"<string>\",\n  \"outcome\": \"<string>\",\n  \"explanation\": \"<string>\",\n  \"metadata\": {\n    \"key_0\": 8942,\n    \"key_1\": 5555.600802904054\n  },\n  \"quantity\": \"<number>\",\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"<string>\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 1004.1915600617191,\n    \"key_1\": 766.0123402678776\n  },\n  \"output\": {\n    \"key_0\": 5235,\n    \"key_1\": true\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f54bf62e-63a8-4c3a-a240-24cdea68ae17",
+              "name": "Event created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_123\",\n  \"customerId\": \"cus_abc123\",\n  \"externalCustomerId\": \"user_42\",\n  \"actionName\": \"api_call\",\n  \"outcome\": \"SUCCEEDED\",\n  \"explanation\": \"Processed request successfully\",\n  \"metadata\": {\n    \"key_0\": true\n  },\n  \"quantity\": 100,\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"API_CALL\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 6749.913390836121,\n    \"key_1\": \"string\",\n    \"key_2\": 5374,\n    \"key_3\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": 3701\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"eventType\": \"TOOL_CALL_START\",\n  \"actionName\": \"string\",\n  \"outcome\": \"SKIPPED\",\n  \"idempotencyKey\": \"string\",\n  \"createdAt\": \"1946-09-26T13:40:22.367Z\",\n  \"wasIdempotentReplay\": false,\n  \"receipt\": {\n    \"batchId\": \"string\",\n    \"eventCount\": 4143,\n    \"batchHash\": \"string\",\n    \"receivedAt\": \"2012-02-04T09:07:06.168Z\",\n    \"signature\": \"string\",\n    \"signerAddress\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4bfbe152-7104-4a42-9c1a-1d298105e7e6",
+              "name": "Validation error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_123\",\n  \"customerId\": \"cus_abc123\",\n  \"externalCustomerId\": \"user_42\",\n  \"actionName\": \"api_call\",\n  \"outcome\": \"SUCCEEDED\",\n  \"explanation\": \"Processed request successfully\",\n  \"metadata\": {\n    \"key_0\": true\n  },\n  \"quantity\": 100,\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"API_CALL\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 6749.913390836121,\n    \"key_1\": \"string\",\n    \"key_2\": 5374,\n    \"key_3\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": 3701\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27523999-d19a-4b0c-8b7e-e48a4c21a522",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_123\",\n  \"customerId\": \"cus_abc123\",\n  \"externalCustomerId\": \"user_42\",\n  \"actionName\": \"api_call\",\n  \"outcome\": \"SUCCEEDED\",\n  \"explanation\": \"Processed request successfully\",\n  \"metadata\": {\n    \"key_0\": true\n  },\n  \"quantity\": 100,\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"API_CALL\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 6749.913390836121,\n    \"key_1\": \"string\",\n    \"key_2\": 5374,\n    \"key_3\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": 3701\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2dea5268-2d77-4ee7-8c69-cf87c0153290",
+              "name": "Customer or referenced event not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_123\",\n  \"customerId\": \"cus_abc123\",\n  \"externalCustomerId\": \"user_42\",\n  \"actionName\": \"api_call\",\n  \"outcome\": \"SUCCEEDED\",\n  \"explanation\": \"Processed request successfully\",\n  \"metadata\": {\n    \"key_0\": true\n  },\n  \"quantity\": 100,\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"API_CALL\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 6749.913390836121,\n    \"key_1\": \"string\",\n    \"key_2\": 5374,\n    \"key_3\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": 3701\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "59ab6644-0435-447b-b8d5-48d0eabcb75f",
+              "name": "Rate limit exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_123\",\n  \"customerId\": \"cus_abc123\",\n  \"externalCustomerId\": \"user_42\",\n  \"actionName\": \"api_call\",\n  \"outcome\": \"SUCCEEDED\",\n  \"explanation\": \"Processed request successfully\",\n  \"metadata\": {\n    \"key_0\": true\n  },\n  \"quantity\": 100,\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"API_CALL\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 6749.913390836121,\n    \"key_1\": \"string\",\n    \"key_2\": 5374,\n    \"key_3\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": 3701\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88fb6a33-cddc-4939-9a8d-cd47808e1cb8",
+              "name": "Service temporarily unavailable — retry with backoff",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"idempotencyKey\": \"req_123\",\n  \"customerId\": \"cus_abc123\",\n  \"externalCustomerId\": \"user_42\",\n  \"actionName\": \"api_call\",\n  \"outcome\": \"SUCCEEDED\",\n  \"explanation\": \"Processed request successfully\",\n  \"metadata\": {\n    \"key_0\": true\n  },\n  \"quantity\": 100,\n  \"usageType\": \"<string>\",\n  \"units\": \"<string>\",\n  \"description\": \"<string>\",\n  \"eventType\": \"API_CALL\",\n  \"runId\": \"<string>\",\n  \"parentEventId\": \"<string>\",\n  \"correlationId\": \"<string>\",\n  \"inputHash\": \"<string>\",\n  \"outputHash\": \"<string>\",\n  \"input\": {\n    \"key_0\": 6749.913390836121,\n    \"key_1\": \"string\",\n    \"key_2\": 5374,\n    \"key_3\": \"string\"\n  },\n  \"output\": {\n    \"key_0\": 3701\n  },\n  \"workflowId\": \"<string>\",\n  \"retryOfEventId\": \"<string>\",\n  \"attemptNumber\": \"<integer>\",\n  \"spanId\": \"<string>\",\n  \"spanKind\": \"<string>\",\n  \"inputBytes\": \"<integer>\",\n  \"outputBytes\": \"<integer>\",\n  \"queueDurationMs\": \"<integer>\",\n  \"executionDurationMs\": \"<integer>\",\n  \"startedAt\": \"<dateTime>\",\n  \"endedAt\": \"<dateTime>\",\n  \"errorType\": \"<string>\",\n  \"errorMessage\": \"<string>\",\n  \"errorStack\": \"<string>\",\n  \"retryCount\": \"<integer>\",\n  \"retryBackoffMs\": \"<integer>\",\n  \"retryReason\": \"<string>\",\n  \"storePayloads\": true,\n  \"payloadTtlSeconds\": \"<integer>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "47bb96ae-04dd-45b3-b6ca-7186d74bf803",
+          "name": "List events",
+          "request": {
+            "name": "List events",
+            "description": {
+              "content": "\nList execution events with optional filters.\n\nSupports filtering by:\n- `customerId`: Events for a specific customer\n- `runId`: Events in a specific agent run\n- `workflowId`: Events in a specific workflow\n- `eventType`: Filter by event type (e.g., LLM_INFERENCE)\n- `outcome`: Filter by outcome (e.g., SUCCESS, FAILURE)\n- `actionName`: Filter by action name\n- `parentEventId`: Get child events\n- `idempotencyKey`: Exact match on idempotency key\n- Time range: `from` and `to` (ISO 8601)\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "events"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "customerId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "runId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "eventType",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "outcome",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "actionName",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "parentEventId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "idempotencyKey",
+                  "value": "<string>",
+                  "description": "Filter by idempotency key"
+                },
+                {
+                  "disabled": false,
+                  "key": "from",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "to",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fb50386d-936d-4096-a9fc-03b3749bc07c",
+              "name": "List of events with pagination",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "customerId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "runId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "outcome",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "actionName",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "parentEventId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "idempotencyKey",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"actionName\": \"string\",\n      \"outcome\": \"string\",\n      \"explanation\": \"string\",\n      \"idempotencyKey\": \"string\",\n      \"customerId\": \"string\",\n      \"runId\": \"string\",\n      \"workflowId\": \"string\",\n      \"parentEventId\": \"string\",\n      \"retryOfEventId\": \"string\",\n      \"attemptNumber\": 6822,\n      \"createdAt\": \"2003-03-07T22:22:03.533Z\",\n      \"chargeId\": \"string\",\n      \"costUsdc\": \"string\",\n      \"usageType\": \"string\",\n      \"quantity\": \"string\",\n      \"units\": \"string\",\n      \"description\": \"string\",\n      \"metadata\": {\n        \"key_0\": false,\n        \"key_1\": \"string\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"actionName\": \"string\",\n      \"outcome\": \"string\",\n      \"explanation\": \"string\",\n      \"idempotencyKey\": \"string\",\n      \"customerId\": \"string\",\n      \"runId\": \"string\",\n      \"workflowId\": \"string\",\n      \"parentEventId\": \"string\",\n      \"retryOfEventId\": \"string\",\n      \"attemptNumber\": 2070,\n      \"createdAt\": \"2016-04-15T22:34:20.291Z\",\n      \"chargeId\": \"string\",\n      \"costUsdc\": \"string\",\n      \"usageType\": \"string\",\n      \"quantity\": \"string\",\n      \"units\": \"string\",\n      \"description\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\"\n      }\n    }\n  ],\n  \"pagination\": {\n    \"total\": 3459,\n    \"limit\": 7479,\n    \"offset\": 3413,\n    \"hasMore\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6f8c109-a9b1-44b9-9ed6-25a118c28bed",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "customerId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "runId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "outcome",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "actionName",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "parentEventId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "idempotencyKey",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd3a02bd-6dd3-4454-9c3a-4289cfea9ea1",
+          "name": "Get event details",
+          "request": {
+            "name": "Get event details",
+            "description": {
+              "content": "\nRetrieve a single event with full details including:\n- Execution metadata (eventType, outcome, explanation)\n- Input/output hashes\n- Causality links (parent, children, retry chain)\n- Billing information (if applicable)\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "events",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Event ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "687506a4-37ed-44e6-8b95-27bf92f69afd",
+              "name": "Event details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"eventType\": \"MEMORY\",\n  \"actionName\": \"string\",\n  \"outcome\": \"SKIPPED\",\n  \"explanation\": \"string\",\n  \"idempotencyKey\": \"string\",\n  \"customerId\": \"string\",\n  \"runId\": \"string\",\n  \"workflowId\": \"string\",\n  \"parentEventId\": \"string\",\n  \"retryOfEventId\": \"string\",\n  \"attemptNumber\": 5231,\n  \"createdAt\": \"1953-06-16T00:27:33.389Z\",\n  \"inputHash\": \"string\",\n  \"outputHash\": \"string\",\n  \"childEvents\": [\n    \"string\",\n    \"string\"\n  ],\n  \"retriedBy\": \"string\",\n  \"chargeId\": \"string\",\n  \"costUsdc\": \"string\",\n  \"usageType\": \"string\",\n  \"quantity\": \"string\",\n  \"units\": \"string\",\n  \"description\": \"string\",\n  \"metadata\": {\n    \"key_0\": 9019.626655573722,\n    \"key_1\": 4898,\n    \"key_2\": 5218,\n    \"key_3\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70f8a3c7-0874-4a97-9d4f-b5b54ed23a8d",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "60914eda-3246-45cf-bc85-e0c083b59f16",
+              "name": "Event not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "df857a9b-e6f8-47ed-b049-96399382acea",
+          "name": "Get stored payloads for an event",
+          "request": {
+            "name": "Get stored payloads for an event",
+            "description": {
+              "content": "\nRetrieve raw input/output payloads that were stored when the event was created\nwith `storePayloads: true`.\n\nReturns the full JSON payloads along with integrity hashes and size information.\nReturns 404 if no payloads were stored or if they have expired.\n\n**Use case**: Historical data replay, audit trails, debugging.\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "events",
+                ":id",
+                "payload"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Event ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "99962ef1-07bd-43bc-82a9-5f6cafcffcff",
+              "name": "Stored payloads",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id",
+                    "payload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"usageEventId\": \"string\",\n  \"inputPayload\": {\n    \"key_0\": \"string\",\n    \"key_1\": 155.85276023333373\n  },\n  \"outputPayload\": {\n    \"key_0\": 8063,\n    \"key_1\": 9372,\n    \"key_2\": 342.88397642048494\n  },\n  \"inputHash\": \"string\",\n  \"outputHash\": \"string\",\n  \"inputSizeBytes\": 2738,\n  \"outputSizeBytes\": 137,\n  \"createdAt\": \"1994-05-06T18:49:24.861Z\",\n  \"expiresAt\": \"1983-09-26T14:31:54.709Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "97b49355-a814-46f6-a235-c1336626895b",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id",
+                    "payload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bba58926-82a3-4baa-b554-76569274d475",
+              "name": "No payload stored for this event",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id",
+                    "payload"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3154276f-69e3-4fe5-9e34-928f088a9a37",
+          "name": "Trace event causality",
+          "request": {
+            "name": "Trace event causality",
+            "description": {
+              "content": "\nGet the full causality context for an event in a single API call.\n\nReturns:\n- **ancestors**: Parent chain from root to this event's parent\n- **children**: Direct child events caused by this event\n- **retryChain**: Original event and all retry attempts\n- **anomalies**: Detected anomalies linked to this event\n- **summary**: Quick stats (counts, hasFailures flag)\n\n**Query Parameters:**\n- `format=tree` - Returns ASCII tree output for CLI/support tickets\n\nThis is the primary debugging endpoint for tracing errors through the ledger.\n\n**Example use case**: Customer reports \"my run failed at step 5\"\n```\nGET /v1/events/{failingEventId}/trace\nGET /v1/events/{failingEventId}/trace?format=tree\n```\nReturns the complete context: what led to this event, what it triggered,\nwhether it was retried, and any anomalies detected.\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "events",
+                ":id",
+                "trace"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "<string>",
+                  "description": "Output format (default: json)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Event ID to trace"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "51d0a056-650f-4fa6-b39a-d429d03fe909",
+              "name": "Full event trace with causality context",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id",
+                    "trace"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID to trace"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"event\": {\n    \"id\": \"string\",\n    \"eventType\": \"LLM_INFERENCE\",\n    \"actionName\": \"string\",\n    \"outcome\": \"CANCELLED\",\n    \"explanation\": \"string\",\n    \"idempotencyKey\": \"string\",\n    \"customerId\": \"string\",\n    \"runId\": \"string\",\n    \"workflowId\": \"string\",\n    \"parentEventId\": \"string\",\n    \"retryOfEventId\": \"string\",\n    \"attemptNumber\": 3521,\n    \"createdAt\": \"1963-09-11T09:06:52.430Z\",\n    \"inputHash\": \"string\",\n    \"outputHash\": \"string\",\n    \"childEvents\": [\n      \"string\",\n      \"string\"\n    ],\n    \"retriedBy\": \"string\",\n    \"chargeId\": \"string\",\n    \"costUsdc\": \"string\",\n    \"usageType\": \"string\",\n    \"quantity\": \"string\",\n    \"units\": \"string\",\n    \"description\": \"string\",\n    \"metadata\": {\n      \"key_0\": true\n    },\n    \"spanKind\": \"string\",\n    \"inputBytes\": 2917,\n    \"outputBytes\": 6280,\n    \"queueDurationMs\": 6388,\n    \"executionDurationMs\": 1747,\n    \"startedAt\": \"2018-10-07T19:01:22.878Z\",\n    \"endedAt\": \"2010-04-10T16:46:48.042Z\",\n    \"errorType\": \"string\",\n    \"errorMessage\": \"string\",\n    \"errorStack\": \"string\",\n    \"retryCount\": 118,\n    \"retryBackoffMs\": 4066,\n    \"retryReason\": \"string\"\n  },\n  \"ancestors\": [\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"actionName\": \"string\",\n      \"outcome\": \"string\",\n      \"explanation\": \"string\",\n      \"attemptNumber\": 460,\n      \"createdAt\": \"1955-10-03T04:38:50.594Z\",\n      \"costUsdc\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"actionName\": \"string\",\n      \"outcome\": \"string\",\n      \"explanation\": \"string\",\n      \"attemptNumber\": 7909,\n      \"createdAt\": \"1962-06-08T04:11:06.236Z\",\n      \"costUsdc\": \"string\"\n    }\n  ],\n  \"children\": [\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"actionName\": \"string\",\n      \"outcome\": \"string\",\n      \"explanation\": \"string\",\n      \"attemptNumber\": 5345,\n      \"createdAt\": \"2016-09-23T12:16:36.067Z\",\n      \"costUsdc\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"eventType\": \"string\",\n      \"actionName\": \"string\",\n      \"outcome\": \"string\",\n      \"explanation\": \"string\",\n      \"attemptNumber\": 1419,\n      \"createdAt\": \"1997-08-14T14:32:55.650Z\",\n      \"costUsdc\": \"string\"\n    }\n  ],\n  \"retryChain\": {\n    \"originalEvent\": {\n      \"key_0\": true\n    },\n    \"retries\": [\n      {\n        \"key_0\": 9835\n      },\n      {\n        \"key_0\": \"string\",\n        \"key_1\": 2616,\n        \"key_2\": 2160\n      }\n    ]\n  },\n  \"anomalies\": [\n    {\n      \"id\": \"string\",\n      \"anomalyType\": \"string\",\n      \"severity\": \"string\",\n      \"detectedAt\": \"2013-11-12T13:08:32.045Z\",\n      \"status\": \"string\",\n      \"metric\": \"string\",\n      \"expectedValue\": \"string\",\n      \"actualValue\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"anomalyType\": \"string\",\n      \"severity\": \"string\",\n      \"detectedAt\": \"1947-06-17T10:56:00.760Z\",\n      \"status\": \"string\",\n      \"metric\": \"string\",\n      \"expectedValue\": \"string\",\n      \"actualValue\": \"string\"\n    }\n  ],\n  \"summary\": {\n    \"totalAncestors\": 1771,\n    \"totalChildren\": 4079,\n    \"totalRetries\": 6634,\n    \"totalAnomalies\": 7410,\n    \"hasFailures\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "865ee84f-c95e-4fe9-ad48-c11f6f030d4d",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id",
+                    "trace"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID to trace"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "646e8706-c247-4f7e-a75c-1f0c5c81588d",
+              "name": "Event not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    ":id",
+                    "trace"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Event ID to trace"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c7ab3dbf-e58e-4af1-b99e-2f790dd00fb2",
+          "name": "Trace by correlation ID",
+          "request": {
+            "name": "Trace by correlation ID",
+            "description": {
+              "content": "\nTrace events across multiple runs and services using a correlation ID.\n\nReturns all events that share the same correlation ID, grouped by run.\nUseful for debugging distributed agent workflows.\n\n**Example use case**: Tracing a request across multiple microservices\n```\nGET /v1/trace/{correlationId}\n```\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "trace",
+                ":correlationId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "format",
+                  "value": "<string>",
+                  "description": "Output format (default: json)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "correlationId",
+                  "description": "(Required) Correlation ID to trace"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "be54c364-f752-4625-9deb-e9efa064fd43",
+              "name": "Events grouped by run with trace context",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "trace",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) Correlation ID to trace"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"correlationId\": \"string\",\n  \"totalEvents\": 6628,\n  \"totalRuns\": 5893,\n  \"runs\": [\n    {\n      \"runId\": \"string\",\n      \"workflowName\": \"string\",\n      \"status\": \"string\",\n      \"events\": [\n        {\n          \"id\": \"string\",\n          \"actionName\": \"string\",\n          \"outcome\": \"string\",\n          \"explanation\": \"string\",\n          \"timestamp\": \"2003-07-03T06:43:11.756Z\"\n        },\n        {\n          \"id\": \"string\",\n          \"actionName\": \"string\",\n          \"outcome\": \"string\",\n          \"explanation\": \"string\",\n          \"timestamp\": \"1957-01-31T12:50:12.464Z\"\n        }\n      ]\n    },\n    {\n      \"runId\": \"string\",\n      \"workflowName\": \"string\",\n      \"status\": \"string\",\n      \"events\": [\n        {\n          \"id\": \"string\",\n          \"actionName\": \"string\",\n          \"outcome\": \"string\",\n          \"explanation\": \"string\",\n          \"timestamp\": \"1963-10-27T02:20:36.261Z\"\n        },\n        {\n          \"id\": \"string\",\n          \"actionName\": \"string\",\n          \"outcome\": \"string\",\n          \"explanation\": \"string\",\n          \"timestamp\": \"1964-12-24T15:44:01.136Z\"\n        }\n      ]\n    }\n  ],\n  \"anomalies\": [\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"severity\": \"string\",\n      \"detectedAt\": \"1970-06-04T15:50:48.072Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"severity\": \"string\",\n      \"detectedAt\": \"1958-11-26T22:50:51.084Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0a93c3dc-8df3-47ae-b3a0-d0c63670ad55",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "trace",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) Correlation ID to trace"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4605a7b2-8f97-4e70-9a81-1a64659f9733",
+              "name": "No events found with this correlation ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "trace",
+                    ":correlationId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "format",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "correlationId",
+                      "description": "(Required) Correlation ID to trace"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "145ff219-f562-42e0-8dc9-a73b4c4a64d2",
+          "name": "List events with payloads (flat format)",
+          "request": {
+            "name": "List events with payloads (flat format)",
+            "description": {
+              "content": "\nReturns events joined with their stored payloads in a flat, tabular format\ndesigned for data engineers and SQL-based workflows.\n\nEach row is a single event with its input/output payloads inlined.\nOnly events that have stored payloads are returned (i.e., events created\nwith `input` or `output` fields).\n\n**Filters:** `customerId`, `actionName`, `from`/`to` (ISO 8601 date range),\n`hasInput`, `hasOutput` (boolean).\n\n**Use cases:**\n- Export to data warehouses (BigQuery, Snowflake, Redshift)\n- Ad-hoc SQL analysis of event payloads\n- Training data extraction for ML pipelines\n- Compliance audits requiring full payload history\n        ",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "events",
+                "payloads"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "customerId",
+                  "value": "<string>",
+                  "description": "Filter by customer"
+                },
+                {
+                  "disabled": false,
+                  "key": "actionName",
+                  "value": "<string>",
+                  "description": "Filter by action name"
+                },
+                {
+                  "disabled": false,
+                  "key": "eventType",
+                  "value": "<string>",
+                  "description": "Filter by event type"
+                },
+                {
+                  "disabled": false,
+                  "key": "from",
+                  "value": "<dateTime>",
+                  "description": "Start of time range (inclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "to",
+                  "value": "<dateTime>",
+                  "description": "End of time range (inclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "hasInput",
+                  "value": "<boolean>",
+                  "description": "Only events with input payloads"
+                },
+                {
+                  "disabled": false,
+                  "key": "hasOutput",
+                  "value": "<boolean>",
+                  "description": "Only events with output payloads"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3fcbc66e-387b-4657-aa65-afd922987870",
+              "name": "Flat list of events with inlined payloads",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    "payloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "customerId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "actionName",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "hasInput",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "hasOutput",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"eventId\": \"string\",\n      \"customerId\": \"string\",\n      \"actionName\": \"string\",\n      \"eventType\": \"string\",\n      \"outcome\": \"string\",\n      \"quantity\": \"string\",\n      \"units\": \"string\",\n      \"idempotencyKey\": \"string\",\n      \"createdAt\": \"2013-07-14T09:08:53.463Z\",\n      \"inputPayload\": {\n        \"key_0\": false\n      },\n      \"outputPayload\": {\n        \"key_0\": 7654.214643903767,\n        \"key_1\": true\n      },\n      \"inputHash\": \"string\",\n      \"outputHash\": \"string\",\n      \"inputSizeBytes\": 4933,\n      \"outputSizeBytes\": 1969,\n      \"payloadExpiresAt\": \"2010-10-07T00:33:44.891Z\",\n      \"runId\": \"string\",\n      \"workflowId\": \"string\",\n      \"metadata\": {\n        \"key_0\": \"string\"\n      }\n    },\n    {\n      \"eventId\": \"string\",\n      \"customerId\": \"string\",\n      \"actionName\": \"string\",\n      \"eventType\": \"string\",\n      \"outcome\": \"string\",\n      \"quantity\": \"string\",\n      \"units\": \"string\",\n      \"idempotencyKey\": \"string\",\n      \"createdAt\": \"1971-05-04T12:36:03.593Z\",\n      \"inputPayload\": {\n        \"key_0\": 6688.832982969851,\n        \"key_1\": 588,\n        \"key_2\": \"string\"\n      },\n      \"outputPayload\": {\n        \"key_0\": false\n      },\n      \"inputHash\": \"string\",\n      \"outputHash\": \"string\",\n      \"inputSizeBytes\": 9764,\n      \"outputSizeBytes\": 1227,\n      \"payloadExpiresAt\": \"2018-08-25T07:20:59.637Z\",\n      \"runId\": \"string\",\n      \"workflowId\": \"string\",\n      \"metadata\": {\n        \"key_0\": 694,\n        \"key_1\": 4731\n      }\n    }\n  ],\n  \"pagination\": {\n    \"total\": 3433,\n    \"limit\": 7020,\n    \"offset\": 7338,\n    \"hasMore\": true\n  },\n  \"sql_hint\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1c09141b-2b43-460d-a9cd-2a49bb8ec62e",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "events",
+                    "payloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "customerId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "actionName",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "eventType",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "hasInput",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "hasOutput",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.drippay.dev",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "882b0023-27a5-4cc5-9a7e-6e1af73becfd",
+    "name": "Drip BillableMetrics Events API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
+      "type": "text/plain"
+    }
+  }
+}

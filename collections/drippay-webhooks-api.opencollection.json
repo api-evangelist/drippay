@@ -1,0 +1,235 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Webhooks API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhook event types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/webhooks/events"
+          },
+          "docs": "Get all available webhook event types with descriptions. **Requires a secret key (sk_).** Public keys (pk_) will receive a 403 error."
+        },
+        {
+          "info": {
+            "name": "List webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/webhooks"
+          },
+          "docs": "Get all webhooks for your business with delivery statistics. **Requires a secret key (sk_).** Public keys (pk_) will receive a 403 error."
+        },
+        {
+          "info": {
+            "name": "Create a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nCreate a new webhook endpoint to receive real-time event notifications. **Requires a secret key (sk_).**\n\n**Important:** The `secret` is only returned once on creation. Save it\nimmediately for HMAC signature verification. Public keys (pk_) cannot access this endpoint.\n\n**Signature verification:**\n```javascript\nconst signature = crypto\n  .createHmac('sha256', secret)\n  .update(JSON.stringify(payload))\n  .digest('hex');\n// Compare with X-Drip-Signature header\n```\n        "
+        },
+        {
+          "info": {
+            "name": "Get a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              }
+            ]
+          },
+          "docs": "Retrieve a webhook by ID with delivery statistics. **Requires a secret key (sk_).**"
+        },
+        {
+          "info": {
+            "name": "Update a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.drippay.dev/v1/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update webhook URL, events, or status. **Requires a secret key (sk_).**"
+        },
+        {
+          "info": {
+            "name": "Delete a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              }
+            ]
+          },
+          "docs": "Permanently delete a webhook. This cannot be undone. **Requires a secret key (sk_).**"
+        },
+        {
+          "info": {
+            "name": "Rotate webhook secret",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/webhooks/:id/rotate-secret",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              }
+            ]
+          },
+          "docs": "\nGenerate a new HMAC secret for signature verification. **Requires a secret key (sk_).**\n\n**Important:** The new secret is only returned once. Update your webhook\nhandler immediately to use the new secret.\n        "
+        },
+        {
+          "info": {
+            "name": "List webhook deliveries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/webhooks/:id/deliveries",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum deliveries to return"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              }
+            ]
+          },
+          "docs": "Get recent delivery attempts for a webhook. **Requires a secret key (sk_).**"
+        },
+        {
+          "info": {
+            "name": "Get a webhook delivery",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/webhooks/:id/deliveries/:deliveryId",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              },
+              {
+                "name": "deliveryId",
+                "value": "",
+                "type": "path",
+                "description": "Delivery ID"
+              }
+            ]
+          },
+          "docs": "Retrieve details for a single webhook delivery attempt. **Requires a secret key (sk_).**"
+        },
+        {
+          "info": {
+            "name": "Retry a delivery",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/webhooks/:id/deliveries/:deliveryId/retry",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              },
+              {
+                "name": "deliveryId",
+                "value": "",
+                "type": "path",
+                "description": "Delivery ID"
+              }
+            ]
+          },
+          "docs": "Manually retry a failed webhook delivery. **Requires a secret key (sk_).**"
+        },
+        {
+          "info": {
+            "name": "Test a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/webhooks/:id/test",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Webhook ID"
+              }
+            ]
+          },
+          "docs": "Send a test event to verify the webhook endpoint is working. **Requires a secret key (sk_).**"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

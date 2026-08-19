@@ -1,0 +1,217 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Tax API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tax",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the customer's stored address",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/address",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the customer's stored address"
+        },
+        {
+          "info": {
+            "name": "Set a customer's billing address",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.drippay.dev/v1/customers/:id/address",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Set or replace the customer's billing address. Triggers address validation via the configured provider (default: format-only). Requires an ADMIN secret key."
+        },
+        {
+          "info": {
+            "name": "Remove the customer's address",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/customers/:id/address",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Remove the customer's address"
+        },
+        {
+          "info": {
+            "name": "Create a customer tax exemption",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:id/tax-exemption",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Create a customer tax exemption"
+        },
+        {
+          "info": {
+            "name": "List active tax exemptions for a customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:id/tax-exemptions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "List active tax exemptions for a customer"
+        },
+        {
+          "info": {
+            "name": "Deactivate a customer tax exemption",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/customers/:id/tax-exemptions/:eid",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "eid",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deactivate a customer tax exemption"
+        },
+        {
+          "info": {
+            "name": "Preview tax for a hypothetical charge amount",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/customers/:id/tax-preview",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Preview tax for a hypothetical charge amount"
+        },
+        {
+          "info": {
+            "name": "List active tax registrations for the business",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/tax-registrations"
+          },
+          "docs": "List active tax registrations for the business"
+        },
+        {
+          "info": {
+            "name": "Create a tax registration for the business",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/tax-registrations"
+          },
+          "docs": "Create a tax registration for the business"
+        },
+        {
+          "info": {
+            "name": "Deactivate a tax registration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.drippay.dev/v1/tax-registrations/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deactivate a tax registration"
+        },
+        {
+          "info": {
+            "name": "List the seeded global tax rate catalogue",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/tax-rates"
+          },
+          "docs": "List the seeded global tax rate catalogue"
+        },
+        {
+          "info": {
+            "name": "Check whether the merchant's tax configuration is production-ready",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/tax-config/readiness"
+          },
+          "docs": "Returns a structured report of the merchant's tax setup: active registrations, customer address coverage, uncovered jurisdictions, and actionable warnings with stable codes. Non-enforcing — merchants can always bill; this is a configuration quality check, not a gate."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

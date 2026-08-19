@@ -1,0 +1,309 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Drip BillableMetrics Events API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get customer events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/customers/:customerId/events",
+            "params": [
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "eventType",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get events for a customer with optional filters."
+        },
+        {
+          "info": {
+            "name": "List events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/events",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "runId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "eventType",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "outcome",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "actionName",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "parentEventId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "idempotencyKey",
+                "value": "",
+                "type": "query",
+                "description": "Filter by idempotency key"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "\nList execution events with optional filters.\n\nSupports filtering by:\n- `customerId`: Events for a specific customer\n- `runId`: Events in a specific agent run\n- `workflowId`: Events in a specific workflow\n- `eventType`: Filter by event type (e.g., LLM_INFERENCE)\n- `outcome`: Filter by outcome (e.g., SUCCESS, FAILURE)\n- `actionName`: Filter by action name\n- `parentEventId`: Get child events\n- `idempotencyKey`: Exact match on idempotency key\n- Time range: `from` and `to` (ISO 8601)\n        "
+        },
+        {
+          "info": {
+            "name": "Record an execution event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.drippay.dev/v1/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Record what happened. Only 2 fields required: `customerId` and `idempotencyKey`.\n\nAll other fields are optional with smart defaults. If you provide `input` or `output` payloads, they are automatically stored for later retrieval via `GET /events/:id/payload` (no need to set `storePayloads: true`).\n\n> **Requires a secret key (`sk_*`) with at least the `OPERATOR` role.**"
+        },
+        {
+          "info": {
+            "name": "Get event details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/events/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Event ID"
+              }
+            ]
+          },
+          "docs": "\nRetrieve a single event with full details including:\n- Execution metadata (eventType, outcome, explanation)\n- Input/output hashes\n- Causality links (parent, children, retry chain)\n- Billing information (if applicable)\n        "
+        },
+        {
+          "info": {
+            "name": "Get stored payloads for an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/events/:id/payload",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Event ID"
+              }
+            ]
+          },
+          "docs": "\nRetrieve raw input/output payloads that were stored when the event was created\nwith `storePayloads: true`.\n\nReturns the full JSON payloads along with integrity hashes and size information.\nReturns 404 if no payloads were stored or if they have expired.\n\n**Use case**: Historical data replay, audit trails, debugging.\n        "
+        },
+        {
+          "info": {
+            "name": "Trace event causality",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/events/:id/trace",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Output format (default: json)"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Event ID to trace"
+              }
+            ]
+          },
+          "docs": "\nGet the full causality context for an event in a single API call.\n\nReturns:\n- **ancestors**: Parent chain from root to this event's parent\n- **children**: Direct child events caused by this event\n- **retryChain**: Original event and all retry attempts\n- **anomalies**: Detected anomalies linked to this event\n- **summary**: Quick stats (counts, hasFailures flag)\n\n**Query Parameters:**\n- `format=tree` - Returns ASCII tree output for CLI/support tickets\n\nThis is the primary debugging endpoint for t"
+        },
+        {
+          "info": {
+            "name": "Trace by correlation ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/trace/:correlationId",
+            "params": [
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "Output format (default: json)"
+              },
+              {
+                "name": "correlationId",
+                "value": "",
+                "type": "path",
+                "description": "Correlation ID to trace"
+              }
+            ]
+          },
+          "docs": "\nTrace events across multiple runs and services using a correlation ID.\n\nReturns all events that share the same correlation ID, grouped by run.\nUseful for debugging distributed agent workflows.\n\n**Example use case**: Tracing a request across multiple microservices\n```\nGET /v1/trace/{correlationId}\n```\n        "
+        },
+        {
+          "info": {
+            "name": "List events with payloads (flat format)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.drippay.dev/v1/events/payloads",
+            "params": [
+              {
+                "name": "customerId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by customer"
+              },
+              {
+                "name": "actionName",
+                "value": "",
+                "type": "query",
+                "description": "Filter by action name"
+              },
+              {
+                "name": "eventType",
+                "value": "",
+                "type": "query",
+                "description": "Filter by event type"
+              },
+              {
+                "name": "from",
+                "value": "",
+                "type": "query",
+                "description": "Start of time range (inclusive)"
+              },
+              {
+                "name": "to",
+                "value": "",
+                "type": "query",
+                "description": "End of time range (inclusive)"
+              },
+              {
+                "name": "hasInput",
+                "value": "",
+                "type": "query",
+                "description": "Only events with input payloads"
+              },
+              {
+                "name": "hasOutput",
+                "value": "",
+                "type": "query",
+                "description": "Only events with output payloads"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "\nReturns events joined with their stored payloads in a flat, tabular format\ndesigned for data engineers and SQL-based workflows.\n\nEach row is a single event with its input/output payloads inlined.\nOnly events that have stored payloads are returned (i.e., events created\nwith `input` or `output` fields).\n\n**Filters:** `customerId`, `actionName`, `from`/`to` (ISO 8601 date range),\n`hasInput`, `hasOutput` (boolean).\n\n**Use cases:**\n- Export to data warehouses (BigQuery, Snowflake, Redshift)\n- Ad-hoc"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
