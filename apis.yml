@@ -48,6 +48,24 @@ tags:
 - Payments
 - AI Agents
 - Developer Tools
+- Webhook
+- MCP
+- CRM
+- Sales Automation
+- Agentic Payments
+- x402
+- Staffing
+- Recruiting
+- Outbound Sales
+tags_raw:
+- Company
+- Billing
+- Usage-Based Billing
+- Metering
+- Monetization
+- Payments
+- AI Agents
+- Developer Tools
 - Webhooks
 - MCP
 - CRM
@@ -64,6 +82,8 @@ apis:
   humanURL: https://docs.usedrip.ai/
   baseURL: https://api.drippay.dev
   tags:
+  - Billable Metrics
+  tags_raw:
   - BillableMetrics
   properties:
   - type: OpenAPI
@@ -398,6 +418,8 @@ apis:
   humanURL: https://docs.usedrip.ai/
   baseURL: https://api.drippay.dev
   tags:
+  - Event
+  tags_raw:
   - Events
   properties:
   - type: OpenAPI
@@ -428,6 +450,8 @@ apis:
   humanURL: https://docs.usedrip.ai/
   baseURL: https://api.drippay.dev
   tags:
+  - Integration
+  tags_raw:
   - Integrations
   properties:
   - type: OpenAPI
@@ -613,6 +637,8 @@ apis:
   humanURL: https://docs.usedrip.ai/
   baseURL: https://api.drippay.dev
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -705,6 +731,8 @@ apis:
   humanURL: https://docs.usedrip.ai/
   baseURL: https://api.drippay.dev
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
