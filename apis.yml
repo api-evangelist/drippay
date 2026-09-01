@@ -94,7 +94,7 @@ apis:
   humanURL: https://docs.usedrip.ai/
   baseURL: https://api.drippay.dev
   tags:
-  - BillableMetrics
+  - Billable Metrics
   tags_raw:
   - BillableMetrics
   properties:
