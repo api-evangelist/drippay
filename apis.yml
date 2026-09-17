@@ -88,38 +88,6 @@ tags_raw:
 - Recruiting
 - Outbound Sales
 apis:
-- aid: drippay:drippay-billablemetrics-api
-  name: Drippay BillableMetrics API
-  description: Evaluate and preview billable metrics.
-  humanURL: https://docs.usedrip.ai/
-  baseURL: https://api.drippay.dev
-  tags:
-  - Billable Metrics
-  tags_raw:
-  - BillableMetrics
-  properties:
-  - type: OpenAPI
-    url: openapi/drippay-billablemetrics-api-openapi.yml
-  - type: Documentation
-    url: https://docs.usedrip.ai/
-  - type: APIReference
-    url: https://docs.usedrip.ai/api-reference
-  - type: Authentication
-    url: authentication/drippay-authentication.yml
-  - type: Idempotency
-    url: conventions/drippay-conventions.yml
-  - type: Conventions
-    url: conventions/drippay-conventions.yml
-  - type: ErrorCatalog
-    url: errors/drippay-problem-types.yml
-  - type: DataModel
-    url: data-model/drippay-data-model.yml
-  - type: Webhooks
-    url: asyncapi/drippay-webhooks.yml
-  - type: Conformance
-    url: conformance/drippay-conformance.yml
-  - type: AgenticAccess
-    url: agentic-access/drippay-agentic-access.yml
 - aid: drippay:drippay-business-api
   name: Drippay Business API
   description: Business-level settings and configuration.
@@ -779,6 +747,36 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/drippay-workflows-api-openapi.yml
+  - type: Documentation
+    url: https://docs.usedrip.ai/
+  - type: APIReference
+    url: https://docs.usedrip.ai/api-reference
+  - type: Authentication
+    url: authentication/drippay-authentication.yml
+  - type: Idempotency
+    url: conventions/drippay-conventions.yml
+  - type: Conventions
+    url: conventions/drippay-conventions.yml
+  - type: ErrorCatalog
+    url: errors/drippay-problem-types.yml
+  - type: DataModel
+    url: data-model/drippay-data-model.yml
+  - type: Webhooks
+    url: asyncapi/drippay-webhooks.yml
+  - type: Conformance
+    url: conformance/drippay-conformance.yml
+  - type: AgenticAccess
+    url: agentic-access/drippay-agentic-access.yml
+- aid: drippay:drippay-billable-metrics-api
+  name: Drippay Billable Metrics API
+  description: Evaluate and preview billable metrics.
+  humanURL: https://docs.usedrip.ai/
+  baseURL: https://api.drippay.dev
+  tags:
+  - Billable Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/drippay-billable-metrics-api-openapi.yml
   - type: Documentation
     url: https://docs.usedrip.ai/
   - type: APIReference
