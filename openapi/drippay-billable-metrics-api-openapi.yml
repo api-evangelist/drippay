@@ -1,0 +1,129 @@
+openapi: 3.2.0
+info:
+  title: Drip Billable Metrics API
+  description: '# Drip API
+
+
+    **Usage-based billing + execution ledger.**
+
+
+    ---
+
+
+    ## 60-Second Quickstart (Core SDK)
+
+
+    ### 1.'
+  version: 1.0.0
+  contact:
+    name: Drip Support
+    email: support@drippay.dev
+  x-logo:
+    url: https://drippay.dev/logo.svg
+    altText: Drip
+servers:
+- url: https://api.drippay.dev
+  description: Production
+- url: http://localhost:3001
+  description: Development
+security:
+- bearerAuth: []
+tags:
+- name: Billable Metrics
+  description: Evaluate and preview billable metrics.
+paths:
+  /v1/billable-metrics:
+    get:
+      operationId: listBillableMetrics
+      summary: List billable metrics
+      tags:
+      - Billable Metrics
+      description: List every billable metric defined for the business.
+      responses:
+        '200':
+          description: Default Response
+    post:
+      operationId: createBillableMetric
+      summary: Create a billable metric
+      tags:
+      - Billable Metrics
+      description: Creates a new billable metric. Name must be unique per business. Supply one or more event types — the metric will union events across all of them.
+      responses:
+        '200':
+          description: Default Response
+  /v1/billable-metrics/{id}:
+    get:
+      operationId: getBillableMetric
+      summary: Get a billable metric by id
+      tags:
+      - Billable Metrics
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    patch:
+      operationId: updateBillableMetric
+      summary: Update a billable metric
+      tags:
+      - Billable Metrics
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+    delete:
+      operationId: deleteBillableMetric
+      summary: Delete (soft-delete) a billable metric
+      tags:
+      - Billable Metrics
+      description: Sets isActive=false. Rate cards that reference the metric keep working for historical charges because the row stays in the DB.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/billable-metrics/{id}/evaluate:
+    post:
+      operationId: evaluateBillableMetric
+      summary: Evaluate a billable metric over a period (no side effects)
+      tags:
+      - Billable Metrics
+      description: Executes the metric's SQL expression (or, if not set, the declarative aggregation) against the merchant's usage events for [periodStart, periodEnd) and returns the result. Read-only — no charges, invoices, or counters change.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: id
+        required: true
+      responses:
+        '200':
+          description: Default Response
+  /v1/billable-metrics/preview:
+    post:
+      operationId: previewBillableMetricSql
+      summary: Preview an unsaved sqlExpression
+      tags:
+      - Billable Metrics
+      responses:
+        '200':
+          description: Default Response
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: 'API key from Drip Dashboard. Format: `sk_live_...` or `sk_test_...`'

@@ -1,29 +1,7 @@
 {
   "provider": "drippay",
   "sources": [
-    "drippay-billablemetrics-api-openapi.yml",
-    "drippay-business-api-openapi.yml",
-    "drippay-charges-api-openapi.yml",
-    "drippay-contracts-api-openapi.yml",
-    "drippay-coupons-api-openapi.yml",
-    "drippay-credit-notes-api-openapi.yml",
-    "drippay-customer-portal-api-openapi.yml",
-    "drippay-customers-api-openapi.yml",
-    "drippay-drift-api-openapi.yml",
-    "drippay-dunning-api-openapi.yml",
-    "drippay-entitlements-api-openapi.yml",
-    "drippay-events-api-openapi.yml",
-    "drippay-integrations-api-openapi.yml",
-    "drippay-internal-api-openapi.yml",
-    "drippay-invoices-api-openapi.yml",
-    "drippay-pricing-plans-api-openapi.yml",
-    "drippay-product-categories-api-openapi.yml",
-    "drippay-runs-api-openapi.yml",
-    "drippay-subscriptions-api-openapi.yml",
-    "drippay-tax-api-openapi.yml",
-    "drippay-usage-api-openapi.yml",
-    "drippay-webhooks-api-openapi.yml",
-    "drippay-workflows-api-openapi.yml"
+    "_original/drippay-openapi-original.json"
   ],
   "outputs": [
     "drippay-billablemetrics-api-openapi.yml",
@@ -50,9 +28,42 @@
     "drippay-webhooks-api-openapi.yml",
     "drippay-workflows-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "drippay-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "drippay-openapi-original.json: declared missing tag: Drift",
+    "drippay-openapi-original.json: declared missing tag: Internal",
+    "superseded outputs removed: drippay-billable-metrics-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 23 total)"
+  ],
+  "skipped": [
+    "drippay-billable-metrics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-business-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-charges-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-contracts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-coupons-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-credit-notes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-customer-portal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-customers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-drift-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-dunning-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-entitlements-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-integrations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-internal-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-invoices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-pricing-plans-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-product-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-runs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-subscriptions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-tax-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "drippay-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
