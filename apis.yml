@@ -51,6 +51,9 @@ x-tier-reason: portfolio-lead
 specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-08-13'
+x-docs-platform: mintlify
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-09-25
 tags:
 - Company
 - Billing
@@ -69,6 +72,7 @@ tags:
 - Staffing
 - Recruiting
 - Outbound Sales
+- A2A
 tags_raw:
 - Company
 - Billing
@@ -87,6 +91,7 @@ tags_raw:
 - Staffing
 - Recruiting
 - Outbound Sales
+- A2A
 apis:
 - aid: drippay:drippay-business-api
   name: Drippay Business API
@@ -898,3 +903,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 10
   pass: local-v1
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://docs.usedrip.ai/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3"
+  control: 404
