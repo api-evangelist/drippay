@@ -1,0 +1,149 @@
+slug: drippay
+provider: Drippay
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 13
+edges:
+- tag: Invoices
+  spec_file: drippay-invoices-api-openapi.yml
+  capability_id: BC-4250.30
+  capability_id_l1: BC-4250
+  capability_name: Invoicing & Statement Management
+  confidence: 0.95
+  evidence: POST /v1/invoices/generate "Generate invoice from charges"; POST /v1/invoices/{id}/issue "Issue
+    invoice"; GET /v1/invoices/{id}/pdf
+  reason: Operations generate, issue, adjust, void and deliver invoices for subscriptions and charges
+    — plainly invoicing and statement management in a subscription billing platform.
+- tag: Dunning
+  spec_file: drippay-dunning-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.93
+  evidence: GET /v1/dunning/schedule  Get the active dunning schedule; GET /v1/collections  List failed
+    payments in collections; POST /v1/collections/{id}/retry  Manually retry a failed payment
+  reason: Dunning schedules and failed-payment retry are exactly Payment Collection & Dunning in the subscription
+    billing capability.
+- tag: Subscriptions
+  spec_file: drippay-subscriptions-api-openapi.yml
+  capability_id: BC-4240
+  capability_id_l1: BC-4240
+  capability_name: Subscription Lifecycle Management
+  confidence: 0.9
+  evidence: POST /v1/subscriptions "Create a subscription"; POST /v1/subscriptions/{id}/cancel "Cancel
+    a subscription"; pause/resume operations
+  reason: Full in-life subscription lifecycle — creation, modification, pause/resume, cancellation. Spans
+    several sub-capabilities (provisioning, modification, cancellation), so only the L1 is asserted.
+- tag: Usage
+  spec_file: drippay-usage-api-openapi.yml
+  capability_id: BC-4250.10
+  capability_id_l1: BC-4250
+  capability_name: Usage Metering
+  confidence: 0.9
+  evidence: POST /v1/usage "Record usage and charge"; GET /v1/usage/quota "Get current-month event usage
+    vs plan quota"
+  reason: Ingests and aggregates usage events (sync, async, batch) that drive charging and quota comparison
+    — usage metering for usage-based billing.
+- tag: Webhooks
+  spec_file: drippay-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.85
+  evidence: POST /v1/webhooks "Create a webhook"; GET /v1/webhooks/{id}/deliveries "List webhook deliveries";
+    POST /v1/webhooks/{id}/deliveries/{deliveryId}/retry "Retry a delivery"
+  reason: Lifecycle of outbound webhook subscriptions plus event-type catalogue and delivery retry/reliability,
+    which the frame names explicitly as a capability rather than mere plumbing.
+- tag: Entitlements
+  spec_file: drippay-entitlements-api-openapi.yml
+  capability_id: BC-4240.10
+  capability_id_l1: BC-4240
+  capability_name: Plan & Entitlement Design
+  confidence: 0.82
+  evidence: POST /v1/entitlement-plans  Create an entitlement plan; POST /v1/entitlement-plans/{id}/rules  Add
+    a rule to a plan; PUT /v1/customers/{customerId}/entitlement  Assign entitlement plan to customer
+  reason: Defines plans, their feature/limit rules and assignment to customers — Plan & Entitlement Design;
+    some operations touch enforcement, hence not 0.95.
+- tag: Tax
+  spec_file: drippay-tax-api-openapi.yml
+  capability_id: BC-4250.60
+  capability_id_l1: BC-4250
+  capability_name: Subscription Tax Management
+  confidence: 0.82
+  evidence: POST /v1/customers/{id}/tax-exemption "Create a customer tax exemption"; POST /v1/tax-registrations
+    "Create a tax registration for the business"; POST /v1/customers/{id}/tax-preview "Preview tax for
+    a hypothetical charge amount"
+  reason: Jurisdiction registration, rate catalogue, exemption handling and tax calculation on charges
+    within a subscription-billing API — matches subscription tax management rather than corporate tax
+    filing.
+- tag: Billable Metrics
+  spec_file: drippay-billable-metrics-api-openapi.yml
+  capability_id: BC-4250.10
+  capability_id_l1: BC-4250
+  capability_name: Usage Metering
+  confidence: 0.75
+  evidence: '"Usage-based billing + execution ledger"; POST /v1/billable-metrics/{id}/evaluate  Evaluate
+    a billable metric over a period'
+  reason: Billable metrics define how usage events are aggregated for usage-based billing, which is Usage
+    Metering within subscription billing. Some overlap with Rating & Charging keeps confidence below 0.8.
+- tag: Credit Notes
+  spec_file: drippay-credit-notes-api-openapi.yml
+  capability_id: BC-4250.30
+  capability_id_l1: BC-4250
+  capability_name: Invoicing & Statement Management
+  confidence: 0.72
+  evidence: POST /v1/credit-notes  Create a draft credit note; POST /v1/credit-notes/{id}/issue  Issue
+    a draft credit note
+  reason: Credit note issuance and voiding is invoice adjustment within the billing lifecycle of this
+    subscription-billing API.
+- tag: Pricing Plans
+  spec_file: drippay-pricing-plans-api-openapi.yml
+  capability_id: BC-4240.10
+  capability_id_l1: BC-4240
+  capability_name: Plan & Entitlement Design
+  confidence: 0.72
+  evidence: POST /v1/pricing-plans "Create a pricing plan"; GET /v1/pricing-plans/{id}/versions "List
+    versions of a pricing plan"; GET /v1/pricing-plans/by-type/{unitType}
+  reason: Defines and versions the plans (by unit type) that govern what customers are charged for — plan
+    design in the subscription commercial lifecycle. Could alternatively be read as rating tariff setup,
+    so not maximal confidence.
+- tag: Charges
+  spec_file: drippay-charges-api-openapi.yml
+  capability_id: BC-4250.20
+  capability_id_l1: BC-4250
+  capability_name: Rating & Charging
+  confidence: 0.7
+  evidence: GET /v1/charges  List charges; POST /v1/cost-estimate/from-usage  Estimate costs from existing
+    usage
+  reason: Charges and usage-based cost estimation are the output of applying tariffs to usage — Rating
+    & Charging in a usage-based billing platform. Refund operation nudges toward collection handling,
+    so not above 0.8.
+- tag: Contracts
+  spec_file: drippay-contracts-api-openapi.yml
+  capability_id: BC-4240.20
+  capability_id_l1: BC-4240
+  capability_name: Subscription Contracting
+  confidence: 0.7
+  evidence: POST /v1/contracts  Create a contract; PATCH /v1/contracts/{id}  Amend a contract; POST /v1/contracts/{id}/overrides  Add
+    a price override
+  reason: In a usage-based billing platform these contracts carry commercial terms and negotiated price
+    overrides for a customer — subscription contracting rather than general legal contract lifecycle.
+- tag: Coupons
+  spec_file: drippay-coupons-api-openapi.yml
+  capability_id: BC-440.30
+  capability_id_l1: BC-440
+  capability_name: Discount & Promotion Management
+  confidence: 0.7
+  evidence: POST /v1/coupons  Create a coupon; POST /v1/promotion-codes/redeem  Redeem a promotion code
+    against a charge or invoice
+  reason: Coupon and promotion-code lifecycle with redemption against charges is discount and promotion
+    management; alternative reading as rating/discount application within billing keeps confidence moderate.

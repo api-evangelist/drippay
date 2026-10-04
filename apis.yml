@@ -803,6 +803,9 @@ apis:
   - type: AgenticAccess
     url: agentic-access/drippay-agentic-access.yml
 common:
+- type: CapabilityMap
+  url: capabilities/drippay-capability-edges.yml
+  name: Drippay Business Capability Map
 - type: Website
   url: https://www.dreach.ai/
 - type: Overlay
