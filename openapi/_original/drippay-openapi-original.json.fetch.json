@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.usedrip.ai/openapi.json",
+ "requested_url": "https://docs.usedrip.ai/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 961459,
+ "sha256": "2cb1567969ca7a7ba1adcfcf2e2d9908fc9d4e1ec42aafdd6bfbf12ee73d5711",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
