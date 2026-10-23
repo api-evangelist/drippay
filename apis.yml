@@ -803,6 +803,8 @@ apis:
   - type: AgenticAccess
     url: agentic-access/drippay-agentic-access.yml
 common:
+- type: PostmanWorkspace
+  url: https://www.postman.com/kinlaneapi/drippay/overview
 - type: CapabilityMap
   url: capabilities/drippay-capability-edges.yml
   name: Drippay Business Capability Map
