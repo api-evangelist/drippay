@@ -1,0 +1,563 @@
+{
+  "info": {
+    "_postman_id": "72d2f6a6-ae43-4646-a675-06cd296c1e48",
+    "name": "Drip Billable Metrics API",
+    "description": "# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1.\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T02:17:01.000Z",
+    "updatedAt": "2026-10-22T02:17:01.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-72d2f6a6-ae43-4646-a675-06cd296c1e48"
+  },
+  "item": [
+    {
+      "name": "v1",
+      "item": [
+        {
+          "name": "billable-metrics",
+          "item": [
+            {
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "evaluate",
+                  "item": [
+                    {
+                      "name": "Evaluate a billable metric over a period (no side effects)",
+                      "id": "88cdd756-d306-4d09-8d3f-1c29fc7e91c2",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/billable-metrics/:id/evaluate",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "billable-metrics",
+                            ":id",
+                            "evaluate"
+                          ],
+                          "variable": [
+                            {
+                              "id": "1ba52d0f-4768-4aaa-bc99-ebaa67b8f56b",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Executes the metric's SQL expression (or, if not set, the declarative aggregation) against the merchant's usage events for [periodStart, periodEnd) and returns the result. Read-only \u2014 no charges, invoices, or counters change."
+                      },
+                      "response": [
+                        {
+                          "id": "2b30f6e6-5931-4d4e-9b31-26fed6f458f7",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/billable-metrics/:id/evaluate",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "billable-metrics",
+                                ":id",
+                                "evaluate"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:17:01.000Z",
+                          "updatedAt": "2026-10-22T02:17:01.000Z",
+                          "uid": "35240-2b30f6e6-5931-4d4e-9b31-26fed6f458f7"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:17:01.000Z",
+                      "updatedAt": "2026-10-22T02:17:01.000Z",
+                      "uid": "35240-88cdd756-d306-4d09-8d3f-1c29fc7e91c2"
+                    }
+                  ],
+                  "id": "e6b7d74d-3c33-4e91-a1d2-1b17131252fe",
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-e6b7d74d-3c33-4e91-a1d2-1b17131252fe"
+                },
+                {
+                  "name": "Get a billable metric by id",
+                  "id": "92be8d47-17d4-4fb8-81ab-aac0f52e4a37",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/billable-metrics/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "billable-metrics",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "a340dde7-dfd4-49c9-89a3-8391cf5ac428",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "783e1a94-af8d-45ae-b9b0-a412d2e8b303",
+                      "name": "Default Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/billable-metrics/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "billable-metrics",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T02:17:01.000Z",
+                      "updatedAt": "2026-10-22T02:17:01.000Z",
+                      "uid": "35240-783e1a94-af8d-45ae-b9b0-a412d2e8b303"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-92be8d47-17d4-4fb8-81ab-aac0f52e4a37"
+                },
+                {
+                  "name": "Update a billable metric",
+                  "id": "e8c5b2ef-885f-46b3-ad72-5e8dc07f6d4f",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/billable-metrics/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "billable-metrics",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "3498e96a-476f-4550-b6b4-d2518bf256c7",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "90cf0e31-9f1b-4f44-ae98-c5c5d8220ca5",
+                      "name": "Default Response",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/billable-metrics/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "billable-metrics",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T02:17:01.000Z",
+                      "updatedAt": "2026-10-22T02:17:01.000Z",
+                      "uid": "35240-90cf0e31-9f1b-4f44-ae98-c5c5d8220ca5"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-e8c5b2ef-885f-46b3-ad72-5e8dc07f6d4f"
+                },
+                {
+                  "name": "Delete (soft-delete) a billable metric",
+                  "id": "0f9c80bf-9588-4553-a2af-491441ea1bb2",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/billable-metrics/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "billable-metrics",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "383730f3-817b-42d9-828c-c99ff66d429a",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
+                    },
+                    "description": "Sets isActive=false. Rate cards that reference the metric keep working for historical charges because the row stays in the DB."
+                  },
+                  "response": [
+                    {
+                      "id": "bd3e520a-3d5e-4f63-9014-c8609c571e15",
+                      "name": "Default Response",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/billable-metrics/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "billable-metrics",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T02:17:01.000Z",
+                      "updatedAt": "2026-10-22T02:17:01.000Z",
+                      "uid": "35240-bd3e520a-3d5e-4f63-9014-c8609c571e15"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-0f9c80bf-9588-4553-a2af-491441ea1bb2"
+                }
+              ],
+              "id": "6573c79e-f43d-447b-be6f-0946a2b735b9",
+              "createdAt": "2026-10-22T02:17:01.000Z",
+              "updatedAt": "2026-10-22T02:17:01.000Z",
+              "uid": "35240-6573c79e-f43d-447b-be6f-0946a2b735b9"
+            },
+            {
+              "name": "preview",
+              "item": [
+                {
+                  "name": "Preview an unsaved sqlExpression",
+                  "id": "d9a6acf3-924f-4c13-9beb-cb252d0f4cfe",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/billable-metrics/preview",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "billable-metrics",
+                        "preview"
+                      ]
+                    }
+                  },
+                  "response": [
+                    {
+                      "id": "d4952989-c30c-4472-bddc-c976f664208b",
+                      "name": "Default Response",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/billable-metrics/preview",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "billable-metrics",
+                            "preview"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T02:17:01.000Z",
+                      "updatedAt": "2026-10-22T02:17:01.000Z",
+                      "uid": "35240-d4952989-c30c-4472-bddc-c976f664208b"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-d9a6acf3-924f-4c13-9beb-cb252d0f4cfe"
+                }
+              ],
+              "id": "9b9259f2-1e16-4abf-a010-985623a02eba",
+              "createdAt": "2026-10-22T02:17:01.000Z",
+              "updatedAt": "2026-10-22T02:17:01.000Z",
+              "uid": "35240-9b9259f2-1e16-4abf-a010-985623a02eba"
+            },
+            {
+              "name": "List billable metrics",
+              "id": "a5c75d7b-868a-457b-943b-e84d74c562e7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/v1/billable-metrics",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billable-metrics"
+                  ]
+                },
+                "description": "List every billable metric defined for the business."
+              },
+              "response": [
+                {
+                  "id": "0f8f639c-3a16-4366-89d7-e2161cb6247e",
+                  "name": "Default Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/billable-metrics",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "billable-metrics"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-0f8f639c-3a16-4366-89d7-e2161cb6247e"
+                }
+              ],
+              "createdAt": "2026-10-22T02:17:01.000Z",
+              "updatedAt": "2026-10-22T02:17:01.000Z",
+              "uid": "35240-a5c75d7b-868a-457b-943b-e84d74c562e7"
+            },
+            {
+              "name": "Create a billable metric",
+              "id": "1c93547b-0cb5-4aba-881e-6a0793b08b7a",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/v1/billable-metrics",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "billable-metrics"
+                  ]
+                },
+                "description": "Creates a new billable metric. Name must be unique per business. Supply one or more event types \u2014 the metric will union events across all of them."
+              },
+              "response": [
+                {
+                  "id": "5ecafd0f-84da-439a-958f-f4611714cd8d",
+                  "name": "Default Response",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/billable-metrics",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "billable-metrics"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-10-22T02:17:01.000Z",
+                  "updatedAt": "2026-10-22T02:17:01.000Z",
+                  "uid": "35240-5ecafd0f-84da-439a-958f-f4611714cd8d"
+                }
+              ],
+              "createdAt": "2026-10-22T02:17:01.000Z",
+              "updatedAt": "2026-10-22T02:17:01.000Z",
+              "uid": "35240-1c93547b-0cb5-4aba-881e-6a0793b08b7a"
+            }
+          ],
+          "id": "029fc88b-a5c2-48d7-9b6f-3a7bbf0ae751",
+          "createdAt": "2026-10-22T02:17:01.000Z",
+          "updatedAt": "2026-10-22T02:17:01.000Z",
+          "uid": "35240-029fc88b-a5c2-48d7-9b6f-3a7bbf0ae751"
+        }
+      ],
+      "id": "1bd70fa9-a3f2-49ac-a457-5c3c2cec88d1",
+      "createdAt": "2026-10-22T02:17:01.000Z",
+      "updatedAt": "2026-10-22T02:17:01.000Z",
+      "uid": "35240-1bd70fa9-a3f2-49ac-a457-5c3c2cec88d1"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.drippay.dev"
+    }
+  ]
+}

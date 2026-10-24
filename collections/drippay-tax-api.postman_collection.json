@@ -1,1009 +1,1000 @@
 {
+  "info": {
+    "_postman_id": "20822eeb-254d-4d74-977b-79b5f6aa8dec",
+    "name": "Drip Tax API",
+    "description": "# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1.\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T02:16:31.000Z",
+    "updatedAt": "2026-10-22T02:16:31.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-20822eeb-254d-4d74-977b-79b5f6aa8dec"
+  },
   "item": [
     {
-      "id": "71866fe9-2ca8-46a5-a2f7-183400e463f6",
-      "name": "Tax",
-      "description": {
-        "content": "Sales tax configuration: customer tax addresses, exemptions, business registrations, and jurisdiction rates. Requires a secret key with ADMIN role and full mode (`SIMPLE_MODE=false`).",
-        "type": "text/plain"
-      },
+      "name": "v1",
       "item": [
         {
-          "id": "97cd1491-a2bc-49e7-997f-f49489645f0d",
-          "name": "Set a customer's billing address",
-          "request": {
-            "name": "Set a customer's billing address",
-            "description": {
-              "content": "Set or replace the customer's billing address. Triggers address validation via the configured provider (default: format-only). Requires an ADMIN secret key.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "address"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "PUT",
-            "auth": null
-          },
-          "response": [
+          "name": "customers",
+          "item": [
             {
-              "id": "6de62fa7-9ba0-4024-a8ec-b13209e29c11",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "address"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "PUT",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "{id}",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "text/plain"
+                  "name": "address",
+                  "item": [
+                    {
+                      "name": "Set a customer's billing address",
+                      "id": "ad8b602e-010d-4f05-8e5f-2b7528074ed2",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/customers/:id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "customers",
+                            ":id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "id": "6426d676-f624-403a-b19c-30d2d54855c2",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        },
+                        "description": "Set or replace the customer's billing address. Triggers address validation via the configured provider (default: format-only). Requires an ADMIN secret key."
+                      },
+                      "response": [
+                        {
+                          "id": "d016fd41-ff92-4f45-9c85-499a9f65e698",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "PUT",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/address",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "address"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-d016fd41-ff92-4f45-9c85-499a9f65e698"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-ad8b602e-010d-4f05-8e5f-2b7528074ed2"
+                    },
+                    {
+                      "name": "Get the customer's stored address",
+                      "id": "0294869b-6f06-4971-94bb-cc2317a54175",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/customers/:id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "customers",
+                            ":id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "id": "b7ea417a-ac6d-4345-a639-28591ffb3d98",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "22fc9e7a-fbff-4c6a-9ef2-54106171488a",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/address",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "address"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-22fc9e7a-fbff-4c6a-9ef2-54106171488a"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-0294869b-6f06-4971-94bb-cc2317a54175"
+                    },
+                    {
+                      "name": "Remove the customer's address",
+                      "id": "6513e51e-c7fe-4d62-87f0-9a7bd12b6ae4",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/customers/:id/address",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "customers",
+                            ":id",
+                            "address"
+                          ],
+                          "variable": [
+                            {
+                              "id": "c5e540a4-8fd8-4824-8fc5-3827df14a47d",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "7ace1eaa-a976-41d4-9df9-94274d28dc01",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "DELETE",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/address",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "address"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-7ace1eaa-a976-41d4-9df9-94274d28dc01"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-6513e51e-c7fe-4d62-87f0-9a7bd12b6ae4"
+                    }
+                  ],
+                  "id": "58afe71f-d483-45bb-8044-a700403ee822",
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-58afe71f-d483-45bb-8044-a700403ee822"
+                },
+                {
+                  "name": "tax-exemption",
+                  "item": [
+                    {
+                      "name": "Create a customer tax exemption",
+                      "id": "8cc1c277-e52a-441e-bf83-72f986311455",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/customers/:id/tax-exemption",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "customers",
+                            ":id",
+                            "tax-exemption"
+                          ],
+                          "variable": [
+                            {
+                              "id": "5f156d08-32ed-4756-98f5-5f9b4ecd11b7",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "920f91d3-d198-42c6-b048-99b3d70cd784",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/tax-exemption",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "tax-exemption"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-920f91d3-d198-42c6-b048-99b3d70cd784"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-8cc1c277-e52a-441e-bf83-72f986311455"
+                    }
+                  ],
+                  "id": "95e3abc4-e67a-40ad-9e9e-a3a45cafbb58",
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-95e3abc4-e67a-40ad-9e9e-a3a45cafbb58"
+                },
+                {
+                  "name": "tax-exemptions",
+                  "item": [
+                    {
+                      "name": "{eid}",
+                      "item": [
+                        {
+                          "name": "Deactivate a customer tax exemption",
+                          "id": "cd7ef482-88b8-4874-8c8f-c48a25dff0bd",
+                          "protocolProfileBehavior": {
+                            "disableBodyPruning": true
+                          },
+                          "request": {
+                            "method": "DELETE",
+                            "header": [],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/tax-exemptions/:eid",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "tax-exemptions",
+                                ":eid"
+                              ],
+                              "variable": [
+                                {
+                                  "id": "97b6118f-8b94-4ce8-ba1e-671d0a8630d8",
+                                  "key": "id",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                },
+                                {
+                                  "id": "618b5ab7-a95d-4dd9-a847-edd0a2d12f19",
+                                  "key": "eid",
+                                  "value": "<string>",
+                                  "description": "(Required) "
+                                }
+                              ]
+                            }
+                          },
+                          "response": [
+                            {
+                              "id": "e92a4d0d-7dda-4d59-a816-b7bffdd7c8bf",
+                              "name": "Default Response",
+                              "originalRequest": {
+                                "method": "DELETE",
+                                "header": [
+                                  {
+                                    "description": "Added as a part of security scheme: bearer",
+                                    "key": "Authorization",
+                                    "value": "Bearer <token>"
+                                  }
+                                ],
+                                "url": {
+                                  "raw": "{{baseUrl}}/v1/customers/:id/tax-exemptions/:eid",
+                                  "host": [
+                                    "{{baseUrl}}"
+                                  ],
+                                  "path": [
+                                    "v1",
+                                    "customers",
+                                    ":id",
+                                    "tax-exemptions",
+                                    ":eid"
+                                  ],
+                                  "variable": [
+                                    {
+                                      "key": "id"
+                                    },
+                                    {
+                                      "key": "eid"
+                                    }
+                                  ]
+                                }
+                              },
+                              "status": "OK",
+                              "code": 200,
+                              "_postman_previewlanguage": "text",
+                              "header": [],
+                              "cookie": [],
+                              "responseTime": null,
+                              "body": null,
+                              "createdAt": "2026-10-22T02:16:31.000Z",
+                              "updatedAt": "2026-10-22T02:16:31.000Z",
+                              "uid": "35240-e92a4d0d-7dda-4d59-a816-b7bffdd7c8bf"
+                            }
+                          ],
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-cd7ef482-88b8-4874-8c8f-c48a25dff0bd"
+                        }
+                      ],
+                      "id": "1436cb53-8d09-4bb5-8c9f-c5a42a2930da",
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-1436cb53-8d09-4bb5-8c9f-c5a42a2930da"
+                    },
+                    {
+                      "name": "List active tax exemptions for a customer",
+                      "id": "f8e68c4d-ffe6-443b-bb47-b1c524d159d4",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/customers/:id/tax-exemptions",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "customers",
+                            ":id",
+                            "tax-exemptions"
+                          ],
+                          "variable": [
+                            {
+                              "id": "7f7245ba-db5a-4cbb-992c-a4e66670d523",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "98d3e401-edde-48fa-b8b1-a974f6ced3cb",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/tax-exemptions",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "tax-exemptions"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-98d3e401-edde-48fa-b8b1-a974f6ced3cb"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-f8e68c4d-ffe6-443b-bb47-b1c524d159d4"
+                    }
+                  ],
+                  "id": "dbd553ea-8faa-4db3-9f81-77fd47895b2a",
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-dbd553ea-8faa-4db3-9f81-77fd47895b2a"
+                },
+                {
+                  "name": "tax-preview",
+                  "item": [
+                    {
+                      "name": "Preview tax for a hypothetical charge amount",
+                      "id": "193aa35e-070a-48a4-aa54-daeb6045dceb",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/customers/:id/tax-preview",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "customers",
+                            ":id",
+                            "tax-preview"
+                          ],
+                          "variable": [
+                            {
+                              "id": "4c793b0a-9733-4ed9-a721-e4bd849833d4",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) "
+                            }
+                          ]
+                        }
+                      },
+                      "response": [
+                        {
+                          "id": "47af960a-0201-44b9-bf81-091c0ceaaa24",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/customers/:id/tax-preview",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "customers",
+                                ":id",
+                                "tax-preview"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:31.000Z",
+                          "updatedAt": "2026-10-22T02:16:31.000Z",
+                          "uid": "35240-47af960a-0201-44b9-bf81-091c0ceaaa24"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-193aa35e-070a-48a4-aa54-daeb6045dceb"
+                    }
+                  ],
+                  "id": "8f679329-0015-4a61-b20f-f35a123c5cef",
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-8f679329-0015-4a61-b20f-f35a123c5cef"
                 }
               ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
+              "id": "23716fca-a977-48f3-9245-413072eee8c9",
+              "createdAt": "2026-10-22T02:16:31.000Z",
+              "updatedAt": "2026-10-22T02:16:31.000Z",
+              "uid": "35240-23716fca-a977-48f3-9245-413072eee8c9"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "4ad09627-8185-4995-a3e6-0c5e25de2014",
+          "createdAt": "2026-10-22T02:16:31.000Z",
+          "updatedAt": "2026-10-22T02:16:31.000Z",
+          "uid": "35240-4ad09627-8185-4995-a3e6-0c5e25de2014"
         },
         {
-          "id": "8b2b966e-5b8c-452e-9ba5-f3889d1b79f4",
-          "name": "Get the customer's stored address",
-          "request": {
-            "name": "Get the customer's stored address",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "address"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
+          "name": "tax-registrations",
+          "item": [
             {
-              "id": "fc9fa6ed-f026-450c-af8b-15f544e2abf4",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "address"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
+              "name": "{id}",
+              "item": [
+                {
+                  "name": "Deactivate a tax registration",
+                  "id": "416e2c77-142d-4d34-9b1c-a88e61813154",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/tax-registrations/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "tax-registrations",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "dfa565b1-2ba1-452c-b372-8955167e4d24",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) "
+                        }
+                      ]
                     }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
+                  },
+                  "response": [
+                    {
+                      "id": "814375da-14ed-47b2-8210-0eb712ae2279",
+                      "name": "Default Response",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/tax-registrations/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "tax-registrations",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-814375da-14ed-47b2-8210-0eb712ae2279"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-416e2c77-142d-4d34-9b1c-a88e61813154"
+                }
+              ],
+              "id": "9aeee4dc-c280-4636-b450-fb953f680cf7",
+              "createdAt": "2026-10-22T02:16:31.000Z",
+              "updatedAt": "2026-10-22T02:16:31.000Z",
+              "uid": "35240-9aeee4dc-c280-4636-b450-fb953f680cf7"
+            },
+            {
+              "name": "Create a tax registration for the business",
+              "id": "3adbc145-634d-4030-94c4-803a2ccce598",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
               },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "2e364cad-8694-41f5-818c-2420a028b0c0",
-          "name": "Remove the customer's address",
-          "request": {
-            "name": "Remove the customer's address",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "address"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "DELETE",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "b570b4ec-8924-4b27-ac72-7b904a9f3b54",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "address"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "f1058d04-dda5-417d-a2e0-c9f12bbbecf7",
-          "name": "Create a customer tax exemption",
-          "request": {
-            "name": "Create a customer tax exemption",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "tax-exemption"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "POST",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "c1a94f0a-e9f5-4395-929a-ef69013ac458",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "tax-exemption"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
+              "request": {
                 "method": "POST",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "22a1ffcb-a941-4d91-a2e4-d09e6a07ce0e",
-          "name": "List active tax exemptions for a customer",
-          "request": {
-            "name": "List active tax exemptions for a customer",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "tax-exemptions"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "76cde21d-74be-41fd-8ae8-03aa04d4a69d",
-              "name": "Default Response",
-              "originalRequest": {
+                "header": [],
                 "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "tax-exemptions"
-                  ],
+                  "raw": "{{baseUrl}}/v1/tax-registrations",
                   "host": [
                     "{{baseUrl}}"
                   ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "a71dd353-1340-48bb-8db9-639a6d8fc348",
-          "name": "Deactivate a customer tax exemption",
-          "request": {
-            "name": "Deactivate a customer tax exemption",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "tax-exemptions",
-                ":eid"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                },
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "eid",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "DELETE",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "cc38d601-bdcf-4670-849b-edbe15bffba1",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "tax-exemptions",
-                    ":eid"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    },
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "eid",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "4c13eec5-f9e1-463a-9496-ff9a82c95dfb",
-          "name": "Preview tax for a hypothetical charge amount",
-          "request": {
-            "name": "Preview tax for a hypothetical charge amount",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "customers",
-                ":id",
-                "tax-preview"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "POST",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "a4ce82af-d8fc-4ba4-bf88-bd921aed8955",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "customers",
-                    ":id",
-                    "tax-preview"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "POST",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "4523f746-d33b-4d04-8f03-27fed1e6b615",
-          "name": "Create a tax registration for the business",
-          "request": {
-            "name": "Create a tax registration for the business",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "tax-registrations"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "method": "POST",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "a6f5c194-0c0a-4af4-9c23-2e72b287be8f",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
                   "path": [
                     "v1",
                     "tax-registrations"
-                  ],
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "id": "bfd8541f-5405-4791-8adc-2c65a0ec458c",
+                  "name": "Default Response",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/tax-registrations",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "tax-registrations"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-bfd8541f-5405-4791-8adc-2c65a0ec458c"
+                }
+              ],
+              "createdAt": "2026-10-22T02:16:31.000Z",
+              "updatedAt": "2026-10-22T02:16:31.000Z",
+              "uid": "35240-3adbc145-634d-4030-94c4-803a2ccce598"
+            },
+            {
+              "name": "List active tax registrations for the business",
+              "id": "6f594a93-43d2-4273-8560-83a09a7ed9a7",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/v1/tax-registrations",
                   "host": [
                     "{{baseUrl}}"
                   ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "POST",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "adc77736-717c-4765-86cc-2fc89f554349",
-          "name": "List active tax registrations for the business",
-          "request": {
-            "name": "List active tax registrations for the business",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "tax-registrations"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "080a54c7-03f3-4004-985b-76ed97031c70",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
                   "path": [
                     "v1",
                     "tax-registrations"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "67c9473a-0176-437b-9d89-ec85b2ecb65f",
-          "name": "Deactivate a tax registration",
-          "request": {
-            "name": "Deactivate a tax registration",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "tax-registrations",
-                ":id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) "
-                }
-              ]
-            },
-            "method": "DELETE",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "566d98fb-aed3-40e3-99ef-a9ccb440caa8",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "tax-registrations",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) "
-                    }
                   ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
+                }
               },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "response": [
                 {
-                  "key": "Content-Type",
-                  "value": "text/plain"
+                  "id": "d6941320-7b7b-4041-bc5f-7e30894ddaa1",
+                  "name": "Default Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/tax-registrations",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "tax-registrations"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-d6941320-7b7b-4041-bc5f-7e30894ddaa1"
                 }
               ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
+              "createdAt": "2026-10-22T02:16:31.000Z",
+              "updatedAt": "2026-10-22T02:16:31.000Z",
+              "uid": "35240-6f594a93-43d2-4273-8560-83a09a7ed9a7"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "83d29797-c8b5-416f-bd9b-d5595231d58b",
+          "createdAt": "2026-10-22T02:16:31.000Z",
+          "updatedAt": "2026-10-22T02:16:31.000Z",
+          "uid": "35240-83d29797-c8b5-416f-bd9b-d5595231d58b"
         },
         {
-          "id": "789d425b-7d43-4529-bd35-cb812ef6f2b4",
-          "name": "List the seeded global tax rate catalogue",
-          "request": {
-            "name": "List the seeded global tax rate catalogue",
-            "description": {},
-            "url": {
-              "path": [
-                "v1",
-                "tax-rates"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
+          "name": "tax-rates",
+          "item": [
             {
-              "id": "960605e0-1079-4ef7-9c76-e8d190293566",
-              "name": "Default Response",
-              "originalRequest": {
+              "name": "List the seeded global tax rate catalogue",
+              "id": "cf47c7a9-5afc-450f-818c-b6a0e8f330be",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
                 "url": {
+                  "raw": "{{baseUrl}}/v1/tax-rates",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "v1",
                     "tax-rates"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
+                  ]
+                }
               },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "response": [
                 {
-                  "key": "Content-Type",
-                  "value": "text/plain"
+                  "id": "a69f3771-7ef8-4e31-b7c3-71a42c7795c5",
+                  "name": "Default Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/tax-rates",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "tax-rates"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": null,
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-a69f3771-7ef8-4e31-b7c3-71a42c7795c5"
                 }
               ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
+              "createdAt": "2026-10-22T02:16:31.000Z",
+              "updatedAt": "2026-10-22T02:16:31.000Z",
+              "uid": "35240-cf47c7a9-5afc-450f-818c-b6a0e8f330be"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "d4c2bd3b-c780-4d67-9845-585363baf434",
+          "createdAt": "2026-10-22T02:16:31.000Z",
+          "updatedAt": "2026-10-22T02:16:31.000Z",
+          "uid": "35240-d4c2bd3b-c780-4d67-9845-585363baf434"
         },
         {
-          "id": "3ad22d0c-ff87-497f-bcbd-9c47b6816c27",
-          "name": "Check whether the merchant's tax configuration is production-ready",
-          "request": {
-            "name": "Check whether the merchant's tax configuration is production-ready",
-            "description": {
-              "content": "Returns a structured report of the merchant's tax setup: active registrations, customer address coverage, uncovered jurisdictions, and actionable warnings with stable codes. Non-enforcing — merchants can always bill; this is a configuration quality check, not a gate.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "tax-config",
-                "readiness"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
+          "name": "tax-config",
+          "item": [
             {
-              "id": "bc69f92b-ec91-4fe7-ba0c-0d63e38100a6",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "tax-config",
-                    "readiness"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "readiness",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "text/plain"
+                  "name": "Check whether the merchant's tax configuration is production-ready",
+                  "id": "030cce7f-b531-44f5-a458-db86cf7217d1",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/tax-config/readiness",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "tax-config",
+                        "readiness"
+                      ]
+                    },
+                    "description": "Returns a structured report of the merchant's tax setup: active registrations, customer address coverage, uncovered jurisdictions, and actionable warnings with stable codes. Non-enforcing \u2014 merchants can always bill; this is a configuration quality check, not a gate."
+                  },
+                  "response": [
+                    {
+                      "id": "be26b9d5-1585-462a-ac36-5d7863bac4ff",
+                      "name": "Default Response",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/tax-config/readiness",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "tax-config",
+                            "readiness"
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": null,
+                      "createdAt": "2026-10-22T02:16:31.000Z",
+                      "updatedAt": "2026-10-22T02:16:31.000Z",
+                      "uid": "35240-be26b9d5-1585-462a-ac36-5d7863bac4ff"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:16:31.000Z",
+                  "updatedAt": "2026-10-22T02:16:31.000Z",
+                  "uid": "35240-030cce7f-b531-44f5-a458-db86cf7217d1"
                 }
               ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
+              "id": "19948ed8-0d5e-44b9-954a-c58e43036786",
+              "createdAt": "2026-10-22T02:16:31.000Z",
+              "updatedAt": "2026-10-22T02:16:31.000Z",
+              "uid": "35240-19948ed8-0d5e-44b9-954a-c58e43036786"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "46705667-0c59-4bc1-8aae-771ae8878f46",
+          "createdAt": "2026-10-22T02:16:31.000Z",
+          "updatedAt": "2026-10-22T02:16:31.000Z",
+          "uid": "35240-46705667-0c59-4bc1-8aae-771ae8878f46"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
-    {
-      "type": "string",
-      "value": "https://api.drippay.dev",
-      "key": "baseUrl"
+      "id": "ecc6bb56-5cfb-40fd-b888-75a883d069bd",
+      "createdAt": "2026-10-22T02:16:31.000Z",
+      "updatedAt": "2026-10-22T02:16:31.000Z",
+      "uid": "35240-ecc6bb56-5cfb-40fd-b888-75a883d069bd"
     }
   ],
   "auth": {
@@ -1011,17 +1002,15 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{bearerToken}}"
+        "value": "{{bearerToken}}",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "9d0e2989-4595-4a8b-ab4f-fe0dfc52dad9",
-    "name": "Drip BillableMetrics Tax API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.drippay.dev"
     }
-  }
+  ]
 }

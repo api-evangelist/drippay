@@ -1,1620 +1,1614 @@
 {
+  "info": {
+    "_postman_id": "e4965db6-dca9-41ae-a45c-8d426e36bb88",
+    "name": "Drip Pricing Plans API",
+    "description": "# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1.\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "createdAt": "2026-10-22T02:15:59.000Z",
+    "updatedAt": "2026-10-22T02:16:00.000Z",
+    "lastUpdatedBy": "35240",
+    "uid": "35240-e4965db6-dca9-41ae-a45c-8d426e36bb88"
+  },
   "item": [
     {
-      "id": "6147a92c-55b0-45a3-a3fe-2fe0966503ba",
-      "name": "Pricing Plans",
-      "description": {
-        "content": "Define per-unit pricing for usage types. Creating, updating, and deleting plans requires a secret key (`sk_*`) with the `ADMIN` role.",
-        "type": "text/plain"
-      },
+      "name": "v1",
       "item": [
         {
-          "id": "0ac4b5fb-7558-4384-9419-ef1dc6a5dba2",
-          "name": "List pricing plans",
-          "request": {
-            "name": "List pricing plans",
-            "description": {
-              "content": "Get all pricing plans for your business.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
+          "name": "pricing-plans",
+          "item": [
             {
-              "id": "b8782d15-68f3-4189-88a5-aa568fce6566",
-              "name": "List of pricing plans",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
+              "name": "{id}",
+              "item": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"data\": [\n    {\n      \"id\": \"plan_abc123def456\",\n      \"name\": \"API Calls\",\n      \"unitType\": \"api_call\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        },\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        }\n      ],\n      \"isActive\": true,\n      \"businessId\": \"biz_789xyz\",\n      \"unitPrice\": null,\n      \"currency\": \"USD\",\n      \"creditsPerUnit\": null,\n      \"productCategoryId\": null,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n    },\n    {\n      \"id\": \"plan_abc123def456\",\n      \"name\": \"API Calls\",\n      \"unitType\": \"api_call\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        },\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        }\n      ],\n      \"isActive\": true,\n      \"businessId\": \"biz_789xyz\",\n      \"unitPrice\": null,\n      \"currency\": \"USD\",\n      \"creditsPerUnit\": null,\n      \"productCategoryId\": null,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  ],\n  \"count\": 6107\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "0bbf52f1-ab4b-4a2d-8022-fc56171bb451",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans"
+                  "name": "versions",
+                  "item": [
+                    {
+                      "name": "List versions of a pricing plan",
+                      "id": "28f5e81d-9ae8-432f-8ab8-006dd5a52555",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id/versions",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id",
+                            "versions"
+                          ],
+                          "variable": [
+                            {
+                              "id": "8f240896-0bfd-4e3a-ae37-54a5e5e54b42",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) Pricing plan ID (any version)"
+                            }
+                          ]
+                        },
+                        "description": "Return every version row in the same `versionGroupId` as the given plan, ordered oldest \u2192 newest. Pass the id of any version (active or archived) and you get the full history of that plan."
+                      },
+                      "response": [
+                        {
+                          "id": "509fbf1a-10bc-444e-afdd-6949d8c8a535",
+                          "name": "Version history",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/:id/versions",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                ":id",
+                                "versions"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"unitType\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        },\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        }\n      ],\n      \"isActive\": \"<boolean>\",\n      \"businessId\": \"<string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"currency\": \"CAD\",\n      \"creditsPerUnit\": \"<null,string>\",\n      \"productCategoryId\": \"<null,string>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"unitType\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        },\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        }\n      ],\n      \"isActive\": \"<boolean>\",\n      \"businessId\": \"<string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"currency\": \"ILS\",\n      \"creditsPerUnit\": \"<null,string>\",\n      \"productCategoryId\": \"<null,string>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ],\n  \"count\": \"<integer>\",\n  \"versionGroupId\": \"<string>\"\n}",
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-509fbf1a-10bc-444e-afdd-6949d8c8a535"
+                        },
+                        {
+                          "id": "fb6e5cab-c979-4ff4-8e1e-01d71f9d832e",
+                          "name": "Unauthorized",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/:id/versions",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                ":id",
+                                "versions"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Unauthorized",
+                          "code": 401,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-fb6e5cab-c979-4ff4-8e1e-01d71f9d832e"
+                        },
+                        {
+                          "id": "e82546ba-155c-47ff-b428-78ab9f3a6c51",
+                          "name": "Pricing plan not found",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/:id/versions",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                ":id",
+                                "versions"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-e82546ba-155c-47ff-b428-78ab9f3a6c51"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:15:59.000Z",
+                      "updatedAt": "2026-10-22T02:15:59.000Z",
+                      "uid": "35240-28f5e81d-9ae8-432f-8ab8-006dd5a52555"
+                    }
                   ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
+                  "id": "5070e283-e867-4c31-be85-104b8d99a27c",
+                  "createdAt": "2026-10-22T02:15:59.000Z",
+                  "updatedAt": "2026-10-22T02:15:59.000Z",
+                  "uid": "35240-5070e283-e867-4c31-be85-104b8d99a27c"
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "8831e3f3-91f9-45f6-9f97-d7eef684f9ed",
-          "name": "Create a pricing plan",
-          "request": {
-            "name": "Create a pricing plan",
-            "description": {
-              "content": "\nCreate a new pricing plan for a usage type.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.** Public keys and lower-role secret keys will receive `403 Forbidden`.\n\nEach `unitType` can only have one active pricing plan. If you need to\nchange prices, update the existing plan or deactivate it first.\n\n**Example unit types:**\n- `api_call` - Per API request\n- `token` - Per token processed\n- `compute_second` - Per second of compute\n- `gb_storage` - Per GB stored\n        ",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": []
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "POST",
-            "auth": null,
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"unitPrice\": \"<number>\",\n  \"currency\": \"<string>\",\n  \"isActive\": \"<boolean>\",\n  \"pricingModel\": \"<string>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"productCategoryId\": \"<string>\",\n  \"productCategoryKey\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
-            {
-              "id": "b0fad418-bcf9-4455-bf76-0e13d5e16cc8",
-              "name": "Pricing plan created",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans"
+                  "name": "reprovision-stripe",
+                  "item": [
+                    {
+                      "name": "Retry Stripe auto-provisioning for a plan",
+                      "id": "141aa505-a394-4041-aca8-b642466d90aa",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id/reprovision-stripe",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id",
+                            "reprovision-stripe"
+                          ],
+                          "variable": [
+                            {
+                              "id": "d1cc3d59-3320-4150-a7c6-a0e6557e57ca",
+                              "key": "id",
+                              "value": "<string>",
+                              "description": "(Required) Pricing plan ID"
+                            }
+                          ]
+                        },
+                        "description": "Retries the Drip-managed Stripe Product / Meter / Price provisioning for a pricing plan. Useful after an initial transient failure on plan create. Idempotent: already-provisioned objects are skipped; only the missing Stripe calls are made.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+                      },
+                      "response": [
+                        {
+                          "id": "f848f474-f8a8-4b1c-bd56-9f96175e7caf",
+                          "name": "Default Response",
+                          "originalRequest": {
+                            "method": "POST",
+                            "header": [
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/:id/reprovision-stripe",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                ":id",
+                                "reprovision-stripe"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "id"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "text",
+                          "header": [],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": null,
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-f848f474-f8a8-4b1c-bd56-9f96175e7caf"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:15:59.000Z",
+                      "updatedAt": "2026-10-22T02:15:59.000Z",
+                      "uid": "35240-141aa505-a394-4041-aca8-b642466d90aa"
+                    }
                   ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
+                  "id": "d4c5593c-f125-42cd-b974-9db3cae794e7",
+                  "createdAt": "2026-10-22T02:15:59.000Z",
+                  "updatedAt": "2026-10-22T02:15:59.000Z",
+                  "uid": "35240-d4c5593c-f125-42cd-b974-9db3cae794e7"
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
+                {
+                  "name": "Get a pricing plan",
+                  "id": "5b2b41ba-9125-45ec-bb04-4066f18129c6",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
                   },
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "fb71c513-0482-4edf-8b0f-148049dc021a",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) Pricing plan ID"
+                        }
+                      ]
+                    },
+                    "description": "Retrieve a pricing plan by ID."
+                  },
+                  "response": [
+                    {
+                      "id": "9a942d6c-b20d-459b-ab29-19ee8b65d435",
+                      "name": "Pricing plan details",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<string>\",\n  \"pricingModel\": \"TIERED\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    },\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    }\n  ],\n  \"isActive\": \"<boolean>\",\n  \"businessId\": \"<string>\",\n  \"unitPrice\": \"<null,string>\",\n  \"currency\": \"MXN\",\n  \"creditsPerUnit\": \"<null,string>\",\n  \"productCategoryId\": \"<null,string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-9a942d6c-b20d-459b-ab29-19ee8b65d435"
+                    },
+                    {
+                      "id": "7ce59334-d0ac-4fa5-8484-928760787ec4",
+                      "name": "Unauthorized",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-7ce59334-d0ac-4fa5-8484-928760787ec4"
+                    },
+                    {
+                      "id": "76a885dd-492b-4bef-907a-6742622b1423",
+                      "name": "Pricing plan not found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-76a885dd-492b-4bef-907a-6742622b1423"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:15:59.000Z",
+                  "updatedAt": "2026-10-22T02:15:59.000Z",
+                  "uid": "35240-5b2b41ba-9125-45ec-bb04-4066f18129c6"
+                },
+                {
+                  "name": "Update a pricing plan",
+                  "id": "c3c5b871-039d-4cb9-a67a-c5859abb2f71",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"VOLUME\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "cd54696b-18bf-4f97-b8c6-c06bcef2dca9",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) Pricing plan ID"
+                        }
+                      ]
+                    },
+                    "description": "Update the name, price, or status of a pricing plan. Changes take effect immediately for new charges.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**"
+                  },
+                  "response": [
+                    {
+                      "id": "73f1a5b4-f7bf-4335-b8e7-93ff439536dc",
+                      "name": "Pricing plan updated",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"VOLUME\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<string>\",\n  \"pricingModel\": \"VOLUME\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    },\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    }\n  ],\n  \"isActive\": \"<boolean>\",\n  \"businessId\": \"<string>\",\n  \"unitPrice\": \"<null,string>\",\n  \"currency\": \"CHF\",\n  \"creditsPerUnit\": \"<null,string>\",\n  \"productCategoryId\": \"<null,string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-73f1a5b4-f7bf-4335-b8e7-93ff439536dc"
+                    },
+                    {
+                      "id": "b198d420-3b28-4462-9ac4-5c7404f1ced8",
+                      "name": "Invalid tier configuration",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"VOLUME\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Bad Request",
+                      "code": 400,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-b198d420-3b28-4462-9ac4-5c7404f1ced8"
+                    },
+                    {
+                      "id": "04f0dec9-689c-4538-8077-63a82a4ef349",
+                      "name": "Unauthorized",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"VOLUME\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-04f0dec9-689c-4538-8077-63a82a4ef349"
+                    },
+                    {
+                      "id": "4e7b8322-097c-4d17-9bf0-dc46e5400ec5",
+                      "name": "Pricing plan not found",
+                      "originalRequest": {
+                        "method": "PATCH",
+                        "header": [
+                          {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                          },
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"VOLUME\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                          "options": {
+                            "raw": {
+                              "headerFamily": "json",
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-4e7b8322-097c-4d17-9bf0-dc46e5400ec5"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:15:59.000Z",
+                  "updatedAt": "2026-10-22T02:15:59.000Z",
+                  "uid": "35240-c3c5b871-039d-4cb9-a67a-c5859abb2f71"
+                },
+                {
+                  "name": "Delete a pricing plan",
+                  "id": "1e77dae4-f7e4-445d-9da7-55ed1279ee9a",
+                  "protocolProfileBehavior": {
+                    "disableBodyPruning": true
+                  },
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "id": "9aab1edb-052c-464d-8b1e-d78dcd7d569c",
+                          "key": "id",
+                          "value": "<string>",
+                          "description": "(Required) Pricing plan ID"
+                        }
+                      ]
+                    },
+                    "description": "Soft-delete a pricing plan by deactivating it.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**\n\nThe plan is preserved for historical charges but will no longer be used\nfor new usage events. You can reactivate it by updating `isActive` to `true`."
+                  },
+                  "response": [
+                    {
+                      "id": "6d7c1029-4288-442c-87e4-33fcc1f3ad3d",
+                      "name": "Pricing plan deleted",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "No Content",
+                      "code": 204,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"description\": \"Pricing plan deleted\"\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-6d7c1029-4288-442c-87e4-33fcc1f3ad3d"
+                    },
+                    {
+                      "id": "9618449b-8827-4c2b-9b58-f1659f98a9e1",
+                      "name": "Unauthorized",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Unauthorized",
+                      "code": 401,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-9618449b-8827-4c2b-9b58-f1659f98a9e1"
+                    },
+                    {
+                      "id": "07541adf-2995-41fa-b0ae-110f994ffff0",
+                      "name": "Pricing plan not found",
+                      "originalRequest": {
+                        "method": "DELETE",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          },
+                          {
+                            "description": "Added as a part of security scheme: bearer",
+                            "key": "Authorization",
+                            "value": "Bearer <token>"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/:id",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            ":id"
+                          ],
+                          "variable": [
+                            {
+                              "key": "id"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "responseTime": null,
+                      "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                      "createdAt": "2026-10-22T02:16:00.000Z",
+                      "updatedAt": "2026-10-22T02:16:00.000Z",
+                      "uid": "35240-07541adf-2995-41fa-b0ae-110f994ffff0"
+                    }
+                  ],
+                  "createdAt": "2026-10-22T02:15:59.000Z",
+                  "updatedAt": "2026-10-22T02:15:59.000Z",
+                  "uid": "35240-1e77dae4-f7e4-445d-9da7-55ed1279ee9a"
+                }
+              ],
+              "id": "d7b6b087-d8bd-444f-89f2-07b082512023",
+              "createdAt": "2026-10-22T02:15:59.000Z",
+              "updatedAt": "2026-10-22T02:15:59.000Z",
+              "uid": "35240-d7b6b087-d8bd-444f-89f2-07b082512023"
+            },
+            {
+              "name": "by-type",
+              "item": [
+                {
+                  "name": "{unitType}",
+                  "item": [
+                    {
+                      "name": "Get pricing plan by unit type",
+                      "id": "c93dd5a4-ca94-403f-a7bc-98715176e7ee",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/v1/pricing-plans/by-type/:unitType",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "v1",
+                            "pricing-plans",
+                            "by-type",
+                            ":unitType"
+                          ],
+                          "variable": [
+                            {
+                              "id": "3e724cde-cce2-47e5-ba18-027e4bd22cb2",
+                              "key": "unitType",
+                              "value": "<string>",
+                              "description": "(Required) Usage type (e.g., \"api_call\", \"token\")"
+                            }
+                          ]
+                        },
+                        "description": "Look up the active pricing plan for a specific usage type."
+                      },
+                      "response": [
+                        {
+                          "id": "22fc52e5-8972-4fbd-9aef-e4d37a25278d",
+                          "name": "Pricing plan for unit type",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/by-type/:unitType",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                "by-type",
+                                ":unitType"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "unitType"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "OK",
+                          "code": 200,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<string>\",\n  \"pricingModel\": \"TIERED\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    },\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    }\n  ],\n  \"isActive\": \"<boolean>\",\n  \"businessId\": \"<string>\",\n  \"unitPrice\": \"<null,string>\",\n  \"currency\": \"GBP\",\n  \"creditsPerUnit\": \"<null,string>\",\n  \"productCategoryId\": \"<null,string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-22fc52e5-8972-4fbd-9aef-e4d37a25278d"
+                        },
+                        {
+                          "id": "6cc978c6-d967-4d3a-8dd0-1b042373ed94",
+                          "name": "Unauthorized",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/by-type/:unitType",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                "by-type",
+                                ":unitType"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "unitType"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Unauthorized",
+                          "code": 401,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-6cc978c6-d967-4d3a-8dd0-1b042373ed94"
+                        },
+                        {
+                          "id": "d653530a-7a2a-4147-8e52-2fcc6107145a",
+                          "name": "No active pricing plan found for unit type",
+                          "originalRequest": {
+                            "method": "GET",
+                            "header": [
+                              {
+                                "key": "Accept",
+                                "value": "application/json"
+                              },
+                              {
+                                "description": "Added as a part of security scheme: bearer",
+                                "key": "Authorization",
+                                "value": "Bearer <token>"
+                              }
+                            ],
+                            "url": {
+                              "raw": "{{baseUrl}}/v1/pricing-plans/by-type/:unitType",
+                              "host": [
+                                "{{baseUrl}}"
+                              ],
+                              "path": [
+                                "v1",
+                                "pricing-plans",
+                                "by-type",
+                                ":unitType"
+                              ],
+                              "variable": [
+                                {
+                                  "key": "unitType"
+                                }
+                              ]
+                            }
+                          },
+                          "status": "Not Found",
+                          "code": 404,
+                          "_postman_previewlanguage": "json",
+                          "header": [
+                            {
+                              "key": "Content-Type",
+                              "value": "application/json"
+                            }
+                          ],
+                          "cookie": [],
+                          "responseTime": null,
+                          "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                          "createdAt": "2026-10-22T02:16:00.000Z",
+                          "updatedAt": "2026-10-22T02:16:00.000Z",
+                          "uid": "35240-d653530a-7a2a-4147-8e52-2fcc6107145a"
+                        }
+                      ],
+                      "createdAt": "2026-10-22T02:15:59.000Z",
+                      "updatedAt": "2026-10-22T02:15:59.000Z",
+                      "uid": "35240-c93dd5a4-ca94-403f-a7bc-98715176e7ee"
+                    }
+                  ],
+                  "id": "38a93459-3317-48a8-ba0b-0c6804f48d3a",
+                  "createdAt": "2026-10-22T02:15:59.000Z",
+                  "updatedAt": "2026-10-22T02:15:59.000Z",
+                  "uid": "35240-38a93459-3317-48a8-ba0b-0c6804f48d3a"
+                }
+              ],
+              "id": "32d3842c-6ae0-4a7a-868d-9a74019c56e6",
+              "createdAt": "2026-10-22T02:15:59.000Z",
+              "updatedAt": "2026-10-22T02:15:59.000Z",
+              "uid": "35240-32d3842c-6ae0-4a7a-868d-9a74019c56e6"
+            },
+            {
+              "name": "List pricing plans",
+              "id": "7fa3d3a1-4e95-4414-b13a-92efdae9c176",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [
                   {
                     "key": "Accept",
                     "value": "application/json"
                   }
                 ],
+                "url": {
+                  "raw": "{{baseUrl}}/v1/pricing-plans",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "v1",
+                    "pricing-plans"
+                  ]
+                },
+                "description": "Get all pricing plans for your business."
+              },
+              "response": [
+                {
+                  "id": "8aa30309-6b8d-4457-8d0b-6a00dd22f51e",
+                  "name": "List of pricing plans",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"unitType\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        },\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        }\n      ],\n      \"isActive\": \"<boolean>\",\n      \"businessId\": \"<string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"currency\": \"CHF\",\n      \"creditsPerUnit\": \"<null,string>\",\n      \"productCategoryId\": \"<null,string>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"name\": \"<string>\",\n      \"unitType\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        },\n        {\n          \"minQuantity\": \"<string>\",\n          \"unitPriceUsd\": \"<string>\",\n          \"id\": \"<string>\",\n          \"maxQuantity\": \"<null,string>\",\n          \"flatFeeUsd\": \"<null,string>\",\n          \"unitPrice\": \"<null,string>\",\n          \"flatFee\": \"<null,string>\",\n          \"packageSize\": \"<null,integer>\"\n        }\n      ],\n      \"isActive\": \"<boolean>\",\n      \"businessId\": \"<string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"currency\": \"CHF\",\n      \"creditsPerUnit\": \"<null,string>\",\n      \"productCategoryId\": \"<null,string>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ],\n  \"count\": \"<integer>\"\n}",
+                  "createdAt": "2026-10-22T02:16:00.000Z",
+                  "updatedAt": "2026-10-22T02:16:00.000Z",
+                  "uid": "35240-8aa30309-6b8d-4457-8d0b-6a00dd22f51e"
+                },
+                {
+                  "id": "a3ef0e51-8fdc-4508-92d2-cb058e0b953b",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                  "createdAt": "2026-10-22T02:16:00.000Z",
+                  "updatedAt": "2026-10-22T02:16:00.000Z",
+                  "uid": "35240-a3ef0e51-8fdc-4508-92d2-cb058e0b953b"
+                }
+              ],
+              "createdAt": "2026-10-22T02:15:59.000Z",
+              "updatedAt": "2026-10-22T02:15:59.000Z",
+              "uid": "35240-7fa3d3a1-4e95-4414-b13a-92efdae9c176"
+            },
+            {
+              "name": "Create a pricing plan",
+              "id": "fefe7c17-73b7-4554-aac8-d2e4a109b096",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
                 "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": 0.001,\n  \"unitPrice\": 0.0037,\n  \"currency\": \"USD\",\n  \"isActive\": true,\n  \"pricingModel\": \"FLAT\",\n  \"creditsPerUnit\": 10,\n  \"productCategoryId\": \"cat_core\",\n  \"productCategoryKey\": \"core_api\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"unitPrice\": \"<number>\",\n  \"currency\": \"DKK\",\n  \"isActive\": \"<boolean>\",\n  \"pricingModel\": \"PER_SEAT\",\n  \"creditsPerUnit\": \"<number>\",\n  \"productCategoryId\": \"<string>\",\n  \"productCategoryKey\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
                   "options": {
                     "raw": {
+                      "headerFamily": "json",
                       "language": "json"
                     }
                   }
-                }
-              },
-              "status": "Created",
-              "code": 201,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"id\": \"plan_abc123def456\",\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": \"0.001000\",\n  \"pricingModel\": \"FLAT\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    },\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    }\n  ],\n  \"isActive\": true,\n  \"businessId\": \"biz_789xyz\",\n  \"unitPrice\": null,\n  \"currency\": \"USD\",\n  \"creditsPerUnit\": null,\n  \"productCategoryId\": null,\n  \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n  \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "3bf8f6f3-b7d2-4e35-a74d-012fce683665",
-              "name": "Invalid tier configuration",
-              "originalRequest": {
+                },
                 "url": {
+                  "raw": "{{baseUrl}}/v1/pricing-plans",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
                   "path": [
                     "v1",
                     "pricing-plans"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
+                  ]
                 },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": 0.001,\n  \"unitPrice\": 0.0037,\n  \"currency\": \"USD\",\n  \"isActive\": true,\n  \"pricingModel\": \"FLAT\",\n  \"creditsPerUnit\": 10,\n  \"productCategoryId\": \"cat_core\",\n  \"productCategoryKey\": \"core_api\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
+                "description": "Create a new pricing plan for a usage type.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.** Public keys and lower-role secret keys will receive `403 Forbidden`.\n\nEach `unitType` can only have one active pricing plan. If you need to\nchange prices, update the existing plan or deactivate it first.\n\n**Example unit types:**\n- `api_call` - Per API request\n- `token` - Per token processed\n- `compute_second` - Per second of compute\n- `gb_storage` - Per GB stored"
               },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
+              "response": [
                 {
-                  "key": "Content-Type",
-                  "value": "application/json"
+                  "id": "485d33c1-90db-4e95-9778-932c994c6da8",
+                  "name": "Pricing plan created",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"unitPrice\": \"<number>\",\n  \"currency\": \"DKK\",\n  \"isActive\": \"<boolean>\",\n  \"pricingModel\": \"PER_SEAT\",\n  \"creditsPerUnit\": \"<number>\",\n  \"productCategoryId\": \"<string>\",\n  \"productCategoryKey\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<string>\",\n  \"pricingModel\": \"FLAT\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    },\n    {\n      \"minQuantity\": \"<string>\",\n      \"unitPriceUsd\": \"<string>\",\n      \"id\": \"<string>\",\n      \"maxQuantity\": \"<null,string>\",\n      \"flatFeeUsd\": \"<null,string>\",\n      \"unitPrice\": \"<null,string>\",\n      \"flatFee\": \"<null,string>\",\n      \"packageSize\": \"<null,integer>\"\n    }\n  ],\n  \"isActive\": \"<boolean>\",\n  \"businessId\": \"<string>\",\n  \"unitPrice\": \"<null,string>\",\n  \"currency\": \"JPY\",\n  \"creditsPerUnit\": \"<null,string>\",\n  \"productCategoryId\": \"<null,string>\",\n  \"createdAt\": \"<dateTime>\",\n  \"updatedAt\": \"<dateTime>\"\n}",
+                  "createdAt": "2026-10-22T02:16:00.000Z",
+                  "updatedAt": "2026-10-22T02:16:00.000Z",
+                  "uid": "35240-485d33c1-90db-4e95-9778-932c994c6da8"
+                },
+                {
+                  "id": "cef0ef17-4e54-4488-b7b4-556df93e1d5d",
+                  "name": "Invalid tier configuration",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"unitPrice\": \"<number>\",\n  \"currency\": \"DKK\",\n  \"isActive\": \"<boolean>\",\n  \"pricingModel\": \"PER_SEAT\",\n  \"creditsPerUnit\": \"<number>\",\n  \"productCategoryId\": \"<string>\",\n  \"productCategoryKey\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                  "createdAt": "2026-10-22T02:16:00.000Z",
+                  "updatedAt": "2026-10-22T02:16:00.000Z",
+                  "uid": "35240-cef0ef17-4e54-4488-b7b4-556df93e1d5d"
+                },
+                {
+                  "id": "465cdbb2-ac26-4edb-8989-9b4a6b308782",
+                  "name": "Unauthorized",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"unitPrice\": \"<number>\",\n  \"currency\": \"DKK\",\n  \"isActive\": \"<boolean>\",\n  \"pricingModel\": \"PER_SEAT\",\n  \"creditsPerUnit\": \"<number>\",\n  \"productCategoryId\": \"<string>\",\n  \"productCategoryKey\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"details\": [\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    },\n    {\n      \"path\": \"<string>\",\n      \"message\": \"<string>\"\n    }\n  ]\n}",
+                  "createdAt": "2026-10-22T02:16:00.000Z",
+                  "updatedAt": "2026-10-22T02:16:00.000Z",
+                  "uid": "35240-465cdbb2-ac26-4edb-8989-9b4a6b308782"
+                },
+                {
+                  "id": "a5ce576a-d3f8-42fe-be3e-5d225166f731",
+                  "name": "Pricing plan for unit type already exists",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "description": "Added as a part of security scheme: bearer",
+                        "key": "Authorization",
+                        "value": "Bearer <token>"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"name\": \"<string>\",\n  \"unitType\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"unitPrice\": \"<number>\",\n  \"currency\": \"DKK\",\n  \"isActive\": \"<boolean>\",\n  \"pricingModel\": \"PER_SEAT\",\n  \"creditsPerUnit\": \"<number>\",\n  \"productCategoryId\": \"<string>\",\n  \"productCategoryKey\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "headerFamily": "json",
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/v1/pricing-plans",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "v1",
+                        "pricing-plans"
+                      ]
+                    }
+                  },
+                  "status": "Conflict",
+                  "code": 409,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "responseTime": null,
+                  "body": "{\n  \"error\": \"<string>\",\n  \"code\": \"<string>\",\n  \"existingPlanId\": \"<string>\"\n}",
+                  "createdAt": "2026-10-22T02:16:00.000Z",
+                  "updatedAt": "2026-10-22T02:16:00.000Z",
+                  "uid": "35240-a5ce576a-d3f8-42fe-be3e-5d225166f731"
                 }
               ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"INVALID_TIERS\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "d8911409-6679-49ab-a9f2-08a01bb63d82",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": 0.001,\n  \"unitPrice\": 0.0037,\n  \"currency\": \"USD\",\n  \"isActive\": true,\n  \"pricingModel\": \"FLAT\",\n  \"creditsPerUnit\": 10,\n  \"productCategoryId\": \"cat_core\",\n  \"productCategoryKey\": \"core_api\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "f478c923-78cd-41b9-afa1-c9238d8d1b7f",
-              "name": "Pricing plan for unit type already exists",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": []
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "POST",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": 0.001,\n  \"unitPrice\": 0.0037,\n  \"currency\": \"USD\",\n  \"isActive\": true,\n  \"pricingModel\": \"FLAT\",\n  \"creditsPerUnit\": 10,\n  \"productCategoryId\": \"cat_core\",\n  \"productCategoryKey\": \"core_api\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"unitPrice\": \"<number,null>\",\n      \"flatFee\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Conflict",
-              "code": 409,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"DUPLICATE_PRICING_PLAN\",\n  \"existingPlanId\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
+              "createdAt": "2026-10-22T02:15:59.000Z",
+              "updatedAt": "2026-10-22T02:15:59.000Z",
+              "uid": "35240-fefe7c17-73b7-4554-aac8-d2e4a109b096"
             }
           ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "4921d4eb-a271-412d-aca9-5821e7d061ac",
-          "name": "Get a pricing plan",
-          "request": {
-            "name": "Get a pricing plan",
-            "description": {
-              "content": "Retrieve a pricing plan by ID.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans",
-                ":id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) Pricing plan ID"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "9eec5295-84b3-4355-a6a2-4902d5823c3e",
-              "name": "Pricing plan details",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"id\": \"plan_abc123def456\",\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": \"0.001000\",\n  \"pricingModel\": \"FLAT\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    },\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    }\n  ],\n  \"isActive\": true,\n  \"businessId\": \"biz_789xyz\",\n  \"unitPrice\": null,\n  \"currency\": \"USD\",\n  \"creditsPerUnit\": null,\n  \"productCategoryId\": null,\n  \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n  \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "e640ca36-7da3-4955-b852-dfe731bce8ec",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "5ea7dbe7-785d-48d4-b306-1f07bb79c8cf",
-              "name": "Pricing plan not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "239b2bab-bbc5-497c-8ae1-ef9533e1d68f",
-          "name": "Update a pricing plan",
-          "request": {
-            "name": "Update a pricing plan",
-            "description": {
-              "content": "Update the name, price, or status of a pricing plan. Changes take effect immediately for new charges.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans",
-                ":id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) Pricing plan ID"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "PATCH",
-            "auth": null,
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          },
-          "response": [
-            {
-              "id": "516110f6-09a5-4362-8786-6e2b36b0444b",
-              "name": "Pricing plan updated",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "PATCH",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"id\": \"plan_abc123def456\",\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": \"0.001000\",\n  \"pricingModel\": \"FLAT\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    },\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    }\n  ],\n  \"isActive\": true,\n  \"businessId\": \"biz_789xyz\",\n  \"unitPrice\": null,\n  \"currency\": \"USD\",\n  \"creditsPerUnit\": null,\n  \"productCategoryId\": null,\n  \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n  \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "ebc7e74c-3d54-4f3d-a652-8b56e3439a7c",
-              "name": "Invalid tier configuration",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "PATCH",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Bad Request",
-              "code": 400,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"INVALID_TIERS\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "5157726c-a9d2-4794-9edb-590da68816b2",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "PATCH",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "35614818-e9c8-4ba6-9cf9-822a46c12337",
-              "name": "Pricing plan not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "PATCH",
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"<string>\",\n  \"unitPriceUsd\": \"<number>\",\n  \"isActive\": \"<boolean>\",\n  \"creditsPerUnit\": \"<number>\",\n  \"pricingModel\": \"<string>\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    },\n    {\n      \"minQuantity\": \"<number>\",\n      \"unitPriceUsd\": \"<number>\",\n      \"maxQuantity\": \"<number,null>\",\n      \"flatFeeUsd\": \"<number,null>\",\n      \"packageSize\": \"<integer,null>\"\n    }\n  ]\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                }
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "9c39ee0e-ee3d-4feb-a59f-8c8421dcae2d",
-          "name": "Delete a pricing plan",
-          "request": {
-            "name": "Delete a pricing plan",
-            "description": {
-              "content": "\nSoft-delete a pricing plan by deactivating it.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**\n\nThe plan is preserved for historical charges but will no longer be used\nfor new usage events. You can reactivate it by updating `isActive` to `true`.\n        ",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans",
-                ":id"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) Pricing plan ID"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "DELETE",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "8d3b5b9f-22a3-4819-875a-ff01e41889d7",
-              "name": "Pricing plan deleted",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "No Content",
-              "code": 204,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "81609364-9e13-4679-b4f2-6f1f7746883c",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "33bbff63-b5c2-4a0d-9584-aa3de6d3c920",
-              "name": "Pricing plan not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "DELETE",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "1b33db34-cb03-4581-bf81-25a6e187abb7",
-          "name": "List versions of a pricing plan",
-          "request": {
-            "name": "List versions of a pricing plan",
-            "description": {
-              "content": "Return every version row in the same `versionGroupId` as the given plan, ordered oldest → newest. Pass the id of any version (active or archived) and you get the full history of that plan.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans",
-                ":id",
-                "versions"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) Pricing plan ID (any version)"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "e6ce9ba3-cbc7-4589-9613-cd048462e86a",
-              "name": "Version history",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id",
-                    "versions"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID (any version)"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"data\": [\n    {\n      \"id\": \"plan_abc123def456\",\n      \"name\": \"API Calls\",\n      \"unitType\": \"api_call\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        },\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        }\n      ],\n      \"isActive\": true,\n      \"businessId\": \"biz_789xyz\",\n      \"unitPrice\": null,\n      \"currency\": \"USD\",\n      \"creditsPerUnit\": null,\n      \"productCategoryId\": null,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n    },\n    {\n      \"id\": \"plan_abc123def456\",\n      \"name\": \"API Calls\",\n      \"unitType\": \"api_call\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"pricingModel\": \"FLAT\",\n      \"tiers\": [\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        },\n        {\n          \"minQuantity\": \"0\",\n          \"unitPriceUsd\": \"0.001000\",\n          \"id\": \"string\",\n          \"maxQuantity\": null,\n          \"flatFeeUsd\": null,\n          \"unitPrice\": null,\n          \"flatFee\": null,\n          \"packageSize\": null\n        }\n      ],\n      \"isActive\": true,\n      \"businessId\": \"biz_789xyz\",\n      \"unitPrice\": null,\n      \"currency\": \"USD\",\n      \"creditsPerUnit\": null,\n      \"productCategoryId\": null,\n      \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n      \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n    }\n  ],\n  \"count\": 5894,\n  \"versionGroupId\": \"string\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "554d418f-3ac5-4d77-8430-53a246997058",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id",
-                    "versions"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID (any version)"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "23cd1c91-b109-4c2d-b1a3-3a85a15d50f8",
-              "name": "Pricing plan not found",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id",
-                    "versions"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID (any version)"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "578a6be4-6413-4a00-9e9c-9624fc7c0875",
-          "name": "Get pricing plan by unit type",
-          "request": {
-            "name": "Get pricing plan by unit type",
-            "description": {
-              "content": "Look up the active pricing plan for a specific usage type.",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans",
-                "by-type",
-                ":unitType"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "unitType",
-                  "description": "(Required) Usage type (e.g., \"api_call\", \"token\")"
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "38f77737-04b3-4171-8c5b-eeb1e947a90b",
-              "name": "Pricing plan for unit type",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    "by-type",
-                    ":unitType"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "unitType",
-                      "description": "(Required) Usage type (e.g., \"api_call\", \"token\")"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"id\": \"plan_abc123def456\",\n  \"name\": \"API Calls\",\n  \"unitType\": \"api_call\",\n  \"unitPriceUsd\": \"0.001000\",\n  \"pricingModel\": \"FLAT\",\n  \"tiers\": [\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    },\n    {\n      \"minQuantity\": \"0\",\n      \"unitPriceUsd\": \"0.001000\",\n      \"id\": \"string\",\n      \"maxQuantity\": null,\n      \"flatFeeUsd\": null,\n      \"unitPrice\": null,\n      \"flatFee\": null,\n      \"packageSize\": null\n    }\n  ],\n  \"isActive\": true,\n  \"businessId\": \"biz_789xyz\",\n  \"unitPrice\": null,\n  \"currency\": \"USD\",\n  \"creditsPerUnit\": null,\n  \"productCategoryId\": null,\n  \"createdAt\": \"2024-01-15T10:30:00.000Z\",\n  \"updatedAt\": \"2024-01-15T10:30:00.000Z\"\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "4cd9a3d3-7fe9-4170-8772-7a96ef20a9de",
-              "name": "Unauthorized",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    "by-type",
-                    ":unitType"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "unitType",
-                      "description": "(Required) Usage type (e.g., \"api_call\", \"token\")"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Unauthorized",
-              "code": 401,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            },
-            {
-              "id": "880c5768-2a5b-4852-8064-fc2cfc9c7520",
-              "name": "No active pricing plan found for unit type",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    "by-type",
-                    ":unitType"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "unitType",
-                      "description": "(Required) Usage type (e.g., \"api_call\", \"token\")"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  },
-                  {
-                    "key": "Accept",
-                    "value": "application/json"
-                  }
-                ],
-                "method": "GET",
-                "body": {}
-              },
-              "status": "Not Found",
-              "code": 404,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": "{\n  \"error\": \"string\",\n  \"code\": \"string\",\n  \"details\": [\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"path\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
-              "cookie": [],
-              "_postman_previewlanguage": "json"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "id": "abcebba2-b450-449a-b4d4-1335bda8e5bd",
-          "name": "Retry Stripe auto-provisioning for a plan",
-          "request": {
-            "name": "Retry Stripe auto-provisioning for a plan",
-            "description": {
-              "content": "Retries the Drip-managed Stripe Product / Meter / Price provisioning for a pricing plan. Useful after an initial transient failure on plan create. Idempotent: already-provisioned objects are skipped; only the missing Stripe calls are made.\n\n> **Requires a secret key (`sk_*`) with the `ADMIN` role.**",
-              "type": "text/plain"
-            },
-            "url": {
-              "path": [
-                "v1",
-                "pricing-plans",
-                ":id",
-                "reprovision-stripe"
-              ],
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "query": [],
-              "variable": [
-                {
-                  "disabled": false,
-                  "type": "any",
-                  "value": "<string>",
-                  "key": "id",
-                  "description": "(Required) Pricing plan ID"
-                }
-              ]
-            },
-            "method": "POST",
-            "auth": null
-          },
-          "response": [
-            {
-              "id": "8fe48cf5-bd6c-4f17-835a-2a517cc64b11",
-              "name": "Default Response",
-              "originalRequest": {
-                "url": {
-                  "path": [
-                    "v1",
-                    "pricing-plans",
-                    ":id",
-                    "reprovision-stripe"
-                  ],
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "query": [],
-                  "variable": [
-                    {
-                      "disabled": false,
-                      "type": "any",
-                      "value": "<string>",
-                      "key": "id",
-                      "description": "(Required) Pricing plan ID"
-                    }
-                  ]
-                },
-                "header": [
-                  {
-                    "description": {
-                      "content": "Added as a part of security scheme: bearer",
-                      "type": "text/plain"
-                    },
-                    "key": "Authorization",
-                    "value": "Bearer <token>"
-                  }
-                ],
-                "method": "POST",
-                "body": {}
-              },
-              "status": "OK",
-              "code": 200,
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "text/plain"
-                }
-              ],
-              "body": "",
-              "cookie": [],
-              "_postman_previewlanguage": "text"
-            }
-          ],
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
+          "id": "75557342-9506-494e-9658-e473eeaea0b8",
+          "createdAt": "2026-10-22T02:15:59.000Z",
+          "updatedAt": "2026-10-22T02:15:59.000Z",
+          "uid": "35240-75557342-9506-494e-9658-e473eeaea0b8"
         }
       ],
-      "event": []
-    }
-  ],
-  "event": [],
-  "variable": [
-    {
-      "type": "string",
-      "value": "https://api.drippay.dev",
-      "key": "baseUrl"
+      "id": "e2d8dd39-c306-4f82-b0d9-94520873b13d",
+      "createdAt": "2026-10-22T02:15:59.000Z",
+      "updatedAt": "2026-10-22T02:15:59.000Z",
+      "uid": "35240-e2d8dd39-c306-4f82-b0d9-94520873b13d"
     }
   ],
   "auth": {
@@ -1622,17 +1616,15 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{bearerToken}}"
+        "value": "{{bearerToken}}",
+        "type": "string"
       }
     ]
   },
-  "info": {
-    "_postman_id": "5b4f755f-aaa7-4516-885b-39f68795897d",
-    "name": "Drip BillableMetrics Pricing Plans API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": {
-      "content": "\n# Drip API\n\n**Usage-based billing + execution ledger.**\n\n---\n\n## 60-Second Quickstart (Core SDK)\n\n### 1. Install\n\n```bash\nnpm install @drip-sdk/node\n```\n\n### 2. Set your API key\n\n```bash\n# Secret key - full API access (server-side only, never expose publicly)\nexport DRIP_API_KEY=sk_test_...\n\n# Use a secret key for the customer, billing, runs, pricing-plan, and webhook\n# flows documented in this reference.\n```\n\nOr use a \".env\" file (recommended):\n\n```bash\nnpm install dotenv\n# .env\nDRIP_API_KEY=sk_test_...\n```\n\nLoad your \".env\" at the top of your entry file:\n\n```typescript\nimport 'dotenv/config';\n```\n\n### 3. Create a customer and track usage\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\n// Create a customer first\nconst customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n// Internal tracking only (no billing)\nawait drip.trackUsage({ customerId: customer.id, meter: 'api_calls', quantity: 1 });\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration\n\n```typescript\nimport 'dotenv/config';\nimport { Drip } from '@drip-sdk/node';\n\n// Auto-reads DRIP_API_KEY from environment\nconst client = new Drip();\n\n// Or pass config explicitly with an Admin/Operator secret key\nconst clientWithSecret = new Drip({ apiKey: 'sk_test_...' });\n```\n\n### Full Example (Node.js)\n\n```typescript\nimport 'dotenv/config';\nimport { drip } from '@drip-sdk/node';\n\nasync function main() {\n  // Verify connectivity\n  await drip.ping();\n\n  // Create a customer (at least one of externalCustomerId or onchainAddress required)\n  const customer = await drip.createCustomer({ externalCustomerId: 'user_123' });\n\n  // Internal tracking (no billing)\n  await drip.trackUsage({\n    customerId: customer.id,\n    meter: 'llm_tokens',\n    quantity: 842,\n    metadata: { model: 'gpt-4o-mini' },\n  });\n\n  // Billable usage\n  await drip.charge({\n    customerId: customer.id,\n    meter: 'api_calls',\n    quantity: 1,\n  });\n\n  // Record an execution lifecycle\n  await drip.recordRun({\n    customerId: customer.id,\n    workflow: 'research-agent',\n    events: [\n      { eventType: 'llm.call', quantity: 1700, units: 'tokens' },\n      { eventType: 'tool.call', quantity: 1 },\n    ],\n    status: 'COMPLETED',\n  });\n\n  console.log(`Customer ${customer.id}: usage + run recorded`);\n}\n\nmain();\n```\n\n```python\nfrom drip import drip\n\n# Create a customer first\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking only (no billing)\ndrip.track_usage(customer_id=customer.id, meter=\"api_calls\", quantity=1)\n```\n\nThe `drip` singleton reads `DRIP_API_KEY` from your environment automatically.\n\n### Alternative: Explicit Configuration (Python)\n\n```python\nfrom drip import Drip\n\n# Auto-reads DRIP_API_KEY from environment\nclient = Drip()\n\n# Or pass config explicitly with an Admin/Operator secret key\nclient_with_secret = Drip(api_key=\"sk_test_...\")\n```\n\n### Full Example (Python)\n\n```python\nfrom drip import drip\n\n# Verify connectivity\ndrip.ping()\n\n# Create a customer (at least one of external_customer_id or onchain_address required)\ncustomer = drip.create_customer(external_customer_id=\"user_123\")\n\n# Internal tracking (no billing)\ndrip.track_usage(\n    customer_id=customer.id,\n    meter=\"llm_tokens\",\n    quantity=842,\n    metadata={\"model\": \"gpt-4o-mini\"}\n)\n\n# Billable usage\ndrip.charge(\n    customer_id=customer.id,\n    meter=\"api_calls\",\n    quantity=1\n)\n\n# Record execution lifecycle\ndrip.record_run(\n    customer_id=customer.id,\n    workflow=\"research-agent\",\n    events=[\n        {\"event_type\": \"llm.call\", \"quantity\": 1700, \"units\": \"tokens\"},\n        {\"event_type\": \"tool.call\", \"quantity\": 1},\n    ],\n    status=\"COMPLETED\"\n)\n\nprint(f\"Customer {customer.id}: usage + run recorded\")\n```\n\n**Expected result:**\n- No errors\n- Events appear in your Drip dashboard within seconds\n\n**Install:** `npm install @drip-sdk/node` or `pip install drip-sdk`\n\n**Set API key:** `export DRIP_API_KEY=sk_test_...` or use a \".env\" file with `DRIP_API_KEY=sk_test_...` and load it with `import 'dotenv/config'` (for Node.js)\n\n---\n\n## REST API Quick Start\n\n### Step 1: Create a customer\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/customers \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"externalCustomerId\": \"user_123\"}'\n```\n\n**You'll get back:**\n```json\n{\n  \"id\": \"cmlxxxxxx...\",\n  \"externalCustomerId\": \"user_123\",\n  \"status\": \"ACTIVE\"\n}\n```\n\n### Step 2: Create pricing\n\nUse the same meter string in your pricing plan and your usage calls:\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/pricing-plans \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"name\": \"API Calls\",\n    \"unitType\": \"api_calls\",\n    \"unitPriceUsd\": 0.001\n  }'\n```\n\n### Step 3: Charge usage\n\n```bash\ncurl -X POST https://api.drippay.dev/v1/usage \\\n  -H \"Authorization: Bearer sk_test_YOUR_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"customerId\": \"CUSTOMER_ID_FROM_STEP_1\",\n    \"usageType\": \"api_calls\",\n    \"quantity\": 100,\n    \"idempotencyKey\": \"charge_001\"\n  }'\n```\n\n---\n\n## SDK Methods\n\n### Node.js (`@drip-sdk/node`)\n\n| Method | Description |\n|--------|-------------|\n| `createCustomer()` | Create a customer |\n| `getCustomer()` | Get customer details |\n| `listCustomers()` | List all customers |\n| `trackUsage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emitEvent()` | Record an execution event |\n| `recordRun()` | Record a complete agent run |\n| `startRun()` | Start a run |\n| `endRun()` | End a run |\n| `getBalance()` | Get customer balance |\n\n### Python (`drip-sdk`)\n\n| Method | Description |\n|--------|-------------|\n| `create_customer()` | Create a customer |\n| `get_customer()` | Get customer details |\n| `list_customers()` | List all customers |\n| `track_usage()` | Record internal usage without billing |\n| `charge()` | Record usage and charge (requires pricing plan) |\n| `emit_event()` | Record an execution event |\n| `record_run()` | Record a complete agent run |\n| `start_run()` | Start a run |\n| `end_run()` | End a run |\n| `get_balance()` | Get customer balance |\n\n---\n\n## Two Modes\n\n| Mode | How | When |\n|------|-----|------|\n| **Tracking only** | `trackUsage()` / `track_usage()` | Pilots, analytics, no billing yet |\n| **Billing** | `charge()` + pricing plan | Ready to charge customers |\n\nBoth modes record usage in the ledger. The difference is whether a charge is created.\n\nUse `POST /v1/usage/internal` when you want tracking only.\n\n---\n\n## Authentication\n\n```\nAuthorization: Bearer sk_test_YOUR_KEY\n```\n\n### Key Types\n\n| Key Prefix | Use For |\n|------------|---------|\n| `sk_test_*` / `sk_live_*` | Server-side API access (secret key) |\n| `pk_test_*` / `pk_live_*` | Public key identifier. The role-protected endpoints in this reference require a secret key |\n\n### API Key Roles\n\nSecret keys (`sk_*`) are assigned a role that controls which endpoints they can access. Roles are hierarchical: higher roles include all permissions of lower roles.\n\n| Role | Level | Permissions |\n|------|-------|-------------|\n| `READONLY` | Lowest | List and read resources (customers, charges, pricing plans, events) |\n| `OPERATOR` | Mid | + Create customers, charge usage, track internal usage, emit events, manage runs |\n| `ADMIN` | Highest | + Create/update/delete pricing plans, manage contracts, manage API keys |\n\nPublic keys (`pk_*`) are always `READONLY`: they cannot create or modify resources.\n\n> **Important:** To create, update, or delete **pricing plans** and **contracts**, you must use a secret key (`sk_*`) with the **ADMIN** role. Using a lower-role key returns `403 Forbidden`.\n\n---\n\n## Idempotency\n\nAlways include `idempotencyKey` in POST requests to prevent duplicates:\n\n```json\n{\n  \"customerId\": \"cmlxxxxxx...\",\n  \"usageType\": \"api_calls\",\n  \"quantity\": 1,\n  \"idempotencyKey\": \"req_unique_12345\"\n}\n```\n\nSame key = same result. Safe to retry on network failures.\n\n---\n\n## Error Codes\n\n| Status | Meaning | Fix |\n|--------|---------|-----|\n| **400** | Bad request | Check request body matches schema |\n| **401** | Invalid API key | Verify `Authorization: Bearer sk_...` header |\n| **404** | Not found | Customer/pricing plan doesn't exist. Create customer first. |\n| **409** | Duplicate | Resource with this ID already exists |\n| **422** | Validation error | Check required fields and types |\n\n---\n\n## Important Notes\n\n- **Always create a customer first** for billable onboarding flows. You cannot use made-up customer IDs.\n- **`POST /v1/events`** records execution events (what happened). It does **not** auto-create charges.\n- **`POST /v1/usage`** records usage and creates charges if a matching pricing plan exists.\n- **`POST /v1/usage/internal`** records usage without billing.\n- **Numbers as strings**: Monetary amounts are returned as strings (e.g., `\"0.001000\"`) to preserve precision.\n\n\nContact Support:\n Name: Drip Support\n Email: support@drippay.dev",
-      "type": "text/plain"
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.drippay.dev"
     }
-  }
+  ]
 }
